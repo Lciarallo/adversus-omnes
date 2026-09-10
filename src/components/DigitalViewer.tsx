@@ -126,8 +126,6 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     ctx.fillStyle = '#1c1c1a';
     ctx.font = 'bold 22px "Cormorant Garamond", Georgia, serif';
     ctx.textAlign = 'center';
-
-    // Wrap title if needed
     ctx.fillText(item.title.toUpperCase(), 400, 110);
 
     ctx.fillStyle = '#8f7e53';
@@ -213,8 +211,11 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     <div className="min-h-screen bg-[#0d0e12] py-6 px-3 sm:px-6">
       {/* Alert toast when copy is blocked */}
       {copiedAlert && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-950/95 border border-red-500 text-red-200 px-5 py-3 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in text-xs font-semibold">
-          <ShieldAlert className="text-red-400 w-5 h-5 shrink-0" />
+        <div
+          role="alert"
+          className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-950/95 border border-red-500 text-red-200 px-5 py-3 rounded-lg shadow-2xl flex items-center gap-3 text-xs font-semibold"
+        >
+          <ShieldAlert className="text-red-400 w-5 h-5 shrink-0" aria-hidden="true" />
           <span>
             Aviso de Proteção: A extração de texto, atalhos de cópia e impressão estão bloqueados para este documento exclusivo de assinantes.
           </span>
@@ -226,10 +227,12 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#14161c] border border-[#262934] rounded-xl">
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={onBack}
-              className="p-2 rounded-lg bg-[#1e212b] hover:bg-[#2a2e3c] text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium"
+              aria-label="Voltar para a lista do acervo"
+              className="p-2.5 rounded-lg bg-[#1e212b] hover:bg-[#2a2e3c] text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium min-h-[44px]"
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft size={16} aria-hidden="true" />
               <span>Voltar ao Acervo</span>
             </button>
 
@@ -240,11 +243,11 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                 </h1>
                 {isExclusive ? (
                   <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-950 text-[#c89b3c] border border-amber-800/40 flex items-center gap-1 shrink-0">
-                    <Shield size={11} /> Exclusivo Assinante
+                    <Shield size={11} aria-hidden="true" /> Exclusivo Assinante
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800/40 flex items-center gap-1 shrink-0">
-                    <FileText size={11} /> Domínio Público
+                    <FileText size={11} aria-hidden="true" /> Domínio Público
                   </span>
                 )}
               </div>
@@ -260,9 +263,10 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
               href={item.downloadUrl}
               target="_blank"
               rel="noreferrer"
-              className="px-4 py-2 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-2 self-start sm:self-auto shadow-md"
+              aria-label={`Baixar PDF completo de ${item.title}`}
+              className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-2 self-start sm:self-auto shadow-md min-h-[44px]"
             >
-              <Download size={15} />
+              <Download size={15} aria-hidden="true" />
               <span>Baixar PDF Completo</span>
             </a>
           )}
@@ -272,7 +276,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
         {!hasAccess ? (
           <div className="p-8 sm:p-12 rounded-2xl bg-gradient-to-b from-[#181a22] to-[#121317] border border-[#2f3342] text-center space-y-6 shadow-2xl">
             <div className="w-16 h-16 rounded-full bg-amber-950/80 border border-[#c89b3c]/50 text-[#c89b3c] flex items-center justify-center mx-auto shadow-lg">
-              <Lock size={32} />
+              <Lock size={32} aria-hidden="true" />
             </div>
 
             <div className="max-w-xl mx-auto space-y-2">
@@ -286,7 +290,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
             <div className="p-4 max-w-lg mx-auto bg-[#1a1d26] border border-[#2b2f3e] rounded-xl text-left text-xs space-y-2 text-stone-300">
               <div className="font-semibold text-amber-300 flex items-center gap-1.5">
-                <Sparkles size={14} /> Vantagens da Assinatura:
+                <Sparkles size={14} aria-hidden="true" /> Vantagens da Assinatura:
               </div>
               <ul className="space-y-1 text-stone-400">
                 <li>• Acesso ilimitado a centenas de documentos raros e cartas históricas</li>
@@ -298,14 +302,16 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
             <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
               <button
+                type="button"
                 onClick={() => startSubscriptionCheckout(plans[1] || plans[0])}
-                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#c89b3c] to-[#a87e28] hover:from-[#d9ab4b] hover:to-[#b88c32] text-black font-bold text-sm transition shadow-xl flex items-center justify-center gap-2"
+                className="px-6 py-3.5 rounded-lg bg-gradient-to-r from-[#c89b3c] to-[#a87e28] hover:from-[#d9ab4b] hover:to-[#b88c32] text-black font-bold text-sm transition shadow-xl flex items-center justify-center gap-2 min-h-[44px]"
               >
                 <span>Assinar Plano Pesquisador (R$ 59,90/mês)</span>
               </button>
               <button
+                type="button"
                 onClick={onBack}
-                className="px-5 py-3 rounded-lg bg-[#222530] text-stone-300 text-sm hover:bg-[#2b2f3d] transition"
+                className="px-5 py-3.5 rounded-lg bg-[#222530] text-stone-300 text-sm hover:bg-[#2b2f3d] transition min-h-[44px]"
               >
                 Explorar Acervo Aberto
               </button>
@@ -321,33 +327,35 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
           >
             {/* Reader Toolbar */}
             <div className="bg-[#181a22] px-4 py-2.5 border-b border-[#252834] flex flex-wrap items-center justify-between gap-3 text-xs">
-              {/* Pagination controls */}
+              {/* Pagination controls with 44px min-touch */}
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   disabled={currentPage <= 1}
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  className="p-1.5 rounded bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 disabled:opacity-40 transition"
-                  title="Página Anterior"
+                  aria-label="Página anterior"
+                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
-                  <ChevronLeft size={16} />
+                  <ChevronLeft size={18} aria-hidden="true" />
                 </button>
                 <span className="text-stone-300 font-medium">
                   Pág. <strong className="text-white">{currentPage}</strong> de {totalPages}
                 </span>
                 <button
+                  type="button"
                   disabled={currentPage >= totalPages}
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  className="p-1.5 rounded bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 disabled:opacity-40 transition"
-                  title="Próxima Página"
+                  aria-label="Próxima página"
+                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
-                  <ChevronRight size={16} />
+                  <ChevronRight size={18} aria-hidden="true" />
                 </button>
               </div>
 
               {/* Security indicator for exclusive */}
               {isExclusive && (
-                <div className="flex items-center gap-2 text-[11px] text-amber-300 bg-amber-950/40 border border-amber-800/30 px-2.5 py-1 rounded-full">
-                  <Shield size={13} className="text-[#c89b3c]" />
+                <div className="flex items-center gap-2 text-[11px] text-amber-300 bg-amber-950/40 border border-amber-800/30 px-3 py-1.5 rounded-full">
+                  <Shield size={13} className="text-[#c89b3c]" aria-hidden="true" />
                   <span>Leitor Protegido Ativo • Extração e Cópia Bloqueadas</span>
                 </div>
               )}
@@ -355,31 +363,34 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
               {/* Zoom & Screen Controls */}
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={() => setZoom(prev => Math.max(70, prev - 15))}
-                  className="p-1.5 rounded bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300"
-                  title="Diminuir Zoom"
+                  aria-label="Diminuir zoom da leitura"
+                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
-                  <ZoomOut size={15} />
+                  <ZoomOut size={16} aria-hidden="true" />
                 </button>
                 <span className="text-stone-400 w-12 text-center">{zoom}%</span>
                 <button
+                  type="button"
                   onClick={() => setZoom(prev => Math.min(150, prev + 15))}
-                  className="p-1.5 rounded bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300"
-                  title="Aumentar Zoom"
+                  aria-label="Aumentar zoom da leitura"
+                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
-                  <ZoomIn size={15} />
+                  <ZoomIn size={16} aria-hidden="true" />
                 </button>
                 <button
+                  type="button"
                   onClick={toggleFullscreen}
-                  className="p-1.5 rounded bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 ml-1"
-                  title="Tela Cheia"
+                  aria-label={isFullscreen ? 'Sair da tela cheia' : 'Entrar em tela cheia'}
+                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 ml-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
-                  <Maximize2 size={15} />
+                  <Maximize2 size={16} aria-hidden="true" />
                 </button>
               </div>
             </div>
 
-            {/* Canvas Viewer Container with Watermark Overlap and selection prevention */}
+            {/* Canvas Viewer Container */}
             <div
               className={`flex-1 overflow-auto p-4 sm:p-8 flex justify-center items-center bg-[#090a0d] user-select-none ${
                 isExclusive ? 'select-none pointer-events-auto' : ''
@@ -388,10 +399,10 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
               <div className="relative shadow-2xl border border-stone-800 rounded bg-[#fbf9f2]">
                 <canvas
                   ref={canvasRef}
+                  aria-label={`Visualização gráfica da página ${currentPage} de ${item.title}`}
                   className="block mx-auto rounded transition-transform"
                 />
 
-                {/* Visible Dynamic Watermark Bar on bottom for transparency */}
                 {isExclusive && (
                   <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none text-[10px] text-stone-400/60 font-mono">
                     Licenciado para: {currentUser.name} ({currentUser.email}) • Sessão Antigravity ID #2026-BC

@@ -78,8 +78,8 @@ export const AdminDashboard: React.FC = () => {
   // Metrics calculation
   const totalRevenue = orders.reduce((acc, curr) => acc + curr.total, 0);
   const totalPhysicalOrders = orders.length;
-  const estimatedSubscribers = 42; // simulated active subscribers
-  const monthlyRecurringRevenue = 42 * 49.90; // MRR
+  const estimatedSubscribers = 42;
+  const monthlyRecurringRevenue = 42 * 49.90;
   const lowStockItems = catalog.filter(c => c.type === 'physical' && c.stock <= 1);
 
   const handleSaveGateway = (e: React.FormEvent) => {
@@ -171,7 +171,7 @@ export const AdminDashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#262a37] pb-6">
         <div>
           <div className="flex items-center gap-2 text-amber-400 text-xs uppercase tracking-widest font-mono">
-            <Shield size={14} /> Painel de Controle e Governança Geral
+            <Shield size={14} aria-hidden="true" /> Painel de Controle e Governança Geral
           </div>
           <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-1">
             Dashboard Administrativo
@@ -182,8 +182,8 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 rounded-full text-xs font-mono bg-emerald-950/80 border border-emerald-800 text-emerald-300 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="px-3 py-1.5 rounded-full text-xs font-mono bg-emerald-950/80 border border-emerald-800 text-emerald-300 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true" />
             <span>Sistema Operacional</span>
           </span>
         </div>
@@ -195,13 +195,13 @@ export const AdminDashboard: React.FC = () => {
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
           <div className="flex items-center justify-between text-stone-400 text-xs">
             <span>Faturamento Bruto (Obras)</span>
-            <DollarSign size={16} className="text-[#c89b3c]" />
+            <DollarSign size={16} className="text-[#c89b3c]" aria-hidden="true" />
           </div>
           <div className="text-2xl font-cinzel font-bold text-white">
             R$ {totalRevenue.toFixed(2)}
           </div>
           <div className="text-[11px] text-emerald-400 flex items-center gap-1 font-mono pt-1">
-            <TrendingUp size={12} /> +18.4% este mês
+            <TrendingUp size={12} aria-hidden="true" /> +18.4% este mês
           </div>
         </div>
 
@@ -209,7 +209,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
           <div className="flex items-center justify-between text-stone-400 text-xs">
             <span>Receita Recorrente (MRR)</span>
-            <Sparkles size={16} className="text-amber-400" />
+            <Sparkles size={16} className="text-amber-400" aria-hidden="true" />
           </div>
           <div className="text-2xl font-cinzel font-bold text-white">
             R$ {monthlyRecurringRevenue.toFixed(2)}
@@ -223,7 +223,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
           <div className="flex items-center justify-between text-stone-400 text-xs">
             <span>Pedidos Físicos Enviados</span>
-            <Truck size={16} className="text-blue-400" />
+            <Truck size={16} className="text-blue-400" aria-hidden="true" />
           </div>
           <div className="text-2xl font-cinzel font-bold text-white">
             {totalPhysicalOrders}
@@ -237,7 +237,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
           <div className="flex items-center justify-between text-stone-400 text-xs">
             <span>Itens c/ Estoque Crítico (1 un.)</span>
-            <AlertTriangle size={16} className="text-orange-400" />
+            <AlertTriangle size={16} className="text-orange-400" aria-hidden="true" />
           </div>
           <div className="text-2xl font-cinzel font-bold text-orange-300">
             {lowStockItems.length}
@@ -248,72 +248,90 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Tabs Menu */}
-      <div className="border-b border-[#252834] flex flex-wrap gap-2 text-xs">
+      {/* Tabs Menu - Cleaned up without colliding border/rounded anti-patterns */}
+      <div role="tablist" aria-label="Abas do Painel Administrativo" className="border-b border-[#252834] flex flex-wrap gap-2 text-xs pb-1">
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'finance'}
           onClick={() => setActiveTab('finance')}
-          className={`px-4 py-2.5 rounded-t-lg font-semibold transition border-b-2 ${
+          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
             activeTab === 'finance'
-              ? 'border-[#c89b3c] text-[#c89b3c] bg-[#1a1d26]'
-              : 'border-transparent text-stone-400 hover:text-white'
+              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
+              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
           }`}
         >
           Faturamento & Pedidos
         </button>
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'catalog'}
           onClick={() => setActiveTab('catalog')}
-          className={`px-4 py-2.5 rounded-t-lg font-semibold transition border-b-2 ${
+          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
             activeTab === 'catalog'
-              ? 'border-[#c89b3c] text-[#c89b3c] bg-[#1a1d26]'
-              : 'border-transparent text-stone-400 hover:text-white'
+              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
+              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
           }`}
         >
           Gestão de Catálogo
         </button>
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'inventory'}
           onClick={() => setActiveTab('inventory')}
-          className={`px-4 py-2.5 rounded-t-lg font-semibold transition border-b-2 ${
+          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
             activeTab === 'inventory'
-              ? 'border-[#c89b3c] text-[#c89b3c] bg-[#1a1d26]'
-              : 'border-transparent text-stone-400 hover:text-white'
+              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
+              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
           }`}
         >
           Estoque & Inventário
         </button>
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'plans'}
           onClick={() => setActiveTab('plans')}
-          className={`px-4 py-2.5 rounded-t-lg font-semibold transition border-b-2 ${
+          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
             activeTab === 'plans'
-              ? 'border-[#c89b3c] text-[#c89b3c] bg-[#1a1d26]'
-              : 'border-transparent text-stone-400 hover:text-white'
+              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
+              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
           }`}
         >
           Planos de Assinatura
         </button>
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'coupons'}
           onClick={() => setActiveTab('coupons')}
-          className={`px-4 py-2.5 rounded-t-lg font-semibold transition border-b-2 ${
+          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
             activeTab === 'coupons'
-              ? 'border-[#c89b3c] text-[#c89b3c] bg-[#1a1d26]'
-              : 'border-transparent text-stone-400 hover:text-white'
+              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
+              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
           }`}
         >
           Cupons Promocionais
         </button>
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'gateway'}
           onClick={() => setActiveTab('gateway')}
-          className={`px-4 py-2.5 rounded-t-lg font-semibold transition border-b-2 flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center gap-1.5 ${
             activeTab === 'gateway'
-              ? 'border-[#c89b3c] text-[#c89b3c] bg-[#1a1d26]'
-              : 'border-transparent text-stone-400 hover:text-white'
+              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
+              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
           }`}
         >
-          <CreditCard size={13} />
+          <CreditCard size={13} aria-hidden="true" />
           <span>Configuração InfinitePay</span>
         </button>
       </div>
@@ -330,14 +348,14 @@ export const AdminDashboard: React.FC = () => {
               <table className="w-full text-left text-xs text-stone-300">
                 <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
                   <tr>
-                    <th className="p-3">ID Pedido</th>
-                    <th className="p-3">Cliente</th>
-                    <th className="p-3">Itens</th>
-                    <th className="p-3">Total</th>
-                    <th className="p-3">Gateway</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Rastreio Correios</th>
-                    <th className="p-3">Data</th>
+                    <th scope="col" className="p-3">ID Pedido</th>
+                    <th scope="col" className="p-3">Cliente</th>
+                    <th scope="col" className="p-3">Itens</th>
+                    <th scope="col" className="p-3">Total</th>
+                    <th scope="col" className="p-3">Gateway</th>
+                    <th scope="col" className="p-3">Status</th>
+                    <th scope="col" className="p-3">Rastreio Correios</th>
+                    <th scope="col" className="p-3">Data</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#20232e]">
@@ -346,7 +364,7 @@ export const AdminDashboard: React.FC = () => {
                       <td className="p-3 font-mono text-[#c89b3c] font-semibold">{order.id}</td>
                       <td className="p-3">
                         <div className="font-medium text-white">{order.customerName}</div>
-                        <div className="text-[10px] text-stone-500">{order.customerEmail}</div>
+                        <div className="text-[10px] text-stone-400">{order.customerEmail}</div>
                       </td>
                       <td className="p-3">
                         {order.items.map(i => (
@@ -389,10 +407,11 @@ export const AdminDashboard: React.FC = () => {
               Catálogo Geral (Físico & Digital)
             </h3>
             <button
+              type="button"
               onClick={() => handleOpenCatalogModal()}
-              className="px-3.5 py-2 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs flex items-center gap-1.5 transition"
+              className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs flex items-center gap-1.5 transition min-h-[44px]"
             >
-              <Plus size={15} /> Cadastrar Nova Obra / Documento
+              <Plus size={15} aria-hidden="true" /> Cadastrar Nova Obra / Documento
             </button>
           </div>
 
@@ -400,13 +419,13 @@ export const AdminDashboard: React.FC = () => {
             <table className="w-full text-left text-xs text-stone-300">
               <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
                 <tr>
-                  <th className="p-3">Capa</th>
-                  <th className="p-3">Título & Autor</th>
-                  <th className="p-3">Tipo / Acesso</th>
-                  <th className="p-3">Movimento / Período</th>
-                  <th className="p-3">Preço</th>
-                  <th className="p-3">Estoque</th>
-                  <th className="p-3 text-right">Ações</th>
+                  <th scope="col" className="p-3">Capa</th>
+                  <th scope="col" className="p-3">Título & Autor</th>
+                  <th scope="col" className="p-3">Tipo / Acesso</th>
+                  <th scope="col" className="p-3">Movimento / Período</th>
+                  <th scope="col" className="p-3">Preço</th>
+                  <th scope="col" className="p-3">Estoque</th>
+                  <th scope="col" className="p-3 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#20232e]">
@@ -415,7 +434,9 @@ export const AdminDashboard: React.FC = () => {
                     <td className="p-3">
                       <img
                         src={item.coverImage}
-                        alt=""
+                        alt={`Capa do exemplar ${item.title}`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-10 h-14 object-cover rounded border border-[#323644]"
                       />
                     </td>
@@ -450,18 +471,20 @@ export const AdminDashboard: React.FC = () => {
                     <td className="p-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
+                          type="button"
                           onClick={() => handleOpenCatalogModal(item)}
-                          className="p-1 rounded text-stone-400 hover:text-white"
-                          title="Editar"
+                          aria-label={`Editar obra ${item.title}`}
+                          className="p-2.5 rounded-lg text-stone-400 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                         >
-                          <Edit2 size={14} />
+                          <Edit2 size={15} aria-hidden="true" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => deleteCatalogItem(item.id)}
-                          className="p-1 rounded text-stone-500 hover:text-red-400"
-                          title="Excluir"
+                          aria-label={`Excluir obra ${item.title}`}
+                          className="p-2.5 rounded-lg text-stone-500 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={15} aria-hidden="true" />
                         </button>
                       </div>
                     </td>
@@ -473,7 +496,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 3: Estoque & Inventário */}
+      {/* Tab 3: Estoque & Inventário com alvos de toque maiores */}
       {activeTab === 'inventory' && (
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
           <h3 className="text-base font-cinzel font-bold text-white">
@@ -494,7 +517,9 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex items-center gap-3 min-w-0">
                     <img
                       src={item.coverImage}
-                      alt=""
+                      alt={`Capa de ${item.title}`}
+                      loading="lazy"
+                      decoding="async"
                       className="w-12 h-16 object-cover rounded border border-[#363a4a] shrink-0"
                     />
                     <div className="min-w-0">
@@ -504,10 +529,13 @@ export const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Accessible 44x44px stepper buttons */}
                   <div className="flex items-center gap-2 shrink-0">
                     <button
+                      type="button"
                       onClick={() => updateStock(item.id, -1)}
-                      className="w-7 h-7 rounded bg-[#252834] hover:bg-[#323646] text-stone-200 flex items-center justify-center font-bold text-sm"
+                      aria-label={`Diminuir estoque de ${item.title}`}
+                      className="min-w-[44px] min-h-[44px] rounded-lg bg-[#252834] hover:bg-[#323646] text-stone-200 flex items-center justify-center font-bold text-base transition"
                     >
                       -
                     </button>
@@ -515,8 +543,10 @@ export const AdminDashboard: React.FC = () => {
                       {item.stock}
                     </span>
                     <button
+                      type="button"
                       onClick={() => updateStock(item.id, 1)}
-                      className="w-7 h-7 rounded bg-[#252834] hover:bg-[#323646] text-stone-200 flex items-center justify-center font-bold text-sm"
+                      aria-label={`Aumentar estoque de ${item.title}`}
+                      className="min-w-[44px] min-h-[44px] rounded-lg bg-[#252834] hover:bg-[#323646] text-stone-200 flex items-center justify-center font-bold text-base transition"
                     >
                       +
                     </button>
@@ -549,30 +579,39 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-stone-400 block mb-1">Preço Mensal (R$)</label>
+                  <label htmlFor={`price-monthly-${plan.id}`} className="text-stone-400 block mb-1">
+                    Preço Mensal (R$)
+                  </label>
                   <input
+                    id={`price-monthly-${plan.id}`}
                     type="number"
                     step="0.1"
                     value={plan.priceMonthly}
                     onChange={e => updatePlan(plan.id, { priceMonthly: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono"
+                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-stone-400 block mb-1">Preço Anual (R$)</label>
+                  <label htmlFor={`price-yearly-${plan.id}`} className="text-stone-400 block mb-1">
+                    Preço Anual (R$)
+                  </label>
                   <input
+                    id={`price-yearly-${plan.id}`}
                     type="number"
                     step="1"
                     value={plan.priceYearly}
                     onChange={e => updatePlan(plan.id, { priceYearly: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono"
+                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-stone-400 block mb-1">Descrição</label>
+                  <label htmlFor={`desc-${plan.id}`} className="text-stone-400 block mb-1">
+                    Descrição do Plano
+                  </label>
                   <textarea
+                    id={`desc-${plan.id}`}
                     rows={2}
                     value={plan.description}
                     onChange={e => updatePlan(plan.id, { description: e.target.value })}
@@ -594,26 +633,29 @@ export const AdminDashboard: React.FC = () => {
               <input
                 type="text"
                 placeholder="CÓDIGO (ex: NOVO25)"
+                aria-label="Código promocional"
                 value={newCouponCode}
                 onChange={e => setNewCouponCode(e.target.value.toUpperCase())}
-                className="bg-[#101217] border border-[#313546] rounded p-2 text-white uppercase font-mono"
+                className="bg-[#101217] border border-[#313546] rounded p-2 text-white uppercase font-mono min-h-[44px]"
               />
               <input
                 type="number"
                 placeholder="% de Desconto"
+                aria-label="Porcentagem de desconto"
                 value={newCouponDiscount}
                 onChange={e => setNewCouponDiscount(Number(e.target.value))}
-                className="bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono"
+                className="bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono min-h-[44px]"
               />
               <input
                 type="date"
+                aria-label="Data de validade do cupom"
                 value={newCouponDate}
                 onChange={e => setNewCouponDate(e.target.value)}
-                className="bg-[#101217] border border-[#313546] rounded p-2 text-white"
+                className="bg-[#101217] border border-[#313546] rounded p-2 text-white min-h-[44px]"
               />
               <button
                 type="submit"
-                className="bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold rounded px-4 py-2 transition"
+                className="bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold rounded px-4 py-2 transition min-h-[44px]"
               >
                 Cadastrar Cupom
               </button>
@@ -624,11 +666,11 @@ export const AdminDashboard: React.FC = () => {
             <table className="w-full text-left text-xs text-stone-300">
               <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
                 <tr>
-                  <th className="p-3">Código</th>
-                  <th className="p-3">Desconto</th>
-                  <th className="p-3">Validade</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3 text-right">Ações</th>
+                  <th scope="col" className="p-3">Código</th>
+                  <th scope="col" className="p-3">Desconto</th>
+                  <th scope="col" className="p-3">Validade</th>
+                  <th scope="col" className="p-3">Status</th>
+                  <th scope="col" className="p-3 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#20232e]">
@@ -650,14 +692,16 @@ export const AdminDashboard: React.FC = () => {
                     </td>
                     <td className="p-3 text-right space-x-2">
                       <button
+                        type="button"
                         onClick={() => toggleCoupon(c.code)}
-                        className="text-stone-400 hover:text-white text-xs"
+                        className="text-stone-400 hover:text-white text-xs min-h-[44px] px-2"
                       >
                         {c.active ? 'Desativar' : 'Ativar'}
                       </button>
                       <button
+                        type="button"
                         onClick={() => deleteCoupon(c.code)}
-                        className="text-red-400 hover:text-red-300 text-xs"
+                        className="text-red-400 hover:text-red-300 text-xs min-h-[44px] px-2"
                       >
                         Excluir
                       </button>
@@ -675,8 +719,8 @@ export const AdminDashboard: React.FC = () => {
         <div className="p-6 rounded-xl bg-[#15171f] border border-[#272b38] space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-[#1e212b] border border-[#323644] flex items-center justify-center text-[#c89b3c]">
-                <CreditCard size={20} />
+              <div className="w-10 h-10 rounded-lg bg-[#1e212b] border border-[#323644] flex items-center justify-center text-[#c89b3c]">
+                <CreditCard size={20} aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-base font-cinzel font-bold text-white">
@@ -688,18 +732,21 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <span className="px-3 py-1 rounded text-xs font-mono bg-amber-950 text-amber-300 border border-amber-800/40">
+            <span className="px-3 py-1 rounded-full text-xs font-mono bg-amber-950 text-amber-300 border border-amber-800/40">
               {gatewayForm.mode === 'sandbox' ? 'Ambiente de Testes / Sandbox' : 'Ambiente de Produção'}
             </span>
           </div>
 
           <form onSubmit={handleSaveGateway} className="space-y-4 text-xs max-w-2xl">
             <div>
-              <label className="text-stone-300 block mb-1">Ambiente de Operação</label>
+              <label htmlFor="gateway-mode" className="text-stone-300 block mb-1">
+                Ambiente de Operação
+              </label>
               <select
+                id="gateway-mode"
                 value={gatewayForm.mode}
                 onChange={e => setGatewayForm({ ...gatewayForm, mode: e.target.value as any })}
-                className="w-full bg-[#101217] border border-[#313546] rounded p-2.5 text-white"
+                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white min-h-[44px]"
               >
                 <option value="sandbox">Sandbox (Simulação de Pix e Cartão para testes imediatos)</option>
                 <option value="production">Produção (Liquidará pagamentos reais na sua conta InfinitePay)</option>
@@ -707,57 +754,69 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-stone-300 block mb-1">InfinitePay Merchant ID</label>
+              <label htmlFor="gateway-merchant" className="text-stone-300 block mb-1">
+                InfinitePay Merchant ID
+              </label>
               <input
+                id="gateway-merchant"
                 type="text"
                 value={gatewayForm.merchantId}
                 onChange={e => setGatewayForm({ ...gatewayForm, merchantId: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded p-2.5 text-white font-mono"
+                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
             <div>
-              <label className="text-stone-300 block mb-1">InfinitePay API Key (Chave Pública / Privada)</label>
+              <label htmlFor="gateway-api-key" className="text-stone-300 block mb-1">
+                InfinitePay API Key (Chave Pública / Privada)
+              </label>
               <input
+                id="gateway-api-key"
                 type="text"
                 value={gatewayForm.apiKey}
                 onChange={e => setGatewayForm({ ...gatewayForm, apiKey: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded p-2.5 text-white font-mono"
+                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
             <div>
-              <label className="text-stone-300 block mb-1">InfinitePay Wallet ID / Chave Pix de Liquidação</label>
+              <label htmlFor="gateway-wallet" className="text-stone-300 block mb-1">
+                InfinitePay Wallet ID / Chave Pix de Liquidação
+              </label>
               <input
+                id="gateway-wallet"
                 type="text"
                 value={gatewayForm.walletId}
                 onChange={e => setGatewayForm({ ...gatewayForm, walletId: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded p-2.5 text-white font-mono"
+                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
             <div>
-              <label className="text-stone-300 block mb-1">URL de Webhook (Notificação de Pagamento Instantâneo)</label>
+              <label htmlFor="gateway-webhook" className="text-stone-300 block mb-1">
+                URL de Webhook (Notificação de Pagamento Instantâneo)
+              </label>
               <input
+                id="gateway-webhook"
                 type="url"
                 value={gatewayForm.webhookUrl}
                 onChange={e => setGatewayForm({ ...gatewayForm, webhookUrl: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded p-2.5 text-white font-mono"
+                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
             <div className="pt-2 flex items-center gap-3">
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-1.5 shadow"
+                className="px-5 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-1.5 shadow min-h-[44px]"
               >
-                <Save size={15} />
+                <Save size={15} aria-hidden="true" />
                 <span>Salvar Configurações InfinitePay</span>
               </button>
 
               {gatewaySavedMsg && (
-                <span className="text-emerald-400 text-xs flex items-center gap-1">
-                  <CheckCircle size={14} /> Configurações salvas com sucesso!
+                <span role="status" className="text-emerald-400 text-xs flex items-center gap-1">
+                  <CheckCircle size={14} aria-hidden="true" /> Configurações salvas com sucesso!
                 </span>
               )}
             </div>
@@ -767,56 +826,74 @@ export const AdminDashboard: React.FC = () => {
 
       {/* Catalog Modal */}
       {isCatalogModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="catalog-modal-title"
+          className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
+        >
           <div
             onClick={() => setIsCatalogModalOpen(false)}
             className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            aria-hidden="true"
           />
           <div className="relative w-full max-w-xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
-            <h3 className="text-base font-cinzel font-bold text-white border-b border-[#252834] pb-2">
+            <h3 id="catalog-modal-title" className="text-base font-cinzel font-bold text-white border-b border-[#252834] pb-2">
               {editingItem ? 'Editar Obra do Catálogo' : 'Adicionar Nova Obra ao Catálogo'}
             </h3>
 
             <form onSubmit={handleSaveCatalogItem} className="space-y-3 text-xs">
               <div>
-                <label className="text-stone-300 block mb-1">Título da Obra *</label>
+                <label htmlFor="cat-title" className="text-stone-300 block mb-1">
+                  Título da Obra *
+                </label>
                 <input
+                  id="cat-title"
                   type="text"
                   required
                   value={catalogFormData.title}
                   onChange={e => setCatalogFormData({ ...catalogFormData, title: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-stone-300 block mb-1">Autor</label>
+                  <label htmlFor="cat-author" className="text-stone-300 block mb-1">
+                    Autor
+                  </label>
                   <input
+                    id="cat-author"
                     type="text"
                     value={catalogFormData.author}
                     onChange={e => setCatalogFormData({ ...catalogFormData, author: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                   />
                 </div>
                 <div>
-                  <label className="text-stone-300 block mb-1">Ano Histórico</label>
+                  <label htmlFor="cat-year" className="text-stone-300 block mb-1">
+                    Ano Histórico
+                  </label>
                   <input
+                    id="cat-year"
                     type="number"
                     value={catalogFormData.year}
                     onChange={e => setCatalogFormData({ ...catalogFormData, year: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-stone-300 block mb-1">Tipo de Obra</label>
+                  <label htmlFor="cat-type" className="text-stone-300 block mb-1">
+                    Tipo de Obra
+                  </label>
                   <select
+                    id="cat-type"
                     value={catalogFormData.type}
                     onChange={e => setCatalogFormData({ ...catalogFormData, type: e.target.value as any })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                   >
                     <option value="physical">Acervo Físico (Livro)</option>
                     <option value="digital">Acervo Digital</option>
@@ -824,11 +901,14 @@ export const AdminDashboard: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-stone-300 block mb-1">Acesso</label>
+                  <label htmlFor="cat-access" className="text-stone-300 block mb-1">
+                    Acesso
+                  </label>
                   <select
+                    id="cat-access"
                     value={catalogFormData.access}
                     onChange={e => setCatalogFormData({ ...catalogFormData, access: e.target.value as any })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                   >
                     <option value="sale">À Venda (E-commerce)</option>
                     <option value="exclusive">Exclusivo Assinantes</option>
@@ -836,52 +916,67 @@ export const AdminDashboard: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-stone-300 block mb-1">Preço (R$)</label>
+                  <label htmlFor="cat-price" className="text-stone-300 block mb-1">
+                    Preço (R$)
+                  </label>
                   <input
+                    id="cat-price"
                     type="number"
                     step="0.01"
                     value={catalogFormData.price}
                     onChange={e => setCatalogFormData({ ...catalogFormData, price: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white font-mono"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-stone-300 block mb-1">Estoque Físico</label>
+                  <label htmlFor="cat-stock" className="text-stone-300 block mb-1">
+                    Estoque Físico
+                  </label>
                   <input
+                    id="cat-stock"
                     type="number"
                     value={catalogFormData.stock}
                     onChange={e => setCatalogFormData({ ...catalogFormData, stock: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white font-mono"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
                 <div>
-                  <label className="text-stone-300 block mb-1">Condição do Exemplar</label>
+                  <label htmlFor="cat-condition" className="text-stone-300 block mb-1">
+                    Condição do Exemplar
+                  </label>
                   <input
+                    id="cat-condition"
                     type="text"
                     value={catalogFormData.condition}
                     onChange={e => setCatalogFormData({ ...catalogFormData, condition: e.target.value })}
                     placeholder="Ex: Raro / Peça Única, Usado - Excelente"
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-stone-300 block mb-1">URL da Imagem da Capa</label>
+                <label htmlFor="cat-cover" className="text-stone-300 block mb-1">
+                  URL da Imagem da Capa
+                </label>
                 <input
+                  id="cat-cover"
                   type="url"
                   value={catalogFormData.coverImage}
                   onChange={e => setCatalogFormData({ ...catalogFormData, coverImage: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
                 />
               </div>
 
               <div>
-                <label className="text-stone-300 block mb-1">Descrição Arquivística / Sinopse</label>
+                <label htmlFor="cat-desc" className="text-stone-300 block mb-1">
+                  Descrição Arquivística / Sinopse
+                </label>
                 <textarea
+                  id="cat-desc"
                   rows={3}
                   value={catalogFormData.description}
                   onChange={e => setCatalogFormData({ ...catalogFormData, description: e.target.value })}
@@ -893,13 +988,13 @@ export const AdminDashboard: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsCatalogModalOpen(false)}
-                  className="px-4 py-2 rounded bg-[#20232e] text-stone-300"
+                  className="px-4 py-2.5 rounded-lg bg-[#20232e] text-stone-300 min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold"
+                  className="px-5 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold min-h-[44px]"
                 >
                   Salvar Obra
                 </button>

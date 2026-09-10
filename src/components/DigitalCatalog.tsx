@@ -42,7 +42,7 @@ export const DigitalCatalog: React.FC = () => {
       {/* Title & Introduction */}
       <div className="border-b border-[#262936] pb-6 space-y-2">
         <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-          <Scroll size={14} /> Documentos Primários, Cartas e Fac-símiles
+          <Scroll size={14} aria-hidden="true" /> Documentos Primários, Cartas e Fac-símiles
         </div>
         <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white">
           Acervo Digital e Arquivo Histórico
@@ -53,15 +53,15 @@ export const DigitalCatalog: React.FC = () => {
       </div>
 
       {/* Banner informing about protected reader */}
-      <div className="p-4 rounded-xl bg-gradient-to-r from-[#1b1e27] to-[#14161f] border border-[#2b3040] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-[#1a1d26] to-[#14161f] border border-[#2b3040] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-amber-950/80 border border-amber-700/50 flex items-center justify-center text-[#c89b3c] shrink-0">
-            <Shield size={20} />
+            <Shield size={20} aria-hidden="true" />
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-white">
+            <h2 className="text-sm font-semibold text-white">
               Tecnologia de Visualização Segura (DRM-Lite)
-            </h4>
+            </h2>
             <p className="text-xs text-stone-400">
               O leitor do acervo exclusivo renderiza as páginas em tela bloqueando download de arquivo bruto, atalhos de impressão e extração textual não autorizada.
             </p>
@@ -70,8 +70,9 @@ export const DigitalCatalog: React.FC = () => {
 
         {currentUser.role !== 'subscriber' && currentUser.role !== 'admin' && (
           <button
+            type="button"
             onClick={() => startSubscriptionCheckout(plans[1] || plans[0])}
-            className="px-4 py-2 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs whitespace-nowrap transition shadow-md"
+            className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs whitespace-nowrap transition shadow-md min-h-[44px]"
           >
             Assinar e Liberar Acesso
           </button>
@@ -82,40 +83,47 @@ export const DigitalCatalog: React.FC = () => {
       <div className="bg-[#15171e] p-4 rounded-xl border border-[#272b38] grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Search */}
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 pointer-events-none" aria-hidden="true" />
           <input
             type="text"
+            aria-label="Buscar documentos por título, autor ou evento histórico"
             placeholder="Buscar por título, autor ou evento histórico..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c]"
+            className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
           />
         </div>
 
         {/* Access type */}
-        <select
-          value={accessFilter}
-          onChange={e => setAccessFilter(e.target.value as any)}
-          className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c89b3c]"
-        >
-          <option value="all">Todos os Tipos de Acesso</option>
-          <option value="free">Livre para Download (PDF Aberto)</option>
-          <option value="exclusive">Exclusivo para Assinantes (Protegido)</option>
-        </select>
+        <div>
+          <select
+            aria-label="Filtrar por tipo de acesso (Livre ou Exclusivo)"
+            value={accessFilter}
+            onChange={e => setAccessFilter(e.target.value as any)}
+            className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+          >
+            <option value="all">Todos os Tipos de Acesso</option>
+            <option value="free">Livre para Download (PDF Aberto)</option>
+            <option value="exclusive">Exclusivo para Assinantes (Protegido)</option>
+          </select>
+        </div>
 
         {/* Movement */}
-        <select
-          value={movementFilter}
-          onChange={e => setMovementFilter(e.target.value)}
-          className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c89b3c]"
-        >
-          <option value="all">Todos os Movimentos Políticos</option>
-          {movements.map(m => (
-            <option key={m} value={m}>
-              {m}
-            </option>
-          ))}
-        </select>
+        <div>
+          <select
+            aria-label="Filtrar documentos por movimento político"
+            value={movementFilter}
+            onChange={e => setMovementFilter(e.target.value)}
+            className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+          >
+            <option value="all">Todos os Movimentos Políticos</option>
+            {movements.map(m => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Digital Grid */}
@@ -127,25 +135,27 @@ export const DigitalCatalog: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-[#15171e] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
             >
               <div>
                 <div className="relative h-60 bg-[#0b0c0e] p-3 flex items-center justify-center overflow-hidden border-b border-[#20232e]">
                   <img
                     src={item.coverImage}
-                    alt={item.title}
-                    className="max-h-full max-w-[80%] object-cover rounded shadow-xl transition duration-500 group-hover:scale-105 border border-[#323644]"
+                    alt={`Capa do documento ${item.title}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="max-h-full max-w-[80%] object-cover rounded shadow-xl border border-[#323644]"
                   />
 
                   {/* Badge */}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {isExclusive ? (
                       <span className="px-2.5 py-1 rounded bg-amber-950/90 text-[#c89b3c] border border-amber-800/60 text-[10px] font-mono font-medium flex items-center gap-1 shadow">
-                        <Shield size={11} /> Exclusivo Assinantes
+                        <Shield size={11} aria-hidden="true" /> Exclusivo Assinantes
                       </span>
                     ) : (
                       <span className="px-2.5 py-1 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-800/60 text-[10px] font-mono font-medium flex items-center gap-1 shadow">
-                        <Download size={11} /> PDF Livre / Baixar
+                        <Download size={11} aria-hidden="true" /> PDF Livre / Baixar
                       </span>
                     )}
                   </div>
@@ -161,7 +171,15 @@ export const DigitalCatalog: React.FC = () => {
                   </div>
 
                   <h3
+                    tabIndex={0}
+                    role="button"
                     onClick={() => openReader(item)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openReader(item);
+                      }
+                    }}
                     className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] cursor-pointer transition line-clamp-2"
                   >
                     {item.title}
@@ -176,20 +194,22 @@ export const DigitalCatalog: React.FC = () => {
                   </p>
 
                   {item.event && (
-                    <div className="text-[10px] text-stone-400 bg-[#1b1e27] p-1.5 rounded border border-[#272b38]">
+                    <div className="text-[10px] text-stone-400 bg-[#1b1e27] p-2 rounded-lg border border-[#272b38]">
                       <strong className="text-stone-300">Contexto:</strong> {item.event}
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Action Buttons with 44px min-height */}
               <div className="p-5 pt-3 border-t border-[#20232e] bg-[#12141a] flex items-center justify-between gap-2">
                 <button
+                  type="button"
                   onClick={() => openReader(item)}
-                  className="flex-1 py-2 px-3 rounded bg-[#20232e] hover:bg-[#2b2f3e] text-stone-200 hover:text-white border border-[#34384a] text-xs font-semibold transition flex items-center justify-center gap-1.5"
+                  aria-label={`Abrir ${item.title} no leitor seguro`}
+                  className="flex-1 min-h-[44px] py-2.5 px-3 rounded-lg bg-[#20232e] hover:bg-[#2b2f3e] text-stone-200 hover:text-white border border-[#34384a] text-xs font-semibold transition flex items-center justify-center gap-1.5"
                 >
-                  <Eye size={14} className="text-[#c89b3c]" />
+                  <Eye size={15} className="text-[#c89b3c]" aria-hidden="true" />
                   <span>{isExclusive && !isUnlocked ? 'Ver Prévia Protegida' : 'Abrir no Leitor'}</span>
                 </button>
 
@@ -198,10 +218,10 @@ export const DigitalCatalog: React.FC = () => {
                     href={item.downloadUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="py-2 px-3 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow"
-                    title="Baixar PDF Original"
+                    aria-label={`Baixar PDF original de ${item.title}`}
+                    className="min-h-[44px] py-2.5 px-4 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow"
                   >
-                    <Download size={14} />
+                    <Download size={15} aria-hidden="true" />
                     <span>Baixar</span>
                   </a>
                 )}

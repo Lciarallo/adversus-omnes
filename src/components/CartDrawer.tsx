@@ -70,11 +70,17 @@ export const CartDrawer: React.FC = () => {
   const isFreeShipping = currentUser.activePlan === 'Membro do Círculo';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cart-drawer-heading"
+      className="fixed inset-0 z-50 overflow-hidden"
+    >
       {/* Backdrop */}
       <div
         onClick={() => setIsCartOpen(false)}
         className="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+        aria-hidden="true"
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
@@ -82,7 +88,7 @@ export const CartDrawer: React.FC = () => {
           {/* Header */}
           <div className="px-6 py-5 border-b border-[#262935] flex items-center justify-between bg-[#12141a]">
             <div>
-              <h2 className="text-lg font-cinzel font-bold text-white tracking-wide">
+              <h2 id="cart-drawer-heading" className="text-lg font-cinzel font-bold text-white tracking-wide">
                 Sua Sacola de Obras
               </h2>
               <p className="text-xs text-stone-400 font-serif italic">
@@ -90,10 +96,12 @@ export const CartDrawer: React.FC = () => {
               </p>
             </div>
             <button
+              type="button"
               onClick={() => setIsCartOpen(false)}
-              className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-[#252834] transition"
+              aria-label="Fechar sacola de compras"
+              className="p-2.5 rounded-lg text-stone-400 hover:text-white hover:bg-[#252834] transition min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
-              <X size={20} />
+              <X size={20} aria-hidden="true" />
             </button>
           </div>
 
@@ -102,7 +110,7 @@ export const CartDrawer: React.FC = () => {
             {cart.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-16 h-16 rounded-full bg-[#20232d] flex items-center justify-center mx-auto mb-4 text-stone-500">
-                  <Tag size={28} />
+                  <Tag size={28} aria-hidden="true" />
                 </div>
                 <h3 className="text-stone-300 font-medium text-base">Sua sacola está vazia</h3>
                 <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto">
@@ -118,6 +126,8 @@ export const CartDrawer: React.FC = () => {
                   <img
                     src={item.coverImage}
                     alt={item.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-16 h-22 object-cover rounded shadow-md border border-[#383c4c] shrink-0"
                   />
                   <div className="flex-1 flex flex-col justify-between min-w-0">
@@ -134,21 +144,25 @@ export const CartDrawer: React.FC = () => {
                     </div>
 
                     <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#292d3b]">
-                      <div className="flex items-center gap-1.5 bg-[#14161d] border border-[#323644] rounded px-1.5 py-0.5">
+                      <div className="flex items-center gap-1 bg-[#14161d] border border-[#323644] rounded">
                         <button
+                          type="button"
                           onClick={() => updateCartQuantity(item.id, quantity - 1)}
-                          className="text-stone-400 hover:text-white p-0.5"
+                          aria-label={`Diminuir quantidade de ${item.title}`}
+                          className="text-stone-300 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                         >
-                          <Minus size={12} />
+                          <Minus size={13} aria-hidden="true" />
                         </button>
-                        <span className="text-xs font-semibold text-white px-1">
+                        <span className="text-xs font-semibold text-white px-2">
                           {quantity}
                         </span>
                         <button
+                          type="button"
                           onClick={() => updateCartQuantity(item.id, quantity + 1)}
-                          className="text-stone-400 hover:text-white p-0.5"
+                          aria-label={`Aumentar quantidade de ${item.title}`}
+                          className="text-stone-300 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                         >
-                          <Plus size={12} />
+                          <Plus size={13} aria-hidden="true" />
                         </button>
                       </div>
 
@@ -164,11 +178,12 @@ export const CartDrawer: React.FC = () => {
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => removeFromCart(item.id)}
-                    className="text-stone-500 hover:text-red-400 p-1 self-start transition"
-                    title="Remover da sacola"
+                    aria-label={`Remover ${item.title} da sacola`}
+                    className="text-stone-400 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center self-start transition"
                   >
-                    <Trash2 size={15} />
+                    <Trash2 size={16} aria-hidden="true" />
                   </button>
                 </div>
               ))
@@ -178,7 +193,7 @@ export const CartDrawer: React.FC = () => {
             {cart.length > 0 && (
               <div className="p-4 rounded-lg bg-[#1a1d26] border border-[#2c303f] space-y-3">
                 <div className="flex items-center gap-2 text-xs font-semibold text-stone-200">
-                  <Truck size={16} className="text-[#c89b3c]" />
+                  <Truck size={16} className="text-[#c89b3c]" aria-hidden="true" />
                   <span>Cálculo de Frete Correios</span>
                 </div>
 
@@ -187,44 +202,46 @@ export const CartDrawer: React.FC = () => {
                     type="text"
                     placeholder="01310-200"
                     maxLength={9}
+                    aria-label="Informe o CEP para cálculo de frete"
                     value={cepInput}
                     onChange={e => setCepInput(e.target.value)}
-                    className="flex-1 bg-[#12141a] border border-[#363a4a] rounded px-3 py-1.5 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c]"
+                    className="flex-1 bg-[#12141a] border border-[#363a4a] rounded-lg px-3 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
                   />
                   <button
                     type="submit"
                     disabled={isCalculatingShipping}
-                    className="bg-[#2a2e3b] hover:bg-[#343949] text-stone-200 text-xs px-3 py-1.5 rounded transition border border-[#3f4456] disabled:opacity-50"
+                    className="bg-[#2a2e3b] hover:bg-[#343949] text-stone-200 text-xs px-4 py-2 rounded-lg transition border border-[#3f4456] disabled:opacity-50 min-h-[44px]"
                   >
                     {isCalculatingShipping ? 'Calculando...' : 'Calcular'}
                   </button>
                 </form>
 
                 {isFreeShipping && (
-                  <div className="p-2 rounded bg-emerald-950/50 border border-emerald-800/40 text-[11px] text-emerald-300 flex items-center gap-1.5">
-                    <CheckCircle size={13} />
+                  <div className="p-2.5 rounded-lg bg-emerald-950/50 border border-emerald-800/40 text-[11px] text-emerald-300 flex items-center gap-1.5">
+                    <CheckCircle size={13} aria-hidden="true" />
                     <span>Benefício Membro do Círculo: <strong>Frete Grátis SEDEX</strong></span>
                   </div>
                 )}
 
                 {shippingQuotes.length > 0 && !isFreeShipping && (
-                  <div className="space-y-1.5 pt-1">
+                  <fieldset className="space-y-1.5 pt-1">
+                    <legend className="sr-only">Opções de Frete dos Correios</legend>
                     {shippingQuotes.map(quote => (
                       <label
                         key={quote.service}
-                        className={`flex items-center justify-between p-2 rounded cursor-pointer border text-xs transition ${
+                        className={`flex items-center justify-between p-3 rounded-lg cursor-pointer border text-xs transition min-h-[44px] ${
                           selectedShipping?.service === quote.service
                             ? 'bg-[#252936] border-[#c89b3c] text-white'
                             : 'bg-[#14161d] border-[#292c3a] text-stone-400 hover:border-[#3d4254]'
                         }`}
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                           <input
                             type="radio"
                             name="shipping"
                             checked={selectedShipping?.service === quote.service}
                             onChange={() => setSelectedShipping(quote)}
-                            className="text-[#c89b3c] focus:ring-0"
+                            className="text-[#c89b3c] focus:ring-0 w-4 h-4"
                           />
                           <div>
                             <span className="font-medium text-white">{quote.service}</span>
@@ -238,7 +255,7 @@ export const CartDrawer: React.FC = () => {
                         </span>
                       </label>
                     ))}
-                  </div>
+                  </fieldset>
                 )}
               </div>
             )}
@@ -248,12 +265,14 @@ export const CartDrawer: React.FC = () => {
               <div className="p-4 rounded-lg bg-[#1a1d26] border border-[#2c303f] space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-stone-200 flex items-center gap-1.5">
-                    <Tag size={15} className="text-[#c89b3c]" /> Cupom de Desconto
+                    <Tag size={15} className="text-[#c89b3c]" aria-hidden="true" /> Cupom de Desconto
                   </span>
                   {appliedCoupon && (
                     <button
+                      type="button"
                       onClick={removeCoupon}
-                      className="text-red-400 hover:text-red-300 text-[11px]"
+                      aria-label="Remover cupom aplicado"
+                      className="text-red-400 hover:text-red-300 text-[11px] underline min-h-[36px]"
                     >
                       Remover cupom
                     </button>
@@ -265,19 +284,20 @@ export const CartDrawer: React.FC = () => {
                     <input
                       type="text"
                       placeholder="Ex: BEMVINDO10"
+                      aria-label="Código do cupom de desconto"
                       value={couponInput}
                       onChange={e => setCouponInput(e.target.value.toUpperCase())}
-                      className="flex-1 bg-[#12141a] border border-[#363a4a] rounded px-3 py-1.5 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] uppercase font-mono"
+                      className="flex-1 bg-[#12141a] border border-[#363a4a] rounded-lg px-3 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] uppercase font-mono min-h-[44px]"
                     />
                     <button
                       type="submit"
-                      className="bg-[#2a2e3b] hover:bg-[#343949] text-stone-200 text-xs px-3 py-1.5 rounded transition border border-[#3f4456]"
+                      className="bg-[#2a2e3b] hover:bg-[#343949] text-stone-200 text-xs px-4 py-2 rounded-lg transition border border-[#3f4456] min-h-[44px]"
                     >
                       Aplicar
                     </button>
                   </form>
                 ) : (
-                  <div className="p-2 rounded bg-[#202430] border border-emerald-800/40 text-xs flex items-center justify-between text-emerald-300">
+                  <div className="p-2.5 rounded-lg bg-[#202430] border border-emerald-800/40 text-xs flex items-center justify-between text-emerald-300">
                     <span className="font-mono font-bold">{appliedCoupon.code}</span>
                     <span>-{appliedCoupon.discountPercentage}% OFF</span>
                   </div>
@@ -285,11 +305,12 @@ export const CartDrawer: React.FC = () => {
 
                 {couponFeedback && !appliedCoupon && (
                   <div
+                    role="status"
                     className={`text-[11px] flex items-center gap-1 ${
                       couponFeedback.success ? 'text-emerald-400' : 'text-red-400'
                     }`}
                   >
-                    {couponFeedback.success ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
+                    {couponFeedback.success ? <CheckCircle size={12} aria-hidden="true" /> : <AlertCircle size={12} aria-hidden="true" />}
                     <span>{couponFeedback.message}</span>
                   </div>
                 )}
@@ -356,23 +377,24 @@ export const CartDrawer: React.FC = () => {
               </div>
 
               <button
+                type="button"
                 onClick={() => {
                   setIsCartOpen(false);
                   startCartCheckout();
                 }}
-                className="w-full py-3 px-4 rounded bg-gradient-to-r from-[#c89b3c] to-[#a87e28] hover:from-[#d9ab4b] hover:to-[#b88c32] text-black font-semibold text-sm transition shadow-lg shadow-[#c89b3c]/20 flex items-center justify-center gap-2 group"
+                className="w-full min-h-[48px] py-3 px-4 rounded-lg bg-gradient-to-r from-[#c89b3c] to-[#a87e28] hover:from-[#d9ab4b] hover:to-[#b88c32] text-black font-semibold text-sm transition shadow-lg shadow-[#c89b3c]/20 flex items-center justify-center gap-2 group"
               >
                 <span>Finalizar Compra via InfinitePay</span>
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </button>
 
-              <div className="flex items-center justify-center gap-3 pt-1 text-[11px] text-stone-500">
+              <div className="flex items-center justify-center gap-3 pt-1 text-[11px] text-stone-400">
                 <span className="flex items-center gap-1">
-                  <ShieldCheck size={13} className="text-emerald-500" /> Checkout Seguro
+                  <ShieldCheck size={13} className="text-emerald-500" aria-hidden="true" /> Checkout Seguro
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
-                  <CreditCard size={13} className="text-[#c89b3c]" /> Pix Instantâneo & Cartão
+                  <CreditCard size={13} className="text-[#c89b3c]" aria-hidden="true" /> Pix Instantâneo & Cartão
                 </span>
               </div>
             </div>

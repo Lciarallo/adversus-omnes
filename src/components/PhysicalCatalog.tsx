@@ -55,7 +55,7 @@ export const PhysicalCatalog: React.FC = () => {
       {/* Title & Editorial Intro */}
       <div className="border-b border-[#262936] pb-6 space-y-2">
         <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-          <BookMarked size={14} /> E-Commerce Cultural & Peças de Colecionador
+          <BookMarked size={14} aria-hidden="true" /> E-Commerce Cultural & Peças de Colecionador
         </div>
         <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white">
           Acervo Físico: Livros Usados, Raros e Esgotados
@@ -65,8 +65,8 @@ export const PhysicalCatalog: React.FC = () => {
         </p>
 
         {currentUser.activePlan && (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-emerald-950/70 border border-emerald-800/40 text-xs text-emerald-300">
-            <CheckCircle2 size={13} />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/70 border border-emerald-800/40 text-xs text-emerald-300">
+            <CheckCircle2 size={14} aria-hidden="true" />
             <span>
               Você possui <strong>{currentUser.activePlan}</strong> ativo: desconto automático de{' '}
               {currentUser.activePlan === 'Membro do Círculo' ? '20%' : '15%'} aplicado na sua sacola!
@@ -80,68 +80,82 @@ export const PhysicalCatalog: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <div className="relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" />
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 pointer-events-none" aria-hidden="true" />
             <input
               type="text"
+              aria-label="Buscar livros por título, autor ou assunto"
               placeholder="Buscar por título, autor ou assunto..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c]"
+              className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
             />
           </div>
 
           {/* Movement */}
-          <select
-            value={selectedMovement}
-            onChange={e => setSelectedMovement(e.target.value)}
-            className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c89b3c]"
-          >
-            <option value="all">Todos os Movimentos Políticos</option>
-            {movements.map(m => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
+          <div>
+            <select
+              aria-label="Filtrar por movimento político ou filosófico"
+              value={selectedMovement}
+              onChange={e => setSelectedMovement(e.target.value)}
+              className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            >
+              <option value="all">Todos os Movimentos Políticos</option>
+              {movements.map(m => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Period */}
-          <select
-            value={selectedPeriod}
-            onChange={e => setSelectedPeriod(e.target.value)}
-            className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c89b3c]"
-          >
-            <option value="all">Todos os Períodos Históricos</option>
-            {periods.map(p => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
+          <div>
+            <select
+              aria-label="Filtrar por período histórico"
+              value={selectedPeriod}
+              onChange={e => setSelectedPeriod(e.target.value)}
+              className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            >
+              <option value="all">Todos os Períodos Históricos</option>
+              {periods.map(p => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Condition */}
-          <select
-            value={selectedCondition}
-            onChange={e => setSelectedCondition(e.target.value)}
-            className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c89b3c]"
-          >
-            <option value="all">Todas as Condições</option>
-            {conditions.map(c => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <div>
+            <select
+              aria-label="Filtrar por condição de conservação da obra"
+              value={selectedCondition}
+              onChange={e => setSelectedCondition(e.target.value)}
+              className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            >
+              <option value="all">Todas as Condições</option>
+              {conditions.map(c => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Sorting options */}
-        <div className="flex items-center justify-between pt-2 border-t border-[#222532] text-xs text-stone-400">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#222532] text-xs text-stone-400">
           <span>{filteredItems.length} exemplar(es) encontrado(s)</span>
           <div className="flex items-center gap-2">
-            <span>Ordenar por:</span>
+            <label htmlFor="sort-physical" className="text-stone-400">
+              Ordenar por:
+            </label>
             <select
+              id="sort-physical"
+              aria-label="Ordenar livros físicos por critério"
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="bg-[#101217] border border-[#2e3343] rounded px-2 py-1 text-xs text-stone-200"
+              className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-1.5 text-xs text-stone-200 min-h-[40px]"
             >
               <option value="featured">Destaques da Curadoria</option>
               <option value="priceAsc">Menor Preço</option>
@@ -161,15 +175,17 @@ export const PhysicalCatalog: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-[#15171e] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
             >
               <div>
                 {/* Book Cover Image */}
                 <div className="relative h-72 bg-[#0c0d10] p-4 flex items-center justify-center overflow-hidden border-b border-[#20232e]">
                   <img
                     src={item.coverImage}
-                    alt={item.title}
-                    className="max-h-full max-w-[85%] object-cover rounded shadow-2xl transition duration-500 group-hover:scale-105 border border-[#353949]"
+                    alt={`Capa original da obra ${item.title}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="max-h-full max-w-[85%] object-cover rounded shadow-2xl border border-[#353949]"
                   />
 
                   {/* Condition badge */}
@@ -237,17 +253,21 @@ export const PhysicalCatalog: React.FC = () => {
 
                 {isSoldOut ? (
                   <button
+                    type="button"
                     disabled
-                    className="px-4 py-2 rounded bg-stone-800 text-stone-500 text-xs font-semibold cursor-not-allowed"
+                    aria-label="Exemplar esgotado"
+                    className="px-4 py-2.5 rounded-lg bg-stone-800 text-stone-500 text-xs font-semibold cursor-not-allowed min-h-[44px]"
                   >
                     Esgotado
                   </button>
                 ) : (
                   <button
+                    type="button"
                     onClick={() => addToCart(item)}
-                    className="px-4 py-2 rounded bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-[#c89b3c]/15"
+                    aria-label={`Comprar ${item.title}`}
+                    className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-[#c89b3c]/15 min-h-[44px]"
                   >
-                    <ShoppingBag size={14} />
+                    <ShoppingBag size={15} aria-hidden="true" />
                     <span>{inCart ? `Adicionado (${inCart.quantity})` : 'Comprar'}</span>
                   </button>
                 )}

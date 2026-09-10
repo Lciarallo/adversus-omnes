@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-serif: "Cormorant Garamond", "Spectral", Georgia, serif;
   --font-display: "Cinzel", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
-  --color-parchment: #f9f7f1;
-  --color-parchment-dark: #eee9dc;
-  --color-ink: #121316;
-  --color-ink-card: #191b20;
-  --color-ink-border: #2c2f38;
+  --font-sans: "Outfit", system-ui, sans-serif;
+  --color-parchment: #fbf9f2;
+  --color-parchment-dark: #eee8d8;
+  --color-ink: #101114;
+  --color-ink-surface: #15171f;
+  --color-ink-card: #1a1d26;
+  --color-ink-border: #282b38;
   --color-gold: #c89b3c;
-  --color-gold-light: #e0b355;
+  --color-gold-light: #dbaa42;
   --color-gold-dark: #966f21;
 }
 
@@ -26,6 +27,29 @@ h1, h2, h3, .font-serif-title {
 
 .font-cinzel {
   font-family: var(--font-display);
+}
+
+/* Accessibility: Consistent focus rings */
+*:focus-visible {
+  outline: 2px solid #c89b3c;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Custom refined scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #101114;
+}
+::-webkit-scrollbar-thumb {
+  background: #282b38;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c89b3c;
 }
 
 /* Watermark styles for secure reader */

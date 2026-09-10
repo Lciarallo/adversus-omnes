@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cinzel", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --color-parchment: #f9f7f1;
+  --color-parchment-dark: #eee9dc;
+  --color-ink: #121316;
+  --color-ink-card: #191b20;
+  --color-ink-border: #2c2f38;
+  --color-gold: #c89b3c;
+  --color-gold-light: #e0b355;
+  --color-gold-dark: #966f21;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #101114;
+  color: #e5e3dd;
+}
+
+h1, h2, h3, .font-serif-title {
+  font-family: var(--font-serif);
+}
+
+.font-cinzel {
+  font-family: var(--font-display);
+}
+
+/* Watermark styles for secure reader */
+.secure-watermark {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(200, 155, 60, 0.04),
+    rgba(200, 155, 60, 0.04) 120px,
+    transparent 120px,
+    transparent 240px
+  );
+}
+
+/* No select & protection */
+.user-select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

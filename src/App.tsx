@@ -103,9 +103,9 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#101114] text-[#e8e6e3] flex flex-col justify-between selection:bg-[#c89b3c] selection:text-black">
+    <div className="min-h-screen bg-[#101114] text-[#e8e6e3] flex flex-col justify-between selection:bg-[#c89b3c] selection:text-black w-full max-w-full overflow-x-clip">
       <Navbar />
-      <main className="flex-grow">{renderContent()}</main>
+      <main className="flex-grow w-full max-w-full overflow-x-clip">{renderContent()}</main>
       <Footer />
       <CartDrawer />
       <InfinitePayModal />

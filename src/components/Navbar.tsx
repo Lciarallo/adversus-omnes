@@ -40,8 +40,8 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-[#121316]/95 backdrop-blur-md border-b border-[#282b38] transition-all">
       {/* Top micro-bar with Role Switcher Demo notice */}
-      <div className="bg-[#161820] border-b border-[#222530] text-xs py-1 px-3 sm:px-8 flex items-center justify-between min-h-[48px]">
-        <div className="flex items-center gap-2 text-stone-400 min-w-0">
+      <div className="bg-[#161820] border-b border-[#222530] text-xs py-1 px-3 sm:px-8 flex items-center justify-between min-h-[44px] max-w-full overflow-hidden">
+        <div className="flex items-center gap-2 text-stone-400 min-w-0 overflow-hidden">
           <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true" />
           <span className="truncate">Ambiente de Testes</span>
           <span className="text-stone-600 hidden md:inline">|</span>
@@ -49,14 +49,14 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Interactive Role Switcher for instant testing */}
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             type="button"
             onClick={() => setRoleMenuOpen(!roleMenuOpen)}
             aria-haspopup="true"
             aria-expanded={roleMenuOpen}
             aria-label={`Perfil de teste atual: ${currentUser.role}. Clique para alternar.`}
-            className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#20232d] hover:bg-[#2a2e3b] border border-[#343948] text-stone-200 transition text-xs min-h-[44px] whitespace-nowrap shrink-0 ml-2"
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded bg-[#20232d] hover:bg-[#2a2e3b] border border-[#343948] text-stone-200 transition text-xs min-h-[44px] whitespace-nowrap shrink-0 ml-2"
           >
             <span className="text-stone-400">Perfil:</span>
             <span className="font-semibold text-[#c89b3c] capitalize">
@@ -72,7 +72,7 @@ export const Navbar: React.FC = () => {
           {roleMenuOpen && (
             <div
               role="menu"
-              className="absolute right-0 mt-1 w-64 bg-[#181a22] border border-[#323646] rounded-lg shadow-2xl py-1.5 z-50 text-xs"
+              className="absolute right-0 mt-1 w-64 max-w-[calc(100vw-1.5rem)] bg-[#181a22] border border-[#323646] rounded-lg shadow-2xl py-1.5 z-50 text-xs"
             >
               <div className="px-3 py-1.5 text-xs uppercase font-bold tracking-wider text-stone-400 border-b border-[#242735]">
                 Simular Perfil de Acesso:
@@ -136,16 +136,16 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-2">
           {/* Brand Logo as semantic button */}
           <button
             type="button"
             onClick={() => handleNav('home')}
             aria-label="Contra Homines - Ir para a página inicial"
-            className="flex items-center gap-3 text-left group select-none min-h-[44px]"
+            className="flex items-center gap-2 sm:gap-3 text-left group select-none min-h-[44px] min-w-0 shrink"
           >
-            <div className="w-11 h-11 rounded-sm bg-gradient-to-br from-[#c89b3c] to-[#966f21] p-[1px] shadow-lg shadow-[#c89b3c]/10 overflow-hidden shrink-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-gradient-to-br from-[#c89b3c] to-[#966f21] p-[1px] shadow-lg shadow-[#c89b3c]/10 overflow-hidden shrink-0">
               <div className="w-full h-full bg-[#121316] flex items-center justify-center group-hover:opacity-90 transition">
                 <img
                   src="/logo.jpg"
@@ -155,7 +155,7 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
             <div className="min-w-0">
-              <div className="font-cinzel text-base sm:text-xl font-bold tracking-wider text-stone-100 group-hover:text-[#c89b3c] transition whitespace-nowrap">
+              <div className="font-cinzel text-sm sm:text-xl font-bold tracking-wide sm:tracking-wider text-stone-100 group-hover:text-[#c89b3c] transition truncate">
                 CONTRA HOMINES
               </div>
               {/* A assinatura não cabe ao lado dos controles no celular: era cortada
@@ -248,14 +248,14 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Action Icons (Cart, Account, Admin Dashboard) */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 shrink-0">
             {/* Admin Dashboard button */}
             {currentUser.role === 'admin' ? (
               <button
                 type="button"
                 onClick={() => handleNav('admin')}
                 aria-label="Acessar Painel do Administrador"
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider border transition min-h-[44px] ${
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-semibold uppercase tracking-wider border transition min-h-[44px] ${
                   activeTab === 'admin'
                     ? 'bg-amber-500 text-black border-amber-400'
                     : 'bg-amber-500/10 text-amber-300 border-amber-500/40 hover:bg-amber-500/20'
@@ -281,13 +281,13 @@ export const Navbar: React.FC = () => {
               type="button"
               onClick={() => handleNav('minha-conta')}
               aria-label={currentUser.role === 'subscriber' ? 'Portal do Assinante' : 'Minha Conta'}
-              className={`p-2.5 rounded-lg border transition flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center ${
+              className={`p-2 sm:p-2.5 rounded-lg border transition flex items-center gap-2 min-h-[44px] min-w-[40px] sm:min-w-[44px] justify-center ${
                 activeTab === 'minha-conta'
                   ? 'border-[#c89b3c] text-[#c89b3c] bg-[#22242e]'
                   : 'border-[#2d303b] text-stone-300 hover:text-white hover:bg-[#1b1e26]'
               }`}
             >
-              <User size={19} aria-hidden="true" />
+              <User size={18} aria-hidden="true" />
               <span className="hidden xl:inline text-xs font-medium">
                 {currentUser.role === 'subscriber' ? 'Portal do Assinante' : 'Minha Conta'}
               </span>
@@ -298,9 +298,9 @@ export const Navbar: React.FC = () => {
               type="button"
               onClick={() => setIsCartOpen(true)}
               aria-label={`Abrir sacola de compras com ${totalCartCount} item(ns)`}
-              className="relative p-2.5 rounded-lg border border-[#353945] bg-[#181a22] hover:border-[#c89b3c] text-stone-200 transition min-h-[44px] min-w-[44px] flex items-center justify-center group"
+              className="relative p-2 sm:p-2.5 rounded-lg border border-[#353945] bg-[#181a22] hover:border-[#c89b3c] text-stone-200 transition min-h-[44px] min-w-[40px] sm:min-w-[44px] flex items-center justify-center group"
             >
-              <ShoppingBag size={20} className="group-hover:text-[#c89b3c] transition" aria-hidden="true" />
+              <ShoppingBag size={18} className="group-hover:text-[#c89b3c] transition" aria-hidden="true" />
               {totalCartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#c89b3c] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg transition-transform duration-200 scale-100">
                   {totalCartCount}
@@ -314,9 +314,9 @@ export const Navbar: React.FC = () => {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
               aria-expanded={mobileMenuOpen}
-              className="md:hidden p-2.5 rounded-lg text-stone-300 hover:text-white hover:bg-[#1d2028] min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="md:hidden p-2 sm:p-2.5 rounded-lg text-stone-300 hover:text-white hover:bg-[#1d2028] min-h-[44px] min-w-[40px] sm:min-w-[44px] flex items-center justify-center"
             >
-              {mobileMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
+              {mobileMenuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
             </button>
           </div>
         </div>

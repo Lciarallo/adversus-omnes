@@ -508,7 +508,7 @@ export const INITIAL_INFINITEPAY_CONFIG: InfinitePayConfig = {
   clientSecret: 'inf_sec_8921b7c4a10',
   walletId: 'inf_wallet_contas_contrahomines_br',
   mode: 'sandbox',
-  webhookUrl: 'https://biblioteca-contraste.luizeduardociarallo.workers.dev/api/webhooks/infinitepay',
+  webhookUrl: 'https://contra-homines.luizeduardociarallo.workers.dev/api/webhooks/infinitepay',
   enabled: true
 };
 

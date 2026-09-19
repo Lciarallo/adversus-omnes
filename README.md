@@ -1,4 +1,4 @@
-# 📚 Biblioteca Contraste
+# 🏛️ CONTRA HOMINES — Bibliotheca et Archivum
 
 > **"Livros, documentos e ideias em perspectiva."**
 
@@ -6,10 +6,10 @@ Plataforma cultural integrando preservação de acervo histórico, acervo digita
 
 ---
 
-## 🌐 Links do Projeto
+## 🌐 Links Oficiais do Projeto
 
-* **Link de Testes (Cloudflare):** [https://biblioteca-contraste.luizeduardociarallo.workers.dev](https://biblioteca-contraste.luizeduardociarallo.workers.dev)
-* **Repositório GitHub:** [https://github.com/Lciarallo/biblioteca-contraste](https://github.com/Lciarallo/biblioteca-contraste)
+* **Link de Produção & Testes (Cloudflare Workers):** [https://contra-homines.luizeduardociarallo.workers.dev](https://contra-homines.luizeduardociarallo.workers.dev)
+* **Repositório GitHub Oficial:** [https://github.com/Lciarallo/contra-homines](https://github.com/Lciarallo/contra-homines)
 
 ---
 
@@ -62,10 +62,10 @@ Plataforma cultural integrando preservação de acervo histórico, acervo digita
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/Lciarallo/biblioteca-contraste.git
+git clone https://github.com/Lciarallo/contra-homines.git
 
 # Acessar a pasta
-cd biblioteca-contraste
+cd contra-homines
 
 # Instalar dependências
 npm install

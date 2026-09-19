@@ -70,3 +70,625 @@ h1, h2, h3, .font-serif-title {
   -ms-user-select: none;
   user-select: none;
 }
+
+
+/* ================================================================== *
+ * Frontispício — a abertura cinematográfica da home.                  *
+ *                                                                     *
+ * Padrão (sem scroll-timeline ou com movimento reduzido): uma página  *
+ * de rosto inteira, composta e legível em uma dobra.                  *
+ * Com suporte: a mesma página se imprime, os estratos do acervo       *
+ * atravessam o fundo e o acervo sobe por cima dela como uma cortina.  *
+ *                                                                     *
+ * Curso do sticky = --frontis-h menos uma dobra. Todos os intervalos  *
+ * de rolagem abaixo cabem dentro desse curso.                         *
+ * ================================================================== */
+
+:root {
+  /* Altura real do cabeçalho sticky; HeroOpening corrige no primeiro quadro. */
+  --frontis-nav: 8.25rem;
+  /* Altura total da abertura e o curso do sticky dentro dela. A cortina é
+     irmã do frontispício, então estes valores moram na raiz para alcançá-la. */
+  --frontis-h: 188svh;
+  --frontis-travel: 88svh;
+}
+
+.frontis {
+  position: relative;
+  min-height: calc(100svh - var(--frontis-nav));
+  background: #0d0e12;
+}
+
+.frontis-stage {
+  position: sticky;
+  top: var(--frontis-nav);
+  height: calc(100svh - var(--frontis-nav));
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  align-items: center;
+  padding: 2.25rem 1.25rem 1.75rem;
+  isolation: isolate;
+}
+
+/* ---- Camadas de fundo ---- */
+
+.frontis-wash,
+.frontis-strata,
+.frontis-dust,
+.frontis-grain,
+.frontis-vignette,
+.frontis-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.frontis-wash {
+  background:
+    radial-gradient(62% 48% at 50% 34%, rgba(200, 155, 60, 0.16), transparent 70%),
+    radial-gradient(90% 70% at 50% 108%, rgba(29, 33, 46, 0.9), transparent 72%);
+  opacity: 0.55;
+}
+
+.frontis-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+}
+
+.frontis-vignette {
+  background:
+    radial-gradient(74% 62% at 50% 46%, transparent 42%, rgba(8, 9, 12, 0.72) 100%),
+    linear-gradient(to bottom, rgba(8, 9, 12, 0.6), transparent 20%, transparent 72%, rgba(8, 9, 12, 0.88));
+}
+
+.frontis-dust {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- Estratos: o vocabulário real do acervo, em profundidades ---- */
+
+.frontis-stratum {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform: translate3d(var(--start, 0%), 0, 0);
+  will-change: transform;
+}
+
+.frontis-stratum-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.frontis-stratum .frontis-sep {
+  display: inline-block;
+  width: 0.3em;
+  height: 0.3em;
+  margin: 0 0.8em;
+  background: currentColor;
+  transform: rotate(45deg);
+  opacity: 0.7;
+}
+
+.frontis-stratum--names {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2.3vw, 2rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d8d3c8;
+  opacity: 0.12;
+  filter: blur(4px);
+}
+
+.frontis-stratum--movements {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  color: #c89b3c;
+  opacity: 0.11;
+  filter: blur(10px);
+}
+
+.frontis-stratum--works {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3vw, 2.6rem);
+  color: #d8d3c8;
+  opacity: 0.13;
+  filter: blur(5px);
+}
+
+.frontis-stratum--deep {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c89b3c;
+  opacity: 0.08;
+  filter: blur(16px);
+}
+
+/* ---- Moldura de filete duplo: ecoa a página do leitor protegido ---- */
+
+.frontis-frame {
+  inset: clamp(0.7rem, 1.9vw, 1.6rem);
+}
+
+.frontis-frame-rule {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(200, 155, 60, 0.28);
+}
+
+.frontis-frame-rule--inner {
+  inset: 6px;
+  border-color: rgba(200, 155, 60, 0.12);
+}
+
+/* ---- Núcleo: a página de rosto ---- */
+
+.frontis-core {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 54rem;
+  will-change: transform, opacity, filter;
+}
+
+/* Campo limpo sob a tipografia: os estratos passam atrás, nunca dentro. */
+.frontis-core::before {
+  content: '';
+  position: absolute;
+  inset: -14% -22%;
+  z-index: -1;
+  background: radial-gradient(
+    58% 56% at 50% 50%,
+    rgba(13, 14, 18, 0.94) 0%,
+    rgba(13, 14, 18, 0.8) 46%,
+    transparent 78%
+  );
+  pointer-events: none;
+}
+
+.frontis-emblem {
+  width: 5.25rem;
+  height: 5.25rem;
+  padding: 2px;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #dbaa42, #7d5c19 52%, #c89b3c);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.frontis-emblem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: calc(1rem - 3px);
+  background: #121316;
+}
+
+.frontis-title {
+  margin-top: 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.35rem, 9.6vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  color: #f4f1ea;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08),
+    0 -1px 1px rgba(0, 0, 0, 0.7),
+    0 18px 42px rgba(0, 0, 0, 0.55);
+}
+
+.frontis-title span {
+  display: block;
+}
+
+.frontis-title-gold {
+  color: #c89b3c;
+}
+
+.frontis-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: min(22rem, 70%);
+  margin-top: 1.35rem;
+}
+
+.frontis-rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(200, 155, 60, 0.75), transparent);
+}
+
+.frontis-rule-mark {
+  width: 0.4rem;
+  height: 0.4rem;
+  background: #c89b3c;
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px rgba(200, 155, 60, 0.5);
+}
+
+.frontis-latin {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  color: #c89b3c;
+}
+
+.frontis-tagline {
+  margin-top: 1.35rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.9vw, 1.85rem);
+  line-height: 1.35;
+  color: #e7e3da;
+  text-wrap: balance;
+}
+
+.frontis-lede {
+  margin-top: 1rem;
+  max-width: 58ch;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: #a9a49b;
+  text-wrap: pretty;
+}
+
+.frontis-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.9rem;
+}
+
+.frontis-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.8rem 1.35rem;
+  border-radius: 0.55rem;
+  border: 1px solid transparent;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease;
+}
+
+.frontis-cta:active {
+  transform: translateY(1px);
+}
+
+.frontis-cta--gold {
+  background: linear-gradient(to right, #c89b3c, #a87e28);
+  color: #0d0e12;
+  box-shadow: 0 14px 30px -14px rgba(200, 155, 60, 0.75);
+}
+
+.frontis-cta--gold:hover {
+  background: linear-gradient(to right, #dbaa42, #b88c32);
+  box-shadow: 0 18px 38px -14px rgba(200, 155, 60, 0.85);
+}
+
+.frontis-cta--ghost {
+  background: rgba(26, 29, 38, 0.72);
+  border-color: #34384a;
+  color: #e2ded6;
+  backdrop-filter: blur(6px);
+}
+
+.frontis-cta--ghost:hover {
+  background: rgba(37, 41, 54, 0.9);
+  border-color: #454a5f;
+  color: #ffffff;
+}
+
+.frontis-cta--quiet {
+  background: rgba(20, 22, 29, 0.6);
+  border-color: rgba(150, 111, 33, 0.55);
+  color: #c89b3c;
+  backdrop-filter: blur(6px);
+}
+
+.frontis-cta--quiet:hover {
+  background: rgba(31, 34, 45, 0.85);
+  border-color: rgba(200, 155, 60, 0.8);
+  color: #dbaa42;
+}
+
+/* ---- Rodapé da página de rosto: o que há dentro do acervo ---- */
+
+.frontis-foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding-top: 1.5rem;
+}
+
+.frontis-ledger {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9b968e;
+}
+
+.frontis-ledger .frontis-sep {
+  display: inline-block;
+  width: 0.24rem;
+  height: 0.24rem;
+  margin: 0 0.75rem;
+  background: #c89b3c;
+  transform: rotate(45deg);
+}
+
+.frontis-cue {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(to bottom, rgba(200, 155, 60, 0.45), transparent);
+}
+
+.frontis-cue-dot {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 3px;
+  height: 3px;
+  margin-left: -1px;
+  border-radius: 50%;
+  background: #c89b3c;
+  box-shadow: 0 0 8px rgba(200, 155, 60, 0.9);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .frontis-cue-dot {
+    animation: frontis-cue-fall 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+}
+
+@keyframes frontis-cue-fall {
+  0% { transform: translateY(0); opacity: 0; }
+  22% { opacity: 1; }
+  78% { opacity: 1; }
+  100% { transform: translateY(2.2rem); opacity: 0; }
+}
+
+/* ---- A cortina: o acervo sobe por cima da página de rosto ---- */
+
+.frontis-curtain {
+  position: relative;
+  z-index: 1;
+  background: #101114;
+  border-top: 1px solid #242735;
+  padding-top: 4.5rem;
+}
+
+/* ---- A sequência: só onde o navegador sabe animar por rolagem ---- */
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .frontis {
+      height: var(--frontis-h);
+    }
+
+    .frontis-curtain {
+      /* Sobe exatamente uma dobra: encosta no rodapé da tela em repouso e
+         cobre o palco no mesmo ponto em que a composição termina de recuar. */
+      margin-top: calc((var(--frontis-travel) + var(--frontis-nav)) * -1);
+      box-shadow: 0 -40px 70px -24px rgba(0, 0, 0, 0.95);
+    }
+
+    .frontis-wash,
+    .frontis-stratum,
+    .frontis-frame-rule,
+    .frontis-core,
+    .frontis-foot {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+
+    .frontis-wash {
+      animation-name: frontis-wash;
+      animation-range: 0 88svh;
+    }
+
+    .frontis-stratum {
+      animation-name: frontis-drift;
+      animation-range: 0 88svh;
+    }
+
+    .frontis-frame-rule--outer {
+      animation-name: frontis-print;
+      animation-range: 0 24svh;
+    }
+
+    .frontis-frame-rule--inner {
+      animation-name: frontis-print;
+      animation-range: 4svh 32svh;
+    }
+
+    .frontis-core {
+      animation-name: frontis-recede;
+      animation-range: 44svh 86svh;
+    }
+
+    .frontis-foot {
+      animation-name: frontis-dismiss;
+      animation-range: 3svh 22svh;
+    }
+  }
+}
+
+@keyframes frontis-wash {
+  from { opacity: 0.32; transform: translate3d(0, 3%, 0) scale(1.02); }
+  52% { opacity: 0.82; }
+  to { opacity: 0.2; transform: translate3d(0, -7%, 0) scale(1.14); }
+}
+
+@keyframes frontis-drift {
+  from { transform: translate3d(var(--start, 0%), 0, 0); }
+  to { transform: translate3d(calc(var(--start, 0%) + var(--drift, -10%)), 0, 0); }
+}
+
+@keyframes frontis-print {
+  from { transform: scale(1.028); opacity: 0.5; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes frontis-recede {
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: 1; filter: blur(0); }
+  to { transform: translate3d(0, -3rem, 0) scale(0.95); opacity: 0; filter: blur(7px); }
+}
+
+@keyframes frontis-dismiss {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(1rem); }
+}
+
+/* ---- Telas estreitas: a mesma página de rosto, em uma dobra ---- */
+
+@media (max-width: 640px) {
+  :root {
+    --frontis-h: 152svh;
+    --frontis-travel: 52svh;
+  }
+
+  .frontis-stage {
+    padding: 1.5rem 1rem 1.25rem;
+  }
+
+  .frontis-emblem {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.85rem;
+  }
+
+  .frontis-emblem img {
+    border-radius: calc(0.85rem - 3px);
+  }
+
+  .frontis-title {
+    margin-top: 1.1rem;
+  }
+
+  .frontis-rule {
+    margin-top: 1.1rem;
+    width: min(16rem, 76%);
+  }
+
+  .frontis-latin {
+    margin-top: 0.85rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+  }
+
+  .frontis-tagline {
+    margin-top: 1.05rem;
+  }
+
+  .frontis-lede {
+    margin-top: 0.85rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .frontis-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+  }
+
+  .frontis-cta {
+    width: 100%;
+    padding: 0.7rem 1rem;
+  }
+
+  .frontis-foot {
+    gap: 0.6rem;
+    padding-top: 1rem;
+  }
+
+  .frontis-ledger {
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+  }
+
+  .frontis-ledger .frontis-sep {
+    margin: 0 0.5rem;
+  }
+
+  .frontis-cue {
+    height: 1.75rem;
+  }
+
+  .frontis-curtain {
+    padding-top: 3rem;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .frontis-wash,
+      .frontis-stratum {
+        animation-range: 0 52svh;
+      }
+
+      .frontis-frame-rule--outer {
+        animation-range: 0 16svh;
+      }
+
+      .frontis-frame-rule--inner {
+        animation-range: 3svh 21svh;
+      }
+
+      .frontis-core {
+        animation-range: 22svh 48svh;
+      }
+
+      .frontis-foot {
+        animation-range: 2svh 14svh;
+      }
+    }
+  }
+}
+
+/* Telas muito baixas: o rodapé cede espaço à página de rosto. */
+@media (max-height: 620px) {
+  .frontis-foot {
+    display: none;
+  }
+}

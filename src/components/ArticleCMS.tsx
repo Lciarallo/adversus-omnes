@@ -54,7 +54,7 @@ export const ArticleCMS: React.FC = () => {
     setFormData({
       title: '',
       subtitle: '',
-      authorName: currentUser.name || 'Redação Contraste',
+      authorName: currentUser.name || 'Redação Contra Homines',
       category: 'Filosofia Política',
       readTime: '7 min',
       tags: 'Ensaio, História, Política',
@@ -219,7 +219,7 @@ export const ArticleCMS: React.FC = () => {
                 Artigos Autorais e Ensaios
               </h1>
               <p className="text-sm text-stone-400 font-serif italic mt-1 max-w-2xl">
-                Reflexões aprofundadas, resenhas críticas e pesquisas arquivísticas produzidas pelo corpo editorial e pesquisadores convidados da Biblioteca Contraste.
+                Reflexões aprofundadas, resenhas críticas e pesquisas arquivísticas produzidas pelo corpo editorial e pesquisadores convidados de Contra Homines.
               </p>
             </div>
 

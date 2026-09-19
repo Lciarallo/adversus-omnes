@@ -38,13 +38,25 @@ export const HomePage: React.FC = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[#c89b3c]/5 blur-[120px] pointer-events-none" aria-hidden="true" />
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6 relative z-10">
+          <div className="flex justify-center mb-2">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-[#c89b3c] via-[#ffe5a3] to-[#966f21] p-[2px] shadow-2xl shadow-[#c89b3c]/20">
+              <div className="w-full h-full bg-[#121316] rounded-[14px] overflow-hidden flex items-center justify-center">
+                <img
+                  src="/logo.jpg"
+                  alt="Contra Homines - Emblema Oficial"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1b1e27] border border-[#313647] text-xs text-[#c89b3c] font-cinzel font-medium tracking-wider shadow-sm">
             <Sparkles size={13} aria-hidden="true" />
-            <span>Preservação da Memória & Pensamento Crítico</span>
+            <span>Bibliotheca et Archivum • Preservação da Memória</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-cinzel font-bold text-white tracking-tight leading-tight">
-            BIBLIOTECA <span className="text-[#c89b3c]">CONTRASTE</span>
+            CONTRA <span className="text-[#c89b3c]">HOMINES</span>
           </h1>
 
           <p className="text-lg sm:text-2xl text-stone-300 font-serif italic max-w-2xl mx-auto leading-relaxed">

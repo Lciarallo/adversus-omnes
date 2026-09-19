@@ -15,7 +15,7 @@ export const SubscriptionPlans: React.FC = () => {
           <Sparkles size={13} /> Clube do Livro & Preservação Histórica
         </div>
         <h1 className="text-3xl sm:text-5xl font-cinzel font-bold text-white tracking-wide">
-          Planos de Assinatura Contraste
+          Planos de Assinatura Contra Homines
         </h1>
         <p className="text-stone-400 font-serif text-base sm:text-lg italic leading-relaxed">
           Apoie a digitalização de manuscritos raros, acesse o acervo digital protegido sem restrições e desfrute de vantagens exclusivas no acervo físico com envio para todo o Brasil.

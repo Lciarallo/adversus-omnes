@@ -391,7 +391,7 @@ export const AuthorManager: React.FC = () => {
 
             <div>
               <h3 className="text-xs uppercase tracking-wider font-semibold text-stone-400 mb-2">
-                Obras Registradas na Biblioteca Contraste
+                Obras Registradas em Contra Homines
               </h3>
               <div className="space-y-2">
                 {viewAuthor.works.map((w, idx) => {

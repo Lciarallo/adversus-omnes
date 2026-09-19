@@ -116,7 +116,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     ctx.font = 'italic 12px "Cormorant Garamond", Georgia, serif';
     ctx.textAlign = 'center';
     ctx.fillText(
-      `BIBLIOTECA CONTRASTE — ACERVO HISTÓRICO PRESERVADO`,
+      `CONTRA HOMINES — BIBLIOTHECA ET ARCHIVUM`,
       400,
       60
     );
@@ -175,7 +175,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     ctx.font = '11px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(
-      `Página ${currentPage} de ${totalPages} • Ano: ${item.year} • Proveniência: ${item.publisher || 'Arquivo Contraste'}`,
+      `Página ${currentPage} de ${totalPages} • Ano: ${item.year} • Proveniência: ${item.publisher || 'Arquivo Contra Homines'}`,
       400,
       1030
     );
@@ -186,7 +186,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
       ctx.rotate((-25 * Math.PI) / 180);
       ctx.fillStyle = 'rgba(180, 140, 50, 0.09)';
       ctx.font = 'bold 16px sans-serif';
-      const watermarkText = `CONTRASTE • ${currentUser.name.toUpperCase()} (${currentUser.email}) • USO EXCLUSIVO • CÓPIA PROIBIDA`;
+      const watermarkText = `CONTRA HOMINES • ${currentUser.name.toUpperCase()} (${currentUser.email}) • USO EXCLUSIVO • CÓPIA PROIBIDA`;
       for (let wx = -400; wx < 1200; wx += 450) {
         for (let wy = -200; wy < 1400; wy += 140) {
           ctx.fillText(watermarkText, wx, wy);
@@ -284,7 +284,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                 Material Restrito a Membros Assinantes
               </h2>
               <p className="text-stone-300 text-sm leading-relaxed">
-                Este fac-símile, ata inédita e seus manuscritos associados fazem parte da coleção reservada da <strong>Biblioteca Contraste</strong>. Para consultar o documento completo com leitor de alta definição protegido, torne-se um membro assinante.
+                Este fac-símile, ata inédita e seus manuscritos associados fazem parte da coleção reservada de <strong>Contra Homines</strong>. Para consultar o documento completo com leitor de alta definição protegido, torne-se um membro assinante.
               </p>
             </div>
 

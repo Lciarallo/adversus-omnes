@@ -62,7 +62,7 @@ export const InfinitePayModal: React.FC = () => {
 
   const totalToPay = checkoutType === 'subscription' && checkoutPlan ? checkoutPlan.priceMonthly : cartTotal;
 
-  const mockPixPayload = `00020126580014br.gov.bcb.pix0136${infinitePayConfig.walletId}520400005303986540${totalToPay.toFixed(2)}5802BR5920BIBLIOTECA CONTRASTE6009SAO PAULO62070503***6304E8A2`;
+  const mockPixPayload = `00020126580014br.gov.bcb.pix0136${infinitePayConfig.walletId}520400005303986540${totalToPay.toFixed(2)}5802BR5914CONTRA HOMINES6009SAO PAULO62070503***6304E8A2`;
 
   const handleCopyPix = () => {
     navigator.clipboard.writeText(mockPixPayload);

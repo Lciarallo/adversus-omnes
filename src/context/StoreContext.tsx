@@ -124,7 +124,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       : {
           id: 'user-default',
           name: 'Visitante da Biblioteca',
-          email: 'leitor@bibliotecacontraste.com.br',
+          email: 'leitor@contrahomines.com.br',
           role: 'visitor' as UserRole,
           purchasedItems: ['cat-1']
         };
@@ -222,8 +222,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (role === 'admin') {
       setCurrentUser({
         id: 'admin-master',
-        name: 'Administrador Contraste',
-        email: 'diretoria@bibliotecacontraste.com.br',
+        name: 'Administrador Contra Homines',
+        email: 'diretoria@contrahomines.com.br',
         role: 'admin',
         activePlan: 'Membro do Círculo',
         purchasedItems: ['cat-1', 'cat-2', 'cat-3', 'cat-4', 'cat-5']
@@ -242,7 +242,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setCurrentUser({
         id: 'user-visitor',
         name: 'Visitante da Biblioteca',
-        email: 'leitor@bibliotecacontraste.com.br',
+        email: 'leitor@contrahomines.com.br',
         role: 'visitor',
         purchasedItems: []
       });

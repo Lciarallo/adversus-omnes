@@ -142,17 +142,21 @@ export const Navbar: React.FC = () => {
           <button
             type="button"
             onClick={() => handleNav('home')}
-            aria-label="Biblioteca Contraste - Ir para a página inicial"
+            aria-label="Contra Homines - Ir para a página inicial"
             className="flex items-center gap-3 text-left group select-none min-h-[44px]"
           >
-            <div className="w-11 h-11 rounded-sm bg-gradient-to-br from-[#c89b3c] to-[#966f21] p-[1px] shadow-lg shadow-[#c89b3c]/10">
-              <div className="w-full h-full bg-[#121316] flex items-center justify-center group-hover:bg-[#1a1c22] transition">
-                <BookOpen className="text-[#c89b3c] w-5 h-5" aria-hidden="true" />
+            <div className="w-11 h-11 rounded-sm bg-gradient-to-br from-[#c89b3c] to-[#966f21] p-[1px] shadow-lg shadow-[#c89b3c]/10 overflow-hidden shrink-0">
+              <div className="w-full h-full bg-[#121316] flex items-center justify-center group-hover:opacity-90 transition">
+                <img
+                  src="/logo.jpg"
+                  alt="Contra Homines"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
             <div>
               <div className="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-stone-100 group-hover:text-[#c89b3c] transition">
-                BIBLIOTECA CONTRASTE
+                CONTRA HOMINES
               </div>
               <div className="font-serif text-xs text-stone-400 italic tracking-wide">
                 Livros, documentos e ideias em perspectiva

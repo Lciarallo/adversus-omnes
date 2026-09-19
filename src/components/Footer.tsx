@@ -46,14 +46,20 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Brand column */}
         <div className="space-y-4 md:col-span-1">
-          <div className="flex items-center gap-2">
-            <BookOpen className="text-[#c89b3c] w-5 h-5" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-gradient-to-br from-[#c89b3c] to-[#966f21] p-[1px] shadow-sm overflow-hidden shrink-0">
+              <img
+                src="/logo.jpg"
+                alt="Contra Homines"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <span className="font-cinzel font-bold text-white tracking-wider text-base">
-              BIBLIOTECA CONTRASTE
+              CONTRA HOMINES
             </span>
           </div>
           <p className="text-xs leading-relaxed text-stone-400 font-serif italic">
-            "Livros, documentos e ideias em perspectiva."
+            "Bibliotheca et Archivum — Livros, documentos e ideias em perspectiva."
           </p>
           <p className="text-xs leading-relaxed text-stone-500">
             Uma ponte viva entre o acervo físico de obras raras, a documentação histórica esquecida e a produção de ensaios contemporâneos sobre economia, política e filosofia.
@@ -152,7 +158,7 @@ export const Footer: React.FC = () => {
 
       {/* Copyright */}
       <div className="border-t border-[#1a1c24] py-4 bg-[#0a0b0d] text-center text-xs text-stone-600">
-        <p>© 2026 Biblioteca Contraste. Todos os direitos reservados. Preservação cultural, livros físicos e acervo digital.</p>
+        <p>© 2026 Contra Homines (Bibliotheca et Archivum). Todos os direitos reservados. Preservação cultural, livros físicos e acervo digital.</p>
       </div>
     </footer>
   );

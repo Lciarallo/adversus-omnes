@@ -11,9 +11,6 @@ export const SubscriptionPlans: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-700/50 text-xs font-mono text-[#c89b3c]">
-          <Sparkles size={13} /> Clube do Livro & Preservação Histórica
-        </div>
         <h1 className="text-3xl sm:text-5xl font-cinzel font-bold text-white tracking-wide">
           Planos de Assinatura Contra Homines
         </h1>
@@ -72,7 +69,7 @@ export const SubscriptionPlans: React.FC = () => {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#c89b3c]">
+                  <span className="text-xs font-sans font-semibold uppercase tracking-wider text-[#c89b3c]">
                     {plan.badge}
                   </span>
                   {isCurrentActive && (

@@ -54,10 +54,7 @@ export const PhysicalCatalog: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Title & Editorial Intro */}
       <div className="border-b border-[#262936] pb-6 space-y-2">
-        <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-          <BookMarked size={14} aria-hidden="true" /> E-Commerce Cultural & Peças de Colecionador
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white">
+        <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
           Acervo Físico: Livros Usados, Raros e Esgotados
         </h1>
         <p className="text-stone-400 font-serif italic text-sm sm:text-base max-w-3xl leading-relaxed">

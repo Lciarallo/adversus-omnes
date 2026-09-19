@@ -31,6 +31,15 @@ body {
   font-family: var(--font-sans);
   background-color: #101114;
   color: #e5e3dd;
+  caret-color: #c89b3c;
+  text-underline-offset: 3px;
+}
+
+/* Numerals in tabular data and monetary values */
+.font-mono,
+table,
+.tabular-nums {
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 h1, h2, h3, .font-serif-title {

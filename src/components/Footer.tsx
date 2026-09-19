@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
 
         {/* Acervo & Catálogo */}
         <div>
-          <h5 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-[#c89b3c] pl-2">
+          <h5 className="text-[#c89b3c] font-cinzel font-semibold text-xs uppercase tracking-widest mb-4">
             Explorar Acervo
           </h5>
           <ul className="space-y-0.5 text-xs">
@@ -102,7 +102,7 @@ export const Footer: React.FC = () => {
 
         {/* Editorial & Assinaturas */}
         <div>
-          <h5 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-[#c89b3c] pl-2">
+          <h5 className="text-[#c89b3c] font-cinzel font-semibold text-xs uppercase tracking-widest mb-4">
             Editorial & Planos
           </h5>
           <ul className="space-y-0.5 text-xs">
@@ -131,7 +131,7 @@ export const Footer: React.FC = () => {
 
         {/* Newsletter & Boletim */}
         <div>
-          <h5 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-[#c89b3c] pl-2">
+          <h5 className="text-[#c89b3c] font-cinzel font-semibold text-xs uppercase tracking-widest mb-4">
             Boletim Bibliófilo
           </h5>
           <p className="text-xs text-stone-400 mb-3">

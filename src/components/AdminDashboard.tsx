@@ -169,14 +169,11 @@ export const AdminDashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#262a37] pb-6">
-        <div>
-          <div className="flex items-center gap-2 text-amber-400 text-xs uppercase tracking-widest font-mono">
-            <Shield size={14} aria-hidden="true" /> Painel de Controle e Governança Geral
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-1">
+        <div className="space-y-1.5">
+          <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
             Dashboard Administrativo
           </h1>
-          <p className="text-stone-400 font-serif italic text-sm mt-1">
+          <p className="text-stone-400 font-serif italic text-sm max-w-2xl leading-relaxed">
             Monitoramento financeiro, estoque de livros raros, gestão de planos e configuração do gateway InfinitePay.
           </p>
         </div>

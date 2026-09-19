@@ -145,14 +145,11 @@ export const AuthorManager: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#252834] pb-6">
-        <div>
-          <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-            <Compass size={14} aria-hidden="true" /> Pensadores, Teóricos e Escritores
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-1">
+        <div className="space-y-1.5">
+          <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
             Autores e suas Obras
           </h1>
-          <p className="text-sm text-stone-400 font-serif italic mt-1 max-w-2xl">
+          <p className="text-sm text-stone-400 font-serif italic max-w-2xl leading-relaxed">
             Catálogo biobibliográfico completo de pensadores políticos, filósofos, sociólogos e romancistas que moldaram o debate de ideias ao longo dos séculos.
           </p>
         </div>

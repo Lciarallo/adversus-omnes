@@ -34,14 +34,11 @@ export const HomePage: React.FC = () => {
         {/* Section 1: Rare Physical Books */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
-            <div>
-              <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-                <BookMarked size={14} aria-hidden="true" /> Colecionismo & Bibliófilia
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white mt-1">
+            <div className="space-y-1.5">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Raridades do Acervo Físico
               </h2>
-              <p className="text-xs text-stone-400 font-serif italic mt-0.5">
+              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
                 Primeiras edições comemorativas, encadernações em meio-couro e volumes com anotações marginais de época.
               </p>
             </div>
@@ -52,10 +49,10 @@ export const HomePage: React.FC = () => {
                 setActiveTab('fisico');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:underline font-semibold flex items-center gap-1 shrink-0 min-h-[44px]"
+              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todo o catálogo físico</span>
-              <ArrowRight size={14} aria-hidden="true" />
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </button>
           </div>
 
@@ -117,14 +114,11 @@ export const HomePage: React.FC = () => {
         {/* Section 2: Protected Online Documents */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
-            <div>
-              <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-                <Scroll size={14} aria-hidden="true" /> Arquivo Histórico & Leitor Protegido
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white mt-1">
+            <div className="space-y-1.5">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Documentos & Fac-símiles Digitais
               </h2>
-              <p className="text-xs text-stone-400 font-serif italic mt-0.5">
+              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
                 Consulte manifestos e cartas históricas digitalizadas com proteção per-session contra extração de dados.
               </p>
             </div>
@@ -135,10 +129,10 @@ export const HomePage: React.FC = () => {
                 setActiveTab('digital');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:underline font-semibold flex items-center gap-1 shrink-0 min-h-[44px]"
+              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todo o acervo digital</span>
-              <ArrowRight size={14} aria-hidden="true" />
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </button>
           </div>
 
@@ -207,14 +201,11 @@ export const HomePage: React.FC = () => {
         {/* Section 3: Authors Spotlight */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
-            <div>
-              <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-                <Compass size={14} aria-hidden="true" /> Correntes de Pensamento
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white mt-1">
+            <div className="space-y-1.5">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Pensadores e Teóricos em Destaque
               </h2>
-              <p className="text-xs text-stone-400 font-serif italic mt-0.5">
+              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
                 Páginas autorais dedicadas com catálogo biográfico e bibliográfico de cada pensador.
               </p>
             </div>
@@ -225,10 +216,10 @@ export const HomePage: React.FC = () => {
                 setActiveTab('autores');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:underline font-semibold flex items-center gap-1 shrink-0 min-h-[44px]"
+              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todos os autores</span>
-              <ArrowRight size={14} aria-hidden="true" />
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </button>
           </div>
 
@@ -258,14 +249,14 @@ export const HomePage: React.FC = () => {
                   decoding="async"
                   className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-[#373c4d] group-hover:border-[#c89b3c] transition shadow-md"
                 />
-                <div>
-                  <span className="text-[10px] font-mono text-[#c89b3c] uppercase tracking-wider">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-sans font-medium text-[#c89b3c] uppercase tracking-wider block">
                     {author.politicalMovement}
                   </span>
-                  <h3 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition mt-0.5">
+                  <h3 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition">
                     {author.name}
                   </h3>
-                  <p className="text-[11px] text-stone-400 font-mono">{author.period}</p>
+                  <p className="text-xs text-stone-400 font-serif italic">{author.period}</p>
                 </div>
 
                 <p className="text-xs text-stone-400 font-serif line-clamp-2 leading-relaxed">
@@ -279,14 +270,11 @@ export const HomePage: React.FC = () => {
         {/* Section 4: Latest Articles from Editorial Blog */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
-            <div>
-              <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-                <FileText size={14} aria-hidden="true" /> Editorial & Ensaios
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white mt-1">
+            <div className="space-y-1.5">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Últimos Artigos Publicados
               </h2>
-              <p className="text-xs text-stone-400 font-serif italic mt-0.5">
+              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
                 Análises sobre a recepção da literatura política e notas de pesquisa arquivística.
               </p>
             </div>
@@ -297,10 +285,10 @@ export const HomePage: React.FC = () => {
                 setActiveTab('artigos');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:underline font-semibold flex items-center gap-1 shrink-0 min-h-[44px]"
+              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ler todos os artigos</span>
-              <ArrowRight size={14} aria-hidden="true" />
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </button>
           </div>
 
@@ -331,11 +319,11 @@ export const HomePage: React.FC = () => {
                     alt={`Imagem ilustrativa de ${art.title}`}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-44 object-cover group-hover:scale-105 transition duration-500"
+                    className="w-full h-44 object-cover"
                   />
                   <div className="p-5 space-y-2">
-                    <div className="flex items-center gap-2 text-[11px] text-stone-400 font-mono">
-                      <span className="text-[#c89b3c]">{art.category}</span>
+                    <div className="flex items-center gap-2 text-[11px] text-stone-400">
+                      <span className="text-[#c89b3c] font-medium">{art.category}</span>
                       <span>•</span>
                       <span>{art.readTime}</span>
                     </div>

@@ -211,14 +211,11 @@ export const ArticleCMS: React.FC = () => {
         /* Articles List & Grid */
         <>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#252834] pb-6">
-            <div>
-              <div className="flex items-center gap-2 text-[#c89b3c] text-xs uppercase tracking-widest font-mono">
-                <FileText size={14} aria-hidden="true" /> Espaço Editorial & Blog Cultural
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white mt-1">
+            <div className="space-y-1.5">
+              <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
                 Artigos Autorais e Ensaios
               </h1>
-              <p className="text-sm text-stone-400 font-serif italic mt-1 max-w-2xl">
+              <p className="text-sm text-stone-400 font-serif italic max-w-2xl leading-relaxed">
                 Reflexões aprofundadas, resenhas críticas e pesquisas arquivísticas produzidas pelo corpo editorial e pesquisadores convidados de Contra Homines.
               </p>
             </div>

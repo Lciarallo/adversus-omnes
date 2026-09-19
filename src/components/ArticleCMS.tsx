@@ -146,7 +146,7 @@ export const ArticleCMS: React.FC = () => {
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#212431] text-[#c89b3c] border border-[#323648]">
                 {selectedArticle.category}
               </span>
-              <span className="text-stone-500 text-xs">•</span>
+              <span className="text-dust text-xs">•</span>
               <span className="text-xs text-stone-400 flex items-center gap-1">
                 <Clock size={13} aria-hidden="true" /> {selectedArticle.readTime} de leitura
               </span>
@@ -310,7 +310,7 @@ export const ArticleCMS: React.FC = () => {
                       <span>{art.readTime}</span>
                     </div>
 
-                    <h3
+                    <h2
                       tabIndex={0}
                       role="button"
                       onClick={() => setSelectedArticle(art)}
@@ -323,7 +323,7 @@ export const ArticleCMS: React.FC = () => {
                       className="text-lg font-serif font-bold text-white hover:text-[#c89b3c] cursor-pointer transition line-clamp-2"
                     >
                       {art.title}
-                    </h3>
+                    </h2>
 
                     <p className="text-xs text-stone-300 line-clamp-3 leading-relaxed font-serif">
                       {art.subtitle}
@@ -349,7 +349,7 @@ export const ArticleCMS: React.FC = () => {
                       type="button"
                       onClick={() => handleDelete(art.id, art.title)}
                       aria-label={`Excluir artigo ${art.title}`}
-                      className="p-2.5 rounded-lg text-stone-500 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
+                      className="p-2.5 rounded-lg text-dust hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                     >
                       <Trash2 size={15} aria-hidden="true" />
                     </button>
@@ -376,9 +376,9 @@ export const ArticleCMS: React.FC = () => {
           />
           <div className="relative w-full max-w-2xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
             <div className="flex items-center justify-between border-b border-[#262a37] pb-3">
-              <h3 id="article-modal-heading" className="text-base font-cinzel font-bold text-white">
+              <h2 id="article-modal-heading" className="text-base font-cinzel font-bold text-white">
                 {editingArticle ? 'Editar Artigo no CMS' : 'Publicar Novo Artigo / Ensaio'}
-              </h3>
+              </h2>
               <button
                 type="button"
                 onClick={() => setIsEditorOpen(false)}

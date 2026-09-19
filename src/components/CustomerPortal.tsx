@@ -72,7 +72,7 @@ export const CustomerPortal: React.FC = () => {
           <button
             type="button"
             onClick={() => setRole('subscriber')}
-            className={`px-3 py-1.5 rounded-lg transition min-h-[36px] ${
+            className={`px-3.5 py-2.5 rounded-lg transition min-h-[44px] min-w-[84px] flex items-center justify-center ${
               currentUser.role === 'subscriber'
                 ? 'bg-[#c89b3c] text-black font-semibold'
                 : 'text-stone-300 hover:text-white'
@@ -83,7 +83,7 @@ export const CustomerPortal: React.FC = () => {
           <button
             type="button"
             onClick={() => setRole('visitor')}
-            className={`px-3 py-1.5 rounded-lg transition min-h-[36px] ${
+            className={`px-3.5 py-2.5 rounded-lg transition min-h-[44px] min-w-[84px] flex items-center justify-center ${
               currentUser.role === 'visitor'
                 ? 'bg-[#c89b3c] text-black font-semibold'
                 : 'text-stone-300 hover:text-white'
@@ -150,9 +150,9 @@ export const CustomerPortal: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xs text-stone-400 block">Status da sua Assinatura</span>
-                  <h3 className="text-2xl font-cinzel font-bold text-white mt-0.5">
+                  <h2 className="text-2xl font-cinzel font-bold text-white mt-0.5">
                     Plano {currentUser.activePlan}
-                  </h3>
+                  </h2>
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1.5">
                   <CheckCircle2 size={13} aria-hidden="true" /> Ativa
@@ -203,9 +203,9 @@ export const CustomerPortal: React.FC = () => {
               <div className="w-12 h-12 rounded-full bg-[#20232e] text-[#c89b3c] flex items-center justify-center mx-auto">
                 <Sparkles size={24} aria-hidden="true" />
               </div>
-              <h3 className="text-lg font-cinzel font-bold text-white">
+              <h2 className="text-lg font-cinzel font-bold text-white">
                 Você ainda não possui um plano de assinatura ativo
-              </h3>
+              </h2>
               <p className="text-xs text-stone-400 leading-relaxed">
                 Assine agora para desfrutar de acesso ilimitado ao acervo digital exclusivo, leituras protegidas de fac-símiles históricos e até 20% de desconto em todo o acervo físico.
               </p>
@@ -334,7 +334,7 @@ export const CustomerPortal: React.FC = () => {
                     <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#232734] text-stone-300">
                       {item.type === 'physical' ? 'Obra Adquirida' : item.access === 'exclusive' ? 'Acervo Assinante' : 'PDF Aberto'}
                     </span>
-                    <h3 className="text-xs font-semibold text-white truncate mt-1">{item.title}</h3>
+                    <h2 className="text-xs font-semibold text-white truncate mt-1">{item.title}</h2>
                     <p className="text-[11px] text-stone-400 truncate">{item.author}</p>
                     <p className="text-[10px] text-[#c89b3c] font-mono">{item.year}</p>
                   </div>

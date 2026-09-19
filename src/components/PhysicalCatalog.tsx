@@ -80,14 +80,14 @@ export const PhysicalCatalog: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <div className="relative">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 pointer-events-none" aria-hidden="true" />
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dust pointer-events-none" aria-hidden="true" />
             <input
               type="text"
               aria-label="Buscar livros por título, autor ou assunto"
               placeholder="Buscar por título, autor ou assunto..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+              className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
             />
           </div>
 
@@ -213,9 +213,9 @@ export const PhysicalCatalog: React.FC = () => {
                     <span>{item.pages} págs</span>
                   </div>
 
-                  <h3 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition line-clamp-2">
+                  <h2 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition line-clamp-2">
                     {item.title}
-                  </h3>
+                  </h2>
 
                   <p className="text-xs text-[#c89b3c] font-medium font-serif italic">
                     {item.author}
@@ -228,12 +228,12 @@ export const PhysicalCatalog: React.FC = () => {
                   <div className="text-[11px] text-stone-400 space-y-0.5 pt-1">
                     {item.publisher && (
                       <div>
-                        <span className="text-stone-500">Editora:</span> {item.publisher}
+                        <span className="text-dust">Editora:</span> {item.publisher}
                       </div>
                     )}
                     {item.dimensions && (
                       <div>
-                        <span className="text-stone-500">Formato:</span> {item.dimensions}
+                        <span className="text-dust">Formato:</span> {item.dimensions}
                       </div>
                     )}
                   </div>
@@ -243,7 +243,7 @@ export const PhysicalCatalog: React.FC = () => {
               {/* Price & Action */}
               <div className="p-5 pt-3 border-t border-[#20232e] bg-[#12141a] flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] uppercase tracking-wider text-stone-500 block">
+                  <span className="text-[10px] uppercase tracking-wider text-dust block">
                     Valor do Exemplar
                   </span>
                   <div className="text-lg font-cinzel font-bold text-white">
@@ -256,7 +256,7 @@ export const PhysicalCatalog: React.FC = () => {
                     type="button"
                     disabled
                     aria-label="Exemplar esgotado"
-                    className="px-4 py-2.5 rounded-lg bg-stone-800 text-stone-500 text-xs font-semibold cursor-not-allowed min-h-[44px]"
+                    className="px-4 py-2.5 rounded-lg bg-stone-800 text-stone-400 text-xs font-semibold cursor-not-allowed min-h-[44px]"
                   >
                     Esgotado
                   </button>

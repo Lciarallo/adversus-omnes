@@ -108,7 +108,7 @@ export const InfinitePayModal: React.FC = () => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="infinitepay-modal-title"
-      className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain flex items-center justify-center p-2 sm:p-4"
     >
       {/* Backdrop */}
       <div
@@ -117,9 +117,9 @@ export const InfinitePayModal: React.FC = () => {
         aria-hidden="true"
       />
 
-      <div className="relative w-full max-w-xl bg-[#15171e] border border-[#2d313f] rounded-2xl shadow-2xl overflow-hidden z-10">
+      <div className="relative my-auto w-full max-w-xl max-h-[92svh] bg-[#15171e] border border-[#2d313f] rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col">
         {/* Modal Header */}
-        <div className="bg-[#101217] px-6 py-4 border-b border-[#252834] flex items-center justify-between">
+        <div className="bg-[#101217] px-4 sm:px-6 py-3.5 border-b border-[#252834] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded bg-[#1f222b] border border-[#353949] flex items-center justify-center text-[#c89b3c]">
               <Lock size={16} aria-hidden="true" />
@@ -149,7 +149,7 @@ export const InfinitePayModal: React.FC = () => {
         </div>
 
         {/* Modal Body */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6 overflow-y-auto overscroll-contain flex-1">
           {isSuccess ? (
             <div className="text-center py-6 space-y-4">
               <div className="w-16 h-16 rounded-full bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 flex items-center justify-center mx-auto shadow-lg">

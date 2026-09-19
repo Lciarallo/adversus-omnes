@@ -40,12 +40,12 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-[#121316]/95 backdrop-blur-md border-b border-[#282b38] transition-all">
       {/* Top micro-bar with Role Switcher Demo notice */}
-      <div className="bg-[#161820] border-b border-[#222530] text-xs py-1.5 px-4 sm:px-8 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-stone-400">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true" />
-          <span className="hidden sm:inline">Ambiente de Testes Ativo</span>
-          <span className="text-stone-600 hidden sm:inline">|</span>
-          <span className="text-[#c89b3c] font-medium font-cinzel">Edição de Colecionador & Acervo Crítico</span>
+      <div className="bg-[#161820] border-b border-[#222530] text-xs py-1 px-3 sm:px-8 flex items-center justify-between min-h-[48px]">
+        <div className="flex items-center gap-2 text-stone-400 min-w-0">
+          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true" />
+          <span className="truncate">Ambiente de Testes</span>
+          <span className="text-stone-600 hidden md:inline">|</span>
+          <span className="text-[#c89b3c] font-medium font-cinzel truncate hidden md:inline">Edição de Colecionador & Acervo Crítico</span>
         </div>
 
         {/* Interactive Role Switcher for instant testing */}
@@ -56,17 +56,17 @@ export const Navbar: React.FC = () => {
             aria-haspopup="true"
             aria-expanded={roleMenuOpen}
             aria-label={`Perfil de teste atual: ${currentUser.role}. Clique para alternar.`}
-            className="flex items-center gap-1.5 px-3 py-1 rounded bg-[#20232d] hover:bg-[#2a2e3b] border border-[#343948] text-stone-200 transition text-[11px] min-h-[36px]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#20232d] hover:bg-[#2a2e3b] border border-[#343948] text-stone-200 transition text-xs min-h-[44px] whitespace-nowrap shrink-0 ml-2"
           >
             <span className="text-stone-400">Perfil:</span>
             <span className="font-semibold text-[#c89b3c] capitalize">
               {currentUser.role === 'admin'
-                ? 'Administrador Geral'
+                ? 'Admin'
                 : currentUser.role === 'subscriber'
-                ? `Assinante (${currentUser.activePlan || 'Ativo'})`
-                : 'Visitante Comum'}
+                ? `Assinante`
+                : 'Visitante'}
             </span>
-            <ChevronDown size={13} className="text-stone-400" aria-hidden="true" />
+            <ChevronDown size={14} className="text-stone-400 shrink-0" aria-hidden="true" />
           </button>
 
           {roleMenuOpen && (
@@ -74,7 +74,7 @@ export const Navbar: React.FC = () => {
               role="menu"
               className="absolute right-0 mt-1 w-64 bg-[#181a22] border border-[#323646] rounded-lg shadow-2xl py-1.5 z-50 text-xs"
             >
-              <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-stone-400 border-b border-[#242735]">
+              <div className="px-3 py-1.5 text-xs uppercase font-bold tracking-wider text-stone-400 border-b border-[#242735]">
                 Simular Perfil de Acesso:
               </div>
               <button
@@ -90,7 +90,7 @@ export const Navbar: React.FC = () => {
               >
                 <div>
                   <div className="font-medium">Visitante / Público</div>
-                  <div className="text-[10px] text-stone-400">Visualiza loja física e PDFs livres</div>
+                  <div className="text-xs text-stone-400">Visualiza loja física e PDFs livres</div>
                 </div>
                 {currentUser.role === 'visitor' && <CheckCircle size={14} className="text-[#c89b3c]" />}
               </button>
@@ -108,7 +108,7 @@ export const Navbar: React.FC = () => {
               >
                 <div>
                   <div className="font-medium">Cliente Assinante (Pesquisador)</div>
-                  <div className="text-[10px] text-stone-400">Acesso ao leitor protegido + 15% off</div>
+                  <div className="text-xs text-stone-400">Acesso ao leitor protegido + 15% off</div>
                 </div>
                 {currentUser.role === 'subscriber' && <CheckCircle size={14} className="text-[#c89b3c]" />}
               </button>
@@ -126,7 +126,7 @@ export const Navbar: React.FC = () => {
               >
                 <div>
                   <div className="font-medium text-amber-300">Administrador do Site</div>
-                  <div className="text-[10px] text-stone-400">CRUD de Autores, Artigos, Estoque & InfinitePay</div>
+                  <div className="text-xs text-stone-400">CRUD de Autores, Artigos, Estoque & InfinitePay</div>
                 </div>
                 {currentUser.role === 'admin' && <CheckCircle size={14} className="text-[#c89b3c]" />}
               </button>
@@ -137,7 +137,7 @@ export const Navbar: React.FC = () => {
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Brand Logo as semantic button */}
           <button
             type="button"
@@ -154,11 +154,13 @@ export const Navbar: React.FC = () => {
                 />
               </div>
             </div>
-            <div>
-              <div className="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-stone-100 group-hover:text-[#c89b3c] transition">
+            <div className="min-w-0">
+              <div className="font-cinzel text-base sm:text-xl font-bold tracking-wider text-stone-100 group-hover:text-[#c89b3c] transition whitespace-nowrap">
                 CONTRA HOMINES
               </div>
-              <div className="font-serif text-xs text-stone-400 italic tracking-wide">
+              {/* A assinatura não cabe ao lado dos controles no celular: era cortada
+                  pela borda inferior do cabeçalho. */}
+              <div className="hidden sm:block font-serif text-xs text-stone-400 italic tracking-wide">
                 Livros, documentos e ideias em perspectiva
               </div>
             </div>

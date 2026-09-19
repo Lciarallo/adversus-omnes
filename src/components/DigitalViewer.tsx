@@ -32,6 +32,34 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
   const [isFullscreen, setIsFullscreen] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const viewerContainerRef = useRef<HTMLDivElement | null>(null);
+  const pageFrameRef = useRef<HTMLDivElement | null>(null);
+  // Largura disponível para a página. A folha é desenhada num espaço fixo de
+  // 800x1100, mas exibida na largura que couber: no celular, ajusta automaticamente
+  // à largura da tela para visualização integral imediata sem corte.
+  const [frameWidth, setFrameWidth] = useState(() =>
+    typeof window !== 'undefined' ? Math.min(800, Math.max(300, window.innerWidth - 32)) : 800
+  );
+
+  useEffect(() => {
+    const frame = pageFrameRef.current;
+    const measure = () => {
+      const containerW = frame ? frame.clientWidth : (typeof window !== 'undefined' ? window.innerWidth : 800);
+      const styles = frame ? getComputedStyle(frame) : null;
+      const padding = styles ? (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0) : 24;
+      const available = containerW - padding;
+      if (available > 0) setFrameWidth(Math.min(800, available));
+    };
+
+    measure();
+    const observer = frame && typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
+    if (observer && frame) observer.observe(frame);
+    window.addEventListener('resize', measure);
+
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [isFullscreen]);
 
   const pages = item.pdfPages || [
     {
@@ -90,16 +118,19 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const scale = (zoom / 100) * 2; // high-DPI scaling
-    const width = 800 * (zoom / 100);
-    const height = 1100 * (zoom / 100);
+    // Coordenadas de desenho seguem o espaço de página 800x1100; só a exibição
+    // e a resolução do buffer acompanham a largura real disponível.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = frameWidth * (zoom / 100);
+    const height = width * (1100 / 800);
 
-    canvas.width = 800 * scale;
-    canvas.height = 1100 * scale;
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
-    ctx.scale(scale, scale);
+    const scale = (width / 800) * dpr;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
 
     // Background: parchment paper texture feel
     ctx.fillStyle = '#fbf9f2';
@@ -194,7 +225,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
       }
       ctx.restore();
     }
-  }, [item, currentPage, zoom, hasAccess, currentUser, isExclusive, totalPages, pages]);
+  }, [item, currentPage, zoom, hasAccess, currentUser, isExclusive, totalPages, pages, frameWidth]);
 
   const toggleFullscreen = () => {
     if (!viewerContainerRef.current) return;
@@ -224,35 +255,36 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
       <div className="max-w-6xl mx-auto space-y-4">
         {/* Top bar with back button & item summary */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#14161c] border border-[#262934] rounded-xl">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-[#14161c] border border-[#262934] rounded-xl">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <button
               type="button"
               onClick={onBack}
               aria-label="Voltar para a lista do acervo"
-              className="p-2.5 rounded-lg bg-[#1e212b] hover:bg-[#2a2e3c] text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium min-h-[44px]"
+              className="px-3 py-2 rounded-lg bg-[#1e212b] hover:bg-[#2a2e3c] text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium min-h-[44px] shrink-0 whitespace-nowrap"
             >
               <ArrowLeft size={16} aria-hidden="true" />
-              <span>Voltar ao Acervo</span>
+              <span className="sm:hidden">Voltar</span>
+              <span className="hidden sm:inline">Voltar ao Acervo</span>
             </button>
 
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-cinzel font-bold text-white truncate max-w-md">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-sm sm:text-base font-cinzel font-bold text-white line-clamp-1">
                   {item.title}
                 </h1>
                 {isExclusive ? (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-950 text-[#c89b3c] border border-amber-800/40 flex items-center gap-1 shrink-0">
-                    <Shield size={11} aria-hidden="true" /> Exclusivo Assinante
+                  <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-950 text-[#c89b3c] border border-amber-800/40 flex items-center gap-1 shrink-0">
+                    <Shield size={11} aria-hidden="true" /> Exclusivo
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800/40 flex items-center gap-1 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800/40 flex items-center gap-1 shrink-0">
                     <FileText size={11} aria-hidden="true" /> Domínio Público
                   </span>
                 )}
               </div>
-              <p className="text-xs text-stone-400 font-serif italic">
-                {item.author} ({item.year}) • {item.pages} páginas catalogadas
+              <p className="text-xs text-stone-400 font-serif italic truncate mt-0.5">
+                {item.author} ({item.year}) • {item.pages} páginas
               </p>
             </div>
           </div>
@@ -392,20 +424,21 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
             {/* Canvas Viewer Container */}
             <div
-              className={`flex-1 overflow-auto p-4 sm:p-8 flex justify-center items-center bg-[#090a0d] user-select-none ${
+              ref={pageFrameRef}
+              className={`flex-1 overflow-auto p-2 sm:p-8 flex justify-center items-start sm:items-center bg-[#090a0d] user-select-none max-w-full ${
                 isExclusive ? 'select-none pointer-events-auto' : ''
               }`}
             >
-              <div className="relative shadow-2xl border border-stone-800 rounded bg-[#fbf9f2]">
+              <div className="relative shadow-2xl border border-stone-800 rounded bg-[#fbf9f2] max-w-full overflow-hidden">
                 <canvas
                   ref={canvasRef}
                   aria-label={`Visualização gráfica da página ${currentPage} de ${item.title}`}
-                  className="block mx-auto rounded transition-transform"
+                  className="block mx-auto rounded transition-transform max-w-full h-auto"
                 />
 
                 {isExclusive && (
-                  <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none text-[10px] text-stone-400/60 font-mono">
-                    Licenciado para: {currentUser.name} ({currentUser.email}) • Sessão Antigravity ID #2026-BC
+                  <div className="absolute bottom-1.5 left-0 right-0 text-center pointer-events-none text-xs text-stone-600 font-mono px-2 truncate">
+                    Licenciado para: {currentUser.name} ({currentUser.email}) • Sessão #2026-CH
                   </div>
                 )}
               </div>

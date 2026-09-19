@@ -61,7 +61,7 @@ export const Footer: React.FC = () => {
           <p className="text-xs leading-relaxed text-stone-400 font-serif italic">
             "Bibliotheca et Archivum — Livros, documentos e ideias em perspectiva."
           </p>
-          <p className="text-xs leading-relaxed text-stone-500">
+          <p className="text-xs leading-relaxed text-stone-400">
             Uma ponte viva entre o acervo físico de obras raras, a documentação histórica esquecida e a produção de ensaios contemporâneos sobre economia, política e filosofia.
           </p>
         </div>
@@ -71,29 +71,29 @@ export const Footer: React.FC = () => {
           <h5 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-[#c89b3c] pl-2">
             Explorar Acervo
           </h5>
-          <ul className="space-y-2 text-xs">
+          <ul className="space-y-0.5 text-xs">
             <li>
-              <button onClick={() => { setActiveTab('fisico'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('fisico'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Livros Raros & Primeiras Edições
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('fisico'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('fisico'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Livros Usados & Esgotados
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('digital'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('digital'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Documentos Históricos Livres (PDF)
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('digital'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('digital'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Acervo Restrito de Assinantes
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('autores'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('autores'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Índice de Autores & Filósofos
               </button>
             </li>
@@ -105,24 +105,24 @@ export const Footer: React.FC = () => {
           <h5 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-[#c89b3c] pl-2">
             Editorial & Planos
           </h5>
-          <ul className="space-y-2 text-xs">
+          <ul className="space-y-0.5 text-xs">
             <li>
-              <button onClick={() => { setActiveTab('artigos'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('artigos'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Artigos Autorais & Ensaios
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('planos'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('planos'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Planos do Clube de Assinatura
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('minha-conta'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('minha-conta'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Portal do Assinante
               </button>
             </li>
             <li>
-              <button onClick={() => { setActiveTab('admin'); window.scrollTo(0, 0); }} className="hover:text-[#c89b3c] transition">
+              <button type="button" onClick={() => { setActiveTab('admin'); window.scrollTo(0, 0); }} className="w-full text-left py-2 flex items-center min-h-[44px] hover:text-[#c89b3c] transition">
                 Painel do Administrador
               </button>
             </li>
@@ -138,26 +138,32 @@ export const Footer: React.FC = () => {
             Receba notificações de novas aquisições de livros raros, cartas históricas e artigos inéditos.
           </p>
           <div className="flex gap-2">
+            <label htmlFor="boletim-email" className="sr-only">
+              Seu e-mail para o Boletim Bibliófilo
+            </label>
             <input
+              id="boletim-email"
               type="email"
               placeholder="Seu e-mail"
-              className="bg-[#181a22] border border-[#2f3340] rounded px-3 py-1.5 text-xs text-white placeholder-stone-500 w-full focus:outline-none focus:border-[#c89b3c]"
+              className="bg-[#181a22] border border-[#2f3340] rounded px-3 py-2 text-xs text-white placeholder-stone-400 w-full min-h-[44px] focus:outline-none focus:border-[#c89b3c]"
             />
             <button
+              type="button"
               onClick={() => alert('Obrigado! Seu e-mail foi cadastrado no Boletim Bibliófilo.')}
-              className="bg-[#c89b3c] hover:bg-[#d9ab4b] text-black px-3 py-1.5 rounded text-xs font-semibold shrink-0 transition"
+              aria-label="Assinar o Boletim Bibliófilo"
+              className="bg-[#c89b3c] hover:bg-[#d9ab4b] text-black px-3 rounded text-xs font-semibold shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
             >
-              <ArrowRight size={14} />
+              <ArrowRight size={16} aria-hidden="true" />
             </button>
           </div>
-          <div className="mt-4 text-[11px] text-stone-500">
+          <div className="mt-4 text-xs text-stone-400">
             Cupons ativos de demonstração: <span className="font-mono text-[#c89b3c]">BEMVINDO10</span> | <span className="font-mono text-[#c89b3c]">HISTORIA15</span>
           </div>
         </div>
       </div>
 
       {/* Copyright */}
-      <div className="border-t border-[#1a1c24] py-4 bg-[#0a0b0d] text-center text-xs text-stone-600">
+      <div className="border-t border-[#1a1c24] py-4 bg-[#0a0b0d] text-center text-xs text-stone-400">
         <p>© 2026 Contra Homines (Bibliotheca et Archivum). Todos os direitos reservados. Preservação cultural, livros físicos e acervo digital.</p>
       </div>
     </footer>

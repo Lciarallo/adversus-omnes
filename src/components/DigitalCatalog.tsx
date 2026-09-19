@@ -83,14 +83,14 @@ export const DigitalCatalog: React.FC = () => {
       <div className="bg-[#15171e] p-4 rounded-xl border border-[#272b38] grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Search */}
         <div className="relative">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 pointer-events-none" aria-hidden="true" />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dust pointer-events-none" aria-hidden="true" />
           <input
             type="text"
             aria-label="Buscar documentos por título, autor ou evento histórico"
             placeholder="Buscar por título, autor ou evento histórico..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
           />
         </div>
 

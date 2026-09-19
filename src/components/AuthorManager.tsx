@@ -187,14 +187,14 @@ export const AuthorManager: React.FC = () => {
       <div className="bg-[#15171e] p-4 rounded-xl border border-[#272a37] grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Search */}
         <div className="relative">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 pointer-events-none" aria-hidden="true" />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dust pointer-events-none" aria-hidden="true" />
           <input
             type="text"
             aria-label="Buscar autor por nome, tema ou obra"
             placeholder="Buscar autor, tema ou obra..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2f3342] rounded-lg text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2f3342] rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
           />
         </div>
 
@@ -258,9 +258,9 @@ export const AuthorManager: React.FC = () => {
                       {author.politicalMovement}
                     </span>
                   </div>
-                  <h3 className="text-base font-cinzel font-bold text-white mt-1.5 truncate group-hover:text-[#c89b3c] transition">
+                  <h2 className="text-base font-cinzel font-bold text-white mt-1.5 truncate group-hover:text-[#c89b3c] transition">
                     {author.name}
-                  </h3>
+                  </h2>
                   <p className="text-[11px] text-stone-400 font-mono">
                     {author.birthYear && author.deathYear
                       ? `${author.birthYear} — ${author.deathYear}`
@@ -327,7 +327,7 @@ export const AuthorManager: React.FC = () => {
                   type="button"
                   onClick={() => handleDeleteAuthor(author.id, author.name)}
                   aria-label={`Excluir autor ${author.name}`}
-                  className="p-2.5 rounded-lg text-stone-500 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
+                  className="p-2.5 rounded-lg text-dust hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                 >
                   <Trash2 size={15} aria-hidden="true" />
                 </button>
@@ -460,9 +460,9 @@ export const AuthorManager: React.FC = () => {
           />
           <div className="relative w-full max-w-xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
             <div className="flex items-center justify-between border-b border-[#262a37] pb-3">
-              <h3 id="author-crud-title" className="text-base font-cinzel font-bold text-white">
+              <h2 id="author-crud-title" className="text-base font-cinzel font-bold text-white">
                 {editingAuthor ? 'Editar Informações do Autor' : 'Cadastrar Novo Autor'}
-              </h3>
+              </h2>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}

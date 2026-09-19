@@ -95,7 +95,7 @@ export const HomePage: React.FC = () => {
 
                 <div className="p-5 pt-3 border-t border-[#20232e] bg-[#12141a] flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] uppercase text-stone-500 block">Preço</span>
+                    <span className="text-[10px] uppercase text-dust block">Preço</span>
                     <div className="text-base font-cinzel font-bold text-white">
                       R$ {item.price.toFixed(2)}
                     </div>

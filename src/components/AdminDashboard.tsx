@@ -340,12 +340,15 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'finance' && (
         <div className="space-y-6">
           <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
-            <h3 className="text-base font-cinzel font-bold text-white">
+            <h2 className="text-base font-cinzel font-bold text-white">
               Histórico de Vendas e Pedidos Realizados
-            </h3>
+            </h2>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-stone-300">
+            <div className="text-xs text-stone-400 sm:hidden flex items-center gap-1.5 py-1">
+              <span>Deslize a tabela para o lado para ver todos os campos</span>
+            </div>
+            <div className="overflow-x-auto rounded-lg border border-[#272b38]">
+              <table className="w-full min-w-[720px] text-left text-xs text-stone-300">
                 <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
                   <tr>
                     <th scope="col" className="p-3">ID Pedido</th>
@@ -403,9 +406,9 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'catalog' && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-base font-cinzel font-bold text-white">
+            <h2 className="text-base font-cinzel font-bold text-white">
               Catálogo Geral (Físico & Digital)
-            </h3>
+            </h2>
             <button
               type="button"
               onClick={() => handleOpenCatalogModal()}
@@ -415,8 +418,11 @@ export const AdminDashboard: React.FC = () => {
             </button>
           </div>
 
+          <div className="text-xs text-stone-400 sm:hidden flex items-center gap-1.5 py-1">
+            <span>Deslize a tabela para o lado para ver todos os campos</span>
+          </div>
           <div className="overflow-x-auto bg-[#15171f] border border-[#272b38] rounded-xl">
-            <table className="w-full text-left text-xs text-stone-300">
+            <table className="w-full min-w-[720px] text-left text-xs text-stone-300">
               <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
                 <tr>
                   <th scope="col" className="p-3">Capa</th>
@@ -465,7 +471,7 @@ export const AdminDashboard: React.FC = () => {
                           {item.stock} un.
                         </span>
                       ) : (
-                        <span className="text-stone-500">Ilimitado</span>
+                        <span className="text-dust">Ilimitado</span>
                       )}
                     </td>
                     <td className="p-3 text-right">
@@ -482,7 +488,7 @@ export const AdminDashboard: React.FC = () => {
                           type="button"
                           onClick={() => deleteCatalogItem(item.id)}
                           aria-label={`Excluir obra ${item.title}`}
-                          className="p-2.5 rounded-lg text-stone-500 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
+                          className="p-2.5 rounded-lg text-dust hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                         >
                           <Trash2 size={15} aria-hidden="true" />
                         </button>
@@ -499,9 +505,9 @@ export const AdminDashboard: React.FC = () => {
       {/* Tab 3: Estoque & Inventário com alvos de toque maiores */}
       {activeTab === 'inventory' && (
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
-          <h3 className="text-base font-cinzel font-bold text-white">
-            Controle de Estoque Físico
-          </h3>
+          <h2 className="text-base font-cinzel font-bold text-white">
+            Ajuste Rápido de Estoque Unitário
+          </h2>
           <p className="text-xs text-stone-400">
             Ajuste rápido de unidades disponíveis para venda imediata. Obras raras de colecionador geralmente possuem estoque unitário (1).
           </p>
@@ -560,9 +566,9 @@ export const AdminDashboard: React.FC = () => {
       {/* Tab 4: Planos de Assinatura */}
       {activeTab === 'plans' && (
         <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
-          <h3 className="text-base font-cinzel font-bold text-white">
+          <h2 className="text-base font-cinzel font-bold text-white">
             Administração dos Planos de Assinatura
-          </h3>
+          </h2>
           <p className="text-xs text-stone-400">
             Altere preços mensais/anuais e características dos planos do clube.
           </p>
@@ -628,7 +634,7 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'coupons' && (
         <div className="space-y-6">
           <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
-            <h3 className="text-base font-cinzel font-bold text-white">Criar Novo Cupom</h3>
+            <h2 className="text-base font-cinzel font-bold text-white">Criar Novo Cupom</h2>
             <form onSubmit={handleCreateCoupon} className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
               <input
                 type="text"
@@ -663,7 +669,7 @@ export const AdminDashboard: React.FC = () => {
           </div>
 
           <div className="overflow-x-auto bg-[#15171f] border border-[#272b38] rounded-xl">
-            <table className="w-full text-left text-xs text-stone-300">
+            <table className="w-full min-w-[620px] text-left text-xs text-stone-300">
               <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
                 <tr>
                   <th scope="col" className="p-3">Código</th>
@@ -723,9 +729,9 @@ export const AdminDashboard: React.FC = () => {
                 <CreditCard size={20} aria-hidden="true" />
               </div>
               <div>
-                <h3 className="text-base font-cinzel font-bold text-white">
+                <h2 className="text-base font-cinzel font-bold text-white">
                   Integração com Gateway InfinitePay
-                </h3>
+                </h2>
                 <p className="text-xs text-stone-400">
                   Preencha as credenciais da sua conta InfinitePay para habilitar pagamentos reais via Pix e Cartão.
                 </p>
@@ -838,9 +844,9 @@ export const AdminDashboard: React.FC = () => {
             aria-hidden="true"
           />
           <div className="relative w-full max-w-xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
-            <h3 id="catalog-modal-title" className="text-base font-cinzel font-bold text-white border-b border-[#252834] pb-2">
+            <h2 id="catalog-modal-title" className="text-base font-cinzel font-bold text-white border-b border-[#252834] pb-2">
               {editingItem ? 'Editar Obra do Catálogo' : 'Adicionar Nova Obra ao Catálogo'}
-            </h3>
+            </h2>
 
             <form onSubmit={handleSaveCatalogItem} className="space-y-3 text-xs">
               <div>

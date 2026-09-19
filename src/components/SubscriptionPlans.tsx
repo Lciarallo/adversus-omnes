@@ -25,7 +25,7 @@ export const SubscriptionPlans: React.FC = () => {
         <div className="pt-3 flex items-center justify-center gap-3">
           <button
             onClick={() => setBillingCycle('monthly')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+            className={`px-5 py-2.5 rounded-full text-xs font-semibold transition min-h-[44px] ${
               billingCycle === 'monthly'
                 ? 'bg-[#c89b3c] text-black shadow-lg shadow-[#c89b3c]/20'
                 : 'bg-[#1a1d26] text-stone-400 hover:text-white border border-[#2b2f3e]'
@@ -35,7 +35,7 @@ export const SubscriptionPlans: React.FC = () => {
           </button>
           <button
             onClick={() => setBillingCycle('yearly')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1.5 ${
+            className={`px-5 py-2.5 rounded-full text-xs font-semibold transition flex items-center gap-1.5 min-h-[44px] ${
               billingCycle === 'yearly'
                 ? 'bg-[#c89b3c] text-black shadow-lg shadow-[#c89b3c]/20'
                 : 'bg-[#1a1d26] text-stone-400 hover:text-white border border-[#2b2f3e]'
@@ -82,7 +82,7 @@ export const SubscriptionPlans: React.FC = () => {
                   )}
                 </div>
 
-                <h3 className="text-2xl font-cinzel font-bold text-white mt-2">{plan.name}</h3>
+                <h2 className="text-2xl font-cinzel font-bold text-white mt-2">{plan.name}</h2>
 
                 <p className="text-xs text-stone-400 font-serif italic mt-2 leading-relaxed min-h-[36px]">
                   {plan.description}
@@ -97,7 +97,7 @@ export const SubscriptionPlans: React.FC = () => {
                     <span className="text-xs text-stone-400">/mês</span>
                   </div>
                   {billingCycle === 'yearly' && (
-                    <div className="text-[11px] text-stone-500 font-mono mt-1">
+                    <div className="text-xs text-stone-400 font-mono mt-1">
                       Faturado anualmente (R$ {plan.priceYearly.toFixed(2)})
                     </div>
                   )}
@@ -105,7 +105,7 @@ export const SubscriptionPlans: React.FC = () => {
 
                 {/* Features list */}
                 <div className="space-y-3 text-xs text-stone-300">
-                  <span className="text-[11px] font-semibold text-stone-400 block uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-stone-400 block uppercase tracking-wider">
                     Benefícios Inclusos:
                   </span>
                   {plan.features.map((feat, idx) => (
@@ -124,14 +124,14 @@ export const SubscriptionPlans: React.FC = () => {
                 {isCurrentActive ? (
                   <button
                     disabled
-                    className="w-full py-3 rounded-lg bg-[#202430] text-emerald-400 border border-emerald-800/40 text-xs font-semibold cursor-default"
+                    className="w-full py-3.5 rounded-lg bg-[#202430] text-emerald-400 border border-emerald-800/40 text-xs font-semibold cursor-default min-h-[48px] flex items-center justify-center"
                   >
                     Plano Ativo na sua Conta
                   </button>
                 ) : (
                   <button
                     onClick={() => startSubscriptionCheckout(plan)}
-                    className={`w-full py-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg ${
+                    className={`w-full py-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg min-h-[48px] ${
                       plan.isPopular
                         ? 'bg-[#c89b3c] hover:bg-[#d9ab4b] text-black shadow-[#c89b3c]/20'
                         : 'bg-[#222532] hover:bg-[#2e3244] text-white border border-[#373c4e]'

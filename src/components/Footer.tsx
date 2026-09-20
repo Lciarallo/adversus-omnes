@@ -78,7 +78,7 @@ export const Footer: React.FC = () => {
   const { setActiveTab } = useStore();
 
   return (
-    <footer className="bg-paper-400 border-t border-rule-faint text-ink-soft text-sm">
+    <footer className="museum-footer bg-paper-400 border-t border-rule-faint text-ink-soft text-sm">
       {/* Editorial Trust Banner */}
       <div className="border-b border-rule-faint py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -124,9 +124,9 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded border border-rule-strong bg-paper-800 p-[2px] overflow-hidden shrink-0">
               <img
-                src="/logo.jpg"
+                src="/logo-v2.png"
                 alt="Adversus Omnes"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             <span className="font-cinzel font-bold text-ink tracking-wider text-base">

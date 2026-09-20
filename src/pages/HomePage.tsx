@@ -1,14 +1,24 @@
 import React from 'react';
-import {
-  BookMarked,
-  Scroll,
-  ArrowRight,
-  Compass,
-  FileText,
-  Lock
-} from 'lucide-react';
-import { useStore } from '../context/StoreContext';
+import { ArrowRight, BookMarked, FileText, Lock, Scroll } from 'lucide-react';
 import { HeroOpening } from '../components/HeroOpening';
+import { useStore } from '../context/StoreContext';
+
+interface SectionHeadingProps {
+  title: string;
+  description: string;
+  action: string;
+  onAction: () => void;
+}
+
+const SectionHeading: React.FC<SectionHeadingProps> = ({ title, description, action, onAction }) => (
+  <header className="archive-section__head">
+    <h2>{title}</h2>
+    <p>{description}</p>
+    <button type="button" onClick={onAction}>
+      {action} <ArrowRight size={15} aria-hidden="true" />
+    </button>
+  </header>
+);
 
 export const HomePage: React.FC = () => {
   const {
@@ -18,323 +28,183 @@ export const HomePage: React.FC = () => {
     articles,
     addToCart,
     openReader,
+    setSelectedAuthor,
     setSelectedArticle,
     transitioningCoverId
   } = useStore();
 
-  const featuredPhysical = catalog.filter(c => c.type === 'physical').slice(0, 3);
-  const featuredDigital = catalog.filter(c => c.type === 'digital' || c.type === 'historical_doc').slice(0, 3);
-  const featuredAuthors = authors.filter(a => a.featured).slice(0, 4);
-  const latestArticles = articles.slice(0, 3);
+  const featuredPhysical = catalog.filter(item => item.type === 'physical').slice(0, 3);
+  const featuredDigital = catalog
+    .filter(item => item.type === 'digital' || item.type === 'historical_doc')
+    .slice(0, 4);
+  const featuredAuthors = authors.filter(author => author.featured).slice(0, 5);
+  const latestArticles = articles.filter(article => article.status === 'published').slice(0, 3);
+  const leadPhysical = featuredPhysical[0];
+
+  const goTo = (tab: string) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="pb-16">
+    <div className="home-page">
       <HeroOpening />
 
-      <div className="frontis-curtain space-y-20">
-        {/* Section 1: Rare Physical Books */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
-            <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
-                Raridades do Acervo Físico
-              </h2>
-              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
-                Primeiras edições comemorativas, encadernações em meio-couro e volumes com anotações marginais de época.
-              </p>
-            </div>
+      <div className="home-archive">
+        <section className="archive-section archive-section--physical">
+          <SectionHeading
+            title="Raridades do acervo físico"
+            description="Edições, encadernações e exemplares descritos pela história material que carregam."
+            action="Consultar catálogo completo"
+            onAction={() => goTo('fisico')}
+          />
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('fisico');
-                window.scrollTo(0, 0);
-              }}
-              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
-            >
-              <span>Ver todo o catálogo físico</span>
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredPhysical.map(item => (
-              <div
-                key={item.id}
-                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group codex-card"
-              >
-                <div>
-                  <div className="relative h-64 bg-paper-300 p-4 flex items-center justify-center overflow-hidden border-b border-rule-faint">
-                    <img
-                      src={item.coverImage}
-                      alt={`Capa do exemplar ${item.title}`}
-                      loading="lazy"
-                      decoding="async"
-                      className="max-h-full max-w-[80%] object-cover rounded shadow-2xl border border-rule"
-                    />
-                    {item.condition && (
-                      <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded bg-paper-800/92 text-rubrica border border-ocre/35 text-[10px] font-mono">
-                        {item.condition}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-5 space-y-2">
-                    <div className="text-[11px] text-ink-soft font-mono">
-                      {item.politicalMovement} • {item.year}
-                    </div>
-                    <h3 className="text-base font-cinzel font-bold text-ink group-hover:text-rubrica transition line-clamp-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-rubrica font-serif italic">{item.author}</p>
-                    <p className="text-xs text-ink-soft line-clamp-2 font-serif">{item.description}</p>
-                  </div>
-                </div>
-
-                <div className="p-5 pt-3 border-t border-rule-faint bg-paper-400 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] uppercase text-ink-faint block">Preço</span>
-                    <div className="text-base font-cinzel font-bold text-ink">
-                      R$ {item.price.toFixed(2)}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => addToCart(item)}
-                    aria-label={`Adicionar ${item.title} à sacola`}
-                    className="px-4 py-2.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold text-xs transition min-h-[44px]"
-                  >
-                    Adicionar à Sacola
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Section 2: Protected Online Documents */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
-            <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
-                Documentos & Fac-símiles Digitais
-              </h2>
-              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
-                Manifestos e cartas históricas digitalizados, abertos ao público ou reservados a assinantes no leitor protegido.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('digital');
-                window.scrollTo(0, 0);
-              }}
-              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
-            >
-              <span>Ver todo o acervo digital</span>
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredDigital.map(item => (
-              <div
-                key={item.id}
-                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4 codex-card"
-              >
-                <div className="flex items-start gap-4">
+          {leadPhysical && (
+            <div className="physical-plate">
+              <article className="physical-lead">
+                <div className="physical-lead__image">
+                  <span aria-hidden="true">AO · EXEMPLAR {String(leadPhysical.year).slice(-2)}</span>
                   <img
-                    src={item.coverImage}
-                    alt={`Capa do documento ${item.title}`}
+                    src={leadPhysical.coverImage}
+                    alt={`Capa do exemplar ${leadPhysical.title}`}
                     loading="lazy"
                     decoding="async"
-                    style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
-                    className="w-16 h-22 object-cover rounded border border-rule shrink-0"
                   />
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      {item.access === 'exclusive' ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-ocre-tint text-rubrica border border-ocre/35 flex items-center gap-1">
-                          <Lock size={10} aria-hidden="true" /> Assinante
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-verdete-tint text-verdete border border-verdete/35">
-                          PDF Livre
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-cinzel text-sm font-bold leading-snug">
-                      <button
-                        type="button"
-                        onClick={() => openReader(item)}
-                        className="line-clamp-2 py-1 text-left text-ink transition group-hover:text-rubrica"
-                      >
-                        {item.title}
-                      </button>
-                    </h3>
-                    <p className="text-xs text-ink-soft font-serif italic truncate">{item.author}</p>
+                </div>
+                <div className="physical-lead__copy">
+                  <p>{leadPhysical.condition ?? 'Acervo físico'} · {leadPhysical.year}</p>
+                  <h3>{leadPhysical.title}</h3>
+                  <cite>{leadPhysical.author}</cite>
+                  <p>{leadPhysical.description}</p>
+                  <div>
+                    <strong>R$ {leadPhysical.price.toFixed(2)}</strong>
+                    <button type="button" onClick={() => addToCart(leadPhysical)}>
+                      Adicionar à sacola <ArrowRight size={14} aria-hidden="true" />
+                    </button>
                   </div>
                 </div>
+              </article>
 
-                <p className="text-xs text-ink-soft font-serif line-clamp-3 leading-relaxed">
-                  {item.description}
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() => openReader(item)}
-                  aria-label={`Abrir ${item.title} no leitor seguro`}
-                  className="w-full py-2.5 px-3 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink hover:text-ink border border-rule-strong text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
-                >
-                  <span>Abrir no Leitor Seguro</span>
-                  <ArrowRight size={13} aria-hidden="true" />
-                </button>
+              <div className="physical-register" aria-label="Outros destaques do acervo físico">
+                {featuredPhysical.slice(1).map((item, index) => (
+                  <article key={item.id} className="physical-register__item">
+                    <span className="physical-register__number" aria-hidden="true">{String(index + 2).padStart(2, '0')}</span>
+                    <img src={item.coverImage} alt="" loading="lazy" decoding="async" />
+                    <div>
+                      <p>{item.politicalMovement} · {item.year}</p>
+                      <h3>{item.title}</h3>
+                      <cite>{item.author}</cite>
+                    </div>
+                    <div className="physical-register__action">
+                      <strong>R$ {item.price.toFixed(2)}</strong>
+                      <button type="button" onClick={() => addToCart(item)} aria-label={`Adicionar ${item.title} à sacola`}>
+                        <BookMarked size={17} aria-hidden="true" />
+                      </button>
+                    </div>
+                  </article>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </section>
 
-        {/* Section 3: Authors Spotlight */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
-            <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
-                Pensadores e Teóricos em Destaque
-              </h2>
-              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
-                Páginas autorais dedicadas com catálogo biográfico e bibliográfico de cada pensador.
-              </p>
-            </div>
+        <section className="archive-section archive-section--digital">
+          <SectionHeading
+            title="Documentos e fac-símiles"
+            description="Fontes primárias e documentos históricos, livres ou reservados a assinantes."
+            action="Abrir acervo online"
+            onAction={() => goTo('digital')}
+          />
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('autores');
-                window.scrollTo(0, 0);
-              }}
-              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
-            >
-              <span>Ver todos os autores</span>
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredAuthors.map(author => (
-              <div
-                key={author.id}
-                tabIndex={0}
-                role="button"
-                onClick={() => {
-                  setActiveTab('autores');
-                  window.scrollTo(0, 0);
-                }}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setActiveTab('autores');
-                    window.scrollTo(0, 0);
-                  }
-                }}
-                className="p-5 rounded-xl bg-paper-700 border border-rule hover:border-rubrica/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg codex-card"
-              >
+          <div className="document-ledger" role="list">
+            {featuredDigital.map((item, index) => (
+              <article key={item.id} className="document-ledger__row" role="listitem">
+                <span className="document-ledger__number" aria-hidden="true">AO.{String(index + 1).padStart(3, '0')}</span>
                 <img
-                  src={author.avatar}
-                  alt={`Foto de ${author.name}`}
+                  src={item.coverImage}
+                  alt=""
                   loading="lazy"
                   decoding="async"
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-rule-strong group-hover:border-rubrica transition shadow-md"
+                  style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
                 />
-                <div className="space-y-0.5">
-                  <span className="text-[10px] font-sans font-medium text-rubrica uppercase tracking-wider block">
-                    {author.politicalMovement}
-                  </span>
-                  <h3 className="text-base font-cinzel font-bold text-ink group-hover:text-rubrica transition">
-                    {author.name}
-                  </h3>
-                  <p className="text-xs text-ink-soft font-serif italic">{author.period}</p>
+                <div className="document-ledger__title">
+                  <p>{item.period} · {item.politicalMovement}</p>
+                  <h3>{item.title}</h3>
+                  <cite>{item.author}</cite>
                 </div>
-
-                <p className="text-xs text-ink-soft font-serif line-clamp-2 leading-relaxed">
-                  {author.bio}
-                </p>
-              </div>
+                <p className="document-ledger__description">{item.description}</p>
+                <span className={`document-ledger__access document-ledger__access--${item.access}`}>
+                  {item.access === 'exclusive' ? <Lock size={12} aria-hidden="true" /> : <FileText size={12} aria-hidden="true" />}
+                  {item.access === 'exclusive' ? 'Assinantes' : 'Acesso livre'}
+                </span>
+                <button type="button" onClick={() => openReader(item)} aria-label={`Abrir ${item.title} no leitor`}>
+                  <Scroll size={18} aria-hidden="true" />
+                  <span>Abrir</span>
+                </button>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* Section 4: Latest Articles from Editorial Blog */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
-            <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
-                Últimos Artigos Publicados
-              </h2>
-              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
-                Análises sobre a recepção da literatura política e notas de pesquisa arquivística.
-              </p>
-            </div>
+        <section className="archive-section archive-section--authors">
+          <SectionHeading
+            title="Índice de autores"
+            description="Vidas, movimentos e bibliografias reunidos pela posição que ocupam no mapa das ideias."
+            action="Ver índice completo"
+            onAction={() => goTo('autores')}
+          />
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('artigos');
-                window.scrollTo(0, 0);
-              }}
-              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
-            >
-              <span>Ler todos os artigos</span>
-              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {latestArticles.map(art => (
-              <div
-                key={art.id}
-                tabIndex={0}
-                role="button"
+          <div className="author-index" role="list">
+            {featuredAuthors.map((author, index) => (
+              <button
+                key={author.id}
+                type="button"
+                role="listitem"
                 onClick={() => {
-                  setSelectedArticle(art);
-                  setActiveTab('artigos');
-                  window.scrollTo(0, 0);
+                  setSelectedAuthor(author);
+                  goTo('autores');
                 }}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedArticle(art);
-                    setActiveTab('artigos');
-                    window.scrollTo(0, 0);
-                  }
-                }}
-                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between codex-card"
+                className="author-index__row"
               >
-                <div>
-                  <img
-                    src={art.coverImage}
-                    alt={`Imagem ilustrativa de ${art.title}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-44 object-cover"
-                  />
-                  <div className="p-5 space-y-2">
-                    <div className="flex items-center gap-2 text-[11px] text-ink-soft">
-                      <span className="text-rubrica font-medium">{art.category}</span>
-                      <span>•</span>
-                      <span>{art.readTime}</span>
-                    </div>
-                    <h3 className="text-base font-serif font-bold text-ink group-hover:text-rubrica transition line-clamp-2">
-                      {art.title}
-                    </h3>
-                    <p className="text-xs text-ink-soft font-serif line-clamp-2">{art.subtitle}</p>
-                  </div>
-                </div>
+                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <strong>{author.name}</strong>
+                <span>{author.politicalMovement}</span>
+                <span>{author.period}</span>
+                <ArrowRight size={17} aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+        </section>
 
-                <div className="p-5 pt-0 text-[11px] text-ink-soft font-mono border-t border-rule-faint mt-2 pt-2">
-                  Por {art.authorName}
+        <section className="archive-section archive-section--articles">
+          <SectionHeading
+            title="Ensaios e notas de pesquisa"
+            description="A camada autoral do arquivo: leituras críticas separadas da descrição documental."
+            action="Ler todos os ensaios"
+            onAction={() => goTo('artigos')}
+          />
+
+          <div className="essay-board">
+            {latestArticles.map((article, index) => (
+              <article key={article.id} className={index === 0 ? 'essay-board__lead' : 'essay-board__item'}>
+                <div>
+                  <p>{article.category} · {article.readTime}</p>
+                  <h3>{article.title}</h3>
+                  <p>{article.subtitle}</p>
+                  <footer>
+                    <span>Por {article.authorName}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedArticle(article);
+                        goTo('artigos');
+                      }}
+                    >
+                      Ler ensaio <ArrowRight size={14} aria-hidden="true" />
+                    </button>
+                  </footer>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </section>

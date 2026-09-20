@@ -79,7 +79,7 @@ Um sebo online tem (3). Um blog de história tem (4). Um repositório acadêmico
 
 - Nome: **Adversus Omnes — Bibliotheca et Archivum**. Já aplicado em toda a interface, no título do documento e no repositório.
 - Tagline: *"Livros, documentos e ideias em perspectiva."*
-- Logotipo oficial fornecido pelo usuário em `public/logo.jpg` — também usado como favicon.
+- Logotipo original fornecido pelo usuário preservado em `public/logo.jpg`. A versão refinada em `public/logo-v2.png` mantém o pórtico e o livro, corrige o monograma para “AO”, adota tinta preta com rubrica vermelha e também é usada como favicon.
 - Idioma: português do Brasil, com latinismos de marca deliberados.
 - **Voz:** documental no acervo, autoral nos ensaios. Fichas de catálogo e descrições de autor descrevem obra e contexto com rigor e sem julgamento; os artigos assinados carregam a leitura crítica do editor. Essa separação entre as duas camadas é explícita e deve permanecer legível na interface.
 - A plataforma cataloga movimentos políticos opostos (liberalismo clássico, marxismo, anarquismo, republicanismo) e trata todos com o mesmo rigor descritivo.

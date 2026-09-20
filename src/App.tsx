@@ -105,12 +105,12 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-paper-500 text-ink flex flex-col justify-between selection:bg-rubrica selection:text-paper-800 w-full max-w-full overflow-x-clip">
+    <div className="museum-app min-h-screen bg-paper-500 text-ink flex flex-col justify-between selection:bg-rubrica selection:text-paper-800 w-full max-w-full overflow-x-clip">
       <a href="#conteudo" className="ch-skip-link">
         Pular para o conteúdo
       </a>
       <Navbar />
-      <main id="conteudo" tabIndex={-1} className="flex-grow w-full max-w-full overflow-x-clip outline-none">
+      <main id="conteudo" tabIndex={-1} className="museum-main flex-grow w-full max-w-full overflow-x-clip outline-none">
         {/* A chave remonta a fronteira a cada troca de seção: um erro numa
             view não deixa as outras inacessíveis. */}
         <ErrorBoundary key={activeTab}>{renderContent()}</ErrorBoundary>

@@ -16,13 +16,17 @@ import {
   RefreshCw,
   Save,
   Sliders,
-  Sparkles,
+  FlaskConical,
   ExternalLink,
   Layers,
   FileText
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
-import { CatalogItem, Coupon, SubscriptionPlan } from '../types';
+import { CatalogItem } from '../types';
+import { Tabs, TabPanel } from './ui/Tabs';
+import { Dialog } from './ui/Dialog';
+import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
+import { useToast } from './ui/Toast';
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -43,7 +47,12 @@ export const AdminDashboard: React.FC = () => {
     currentUser
   } = useStore();
 
-  const [activeTab, setActiveTab] = useState<'finance' | 'catalog' | 'inventory' | 'plans' | 'coupons' | 'gateway'>('finance');
+  const { notify } = useToast();
+
+  type AdminTab = 'finance' | 'catalog' | 'inventory' | 'plans' | 'coupons' | 'gateway';
+  const [activeTab, setActiveTab] = useState<AdminTab>('finance');
+  const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
+  const [catalogFormError, setCatalogFormError] = useState<string | null>(null);
 
   // InfinitePay Form Local State
   const [gatewayForm, setGatewayForm] = useState(infinitePayConfig);
@@ -75,12 +84,13 @@ export const AdminDashboard: React.FC = () => {
   const [newCouponDiscount, setNewCouponDiscount] = useState(15);
   const [newCouponDate, setNewCouponDate] = useState('2026-12-31');
 
-  // Metrics calculation
+  // Métricas derivadas do estado real do protótipo. Nada aqui é estimado:
+  // um número inventado num painel é lido como fato por quem assiste à demo.
   const totalRevenue = orders.reduce((acc, curr) => acc + curr.total, 0);
   const totalPhysicalOrders = orders.length;
-  const estimatedSubscribers = 42;
-  const monthlyRecurringRevenue = 42 * 49.90;
   const lowStockItems = catalog.filter(c => c.type === 'physical' && c.stock <= 1);
+  const physicalCount = catalog.filter(c => c.type === 'physical').length;
+  const digitalCount = catalog.length - physicalCount;
 
   const handleSaveGateway = (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,9 +145,10 @@ export const AdminDashboard: React.FC = () => {
   const handleSaveCatalogItem = (e: React.FormEvent) => {
     e.preventDefault();
     if (!catalogFormData.title.trim()) {
-      alert('Informe o título do item.');
+      setCatalogFormError('O título é obrigatório: é por ele que a obra aparece no catálogo e nas buscas.');
       return;
     }
+    setCatalogFormError(null);
 
     const payload = {
       ...catalogFormData,
@@ -168,7 +179,7 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#262a37] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-line pb-6">
         <div className="space-y-1.5">
           <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
             Dashboard Administrativo
@@ -179,164 +190,96 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full text-xs font-mono bg-emerald-950/80 border border-emerald-800 text-emerald-300 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true" />
-            <span>Sistema Operacional</span>
+          <span className="flex items-center gap-1.5 rounded-full border border-amber-800/50 bg-amber-950/70 px-3 py-1.5 font-mono text-xs text-amber-300">
+            <FlaskConical size={12} aria-hidden="true" />
+            <span>Dados de demonstração</span>
           </span>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Faturamento */}
-        <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
-          <div className="flex items-center justify-between text-stone-400 text-xs">
-            <span>Faturamento Bruto (Obras)</span>
-            <DollarSign size={16} className="text-[#c89b3c]" aria-hidden="true" />
+      {/* KPI Cards — todos calculados a partir do catálogo e dos pedidos em memória */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-1 rounded-xl border border-line bg-ink-700 p-5">
+          <div className="flex items-center justify-between text-xs text-stone-400">
+            <span>Faturamento dos pedidos</span>
+            <DollarSign size={16} className="text-gold" aria-hidden="true" />
           </div>
-          <div className="text-2xl font-cinzel font-bold text-white">
+          <div className="font-cinzel text-2xl font-bold tabular-nums text-white">
             R$ {totalRevenue.toFixed(2)}
           </div>
-          <div className="text-[11px] text-emerald-400 flex items-center gap-1 font-mono pt-1">
-            <TrendingUp size={12} aria-hidden="true" /> +18.4% este mês
+          <div className="pt-1 font-mono text-[11px] text-stone-400">
+            Soma dos pedidos registrados
           </div>
         </div>
 
-        {/* MRR Assinaturas */}
-        <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
-          <div className="flex items-center justify-between text-stone-400 text-xs">
-            <span>Receita Recorrente (MRR)</span>
-            <Sparkles size={16} className="text-amber-400" aria-hidden="true" />
-          </div>
-          <div className="text-2xl font-cinzel font-bold text-white">
-            R$ {monthlyRecurringRevenue.toFixed(2)}
-          </div>
-          <div className="text-[11px] text-stone-400 font-mono pt-1">
-            {estimatedSubscribers} assinantes ativos
-          </div>
-        </div>
-
-        {/* Pedidos Físicos */}
-        <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
-          <div className="flex items-center justify-between text-stone-400 text-xs">
-            <span>Pedidos Físicos Enviados</span>
+        <div className="space-y-1 rounded-xl border border-line bg-ink-700 p-5">
+          <div className="flex items-center justify-between text-xs text-stone-400">
+            <span>Pedidos registrados</span>
             <Truck size={16} className="text-blue-400" aria-hidden="true" />
           </div>
-          <div className="text-2xl font-cinzel font-bold text-white">
+          <div className="font-cinzel text-2xl font-bold tabular-nums text-white">
             {totalPhysicalOrders}
           </div>
-          <div className="text-[11px] text-stone-400 font-mono pt-1">
-            Via SEDEX e PAC Correios
+          <div className="pt-1 font-mono text-[11px] text-stone-400">
+            Envio por SEDEX e PAC
           </div>
         </div>
 
-        {/* Alerta de Estoque */}
-        <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-1">
-          <div className="flex items-center justify-between text-stone-400 text-xs">
-            <span>Itens c/ Estoque Crítico (1 un.)</span>
+        <div className="space-y-1 rounded-xl border border-line bg-ink-700 p-5">
+          <div className="flex items-center justify-between text-xs text-stone-400">
+            <span>Acervo catalogado</span>
+            <Layers size={16} className="text-gold" aria-hidden="true" />
+          </div>
+          <div className="font-cinzel text-2xl font-bold tabular-nums text-white">
+            {catalog.length}
+          </div>
+          <div className="pt-1 font-mono text-[11px] text-stone-400">
+            {physicalCount} físicas · {digitalCount} digitais
+          </div>
+        </div>
+
+        <div className="space-y-1 rounded-xl border border-line bg-ink-700 p-5">
+          <div className="flex items-center justify-between text-xs text-stone-400">
+            <span>Estoque crítico (1 un.)</span>
             <AlertTriangle size={16} className="text-orange-400" aria-hidden="true" />
           </div>
-          <div className="text-2xl font-cinzel font-bold text-orange-300">
+          <div className="font-cinzel text-2xl font-bold tabular-nums text-orange-300">
             {lowStockItems.length}
           </div>
-          <div className="text-[11px] text-stone-400 font-mono pt-1">
+          <div className="pt-1 font-mono text-[11px] text-stone-400">
             Peças únicas ou raras
           </div>
         </div>
       </div>
 
-      {/* Tabs Menu - Cleaned up without colliding border/rounded anti-patterns */}
-      <div role="tablist" aria-label="Abas do Painel Administrativo" className="border-b border-[#252834] flex flex-wrap gap-2 text-xs pb-1">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'finance'}
-          onClick={() => setActiveTab('finance')}
-          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
-            activeTab === 'finance'
-              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
-              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
-          }`}
-        >
-          Faturamento & Pedidos
-        </button>
+      <p className="-mt-4 text-xs leading-relaxed text-stone-400">
+        Receita recorrente e número de assinantes aparecem aqui quando houver base de assinantes —
+        hoje o protótipo não tem essa informação, e estimá-la seria inventar um número.
+      </p>
 
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'catalog'}
-          onClick={() => setActiveTab('catalog')}
-          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
-            activeTab === 'catalog'
-              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
-              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
-          }`}
-        >
-          Gestão de Catálogo
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'inventory'}
-          onClick={() => setActiveTab('inventory')}
-          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
-            activeTab === 'inventory'
-              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
-              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
-          }`}
-        >
-          Estoque & Inventário
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'plans'}
-          onClick={() => setActiveTab('plans')}
-          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
-            activeTab === 'plans'
-              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
-              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
-          }`}
-        >
-          Planos de Assinatura
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'coupons'}
-          onClick={() => setActiveTab('coupons')}
-          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center ${
-            activeTab === 'coupons'
-              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
-              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
-          }`}
-        >
-          Cupons Promocionais
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'gateway'}
-          onClick={() => setActiveTab('gateway')}
-          className={`px-4 py-2.5 rounded-lg font-semibold transition min-h-[44px] flex items-center gap-1.5 ${
-            activeTab === 'gateway'
-              ? 'bg-[#222532] text-[#c89b3c] border border-[#373c4d]'
-              : 'text-stone-400 hover:text-white hover:bg-[#1a1d26]'
-          }`}
-        >
-          <CreditCard size={13} aria-hidden="true" />
-          <span>Configuração InfinitePay</span>
-        </button>
-      </div>
+      <Tabs
+        group="admin"
+        label="Seções do painel administrativo"
+        value={activeTab}
+        onChange={setActiveTab}
+        items={[
+          { id: 'finance', label: 'Faturamento e pedidos', labelShort: 'Faturamento' },
+          { id: 'catalog', label: 'Gestão de catálogo', labelShort: 'Catálogo' },
+          { id: 'inventory', label: 'Estoque e inventário', labelShort: 'Estoque' },
+          { id: 'plans', label: 'Planos de assinatura', labelShort: 'Planos' },
+          { id: 'coupons', label: 'Cupons promocionais', labelShort: 'Cupons' },
+          {
+            id: 'gateway',
+            label: 'Configuração InfinitePay',
+            labelShort: 'InfinitePay',
+            icon: <CreditCard size={13} aria-hidden="true" />
+          }
+        ]}
+      />
 
       {/* Tab 1: Faturamento & Pedidos */}
-      {activeTab === 'finance' && (
-        <div className="space-y-6">
-          <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
+      <TabPanel group="admin" id="finance" active={activeTab === 'finance'} className="space-y-6">
+          <div className="p-5 rounded-xl bg-ink-700 border border-line space-y-4">
             <h2 className="text-base font-cinzel font-bold text-white">
               Histórico de Vendas e Pedidos Realizados
             </h2>
@@ -344,9 +287,9 @@ export const AdminDashboard: React.FC = () => {
             <div className="text-xs text-stone-400 sm:hidden flex items-center gap-1.5 py-1">
               <span>Deslize a tabela para o lado para ver todos os campos</span>
             </div>
-            <div className="overflow-x-auto rounded-lg border border-[#272b38]">
+            <div className="overflow-x-auto rounded-lg border border-line">
               <table className="w-full min-w-[720px] text-left text-xs text-stone-300">
-                <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
+                <thead className="bg-ink-800 text-stone-400 uppercase text-[10px] tracking-wider border-b border-line-soft">
                   <tr>
                     <th scope="col" className="p-3">ID Pedido</th>
                     <th scope="col" className="p-3">Cliente</th>
@@ -358,10 +301,10 @@ export const AdminDashboard: React.FC = () => {
                     <th scope="col" className="p-3">Data</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#20232e]">
+                <tbody className="divide-y divide-line-faint">
                   {orders.map(order => (
-                    <tr key={order.id} className="hover:bg-[#1a1d26]">
-                      <td className="p-3 font-mono text-[#c89b3c] font-semibold">{order.id}</td>
+                    <tr key={order.id} className="hover:bg-ink-600">
+                      <td className="p-3 font-mono text-gold font-semibold">{order.id}</td>
                       <td className="p-3">
                         <div className="font-medium text-white">{order.customerName}</div>
                         <div className="text-[10px] text-stone-400">{order.customerEmail}</div>
@@ -396,12 +339,10 @@ export const AdminDashboard: React.FC = () => {
               </table>
             </div>
           </div>
-        </div>
-      )}
+      </TabPanel>
 
       {/* Tab 2: Gestão de Catálogo */}
-      {activeTab === 'catalog' && (
-        <div className="space-y-4">
+      <TabPanel group="admin" id="catalog" active={activeTab === 'catalog'} className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-base font-cinzel font-bold text-white">
               Catálogo Geral (Físico & Digital)
@@ -409,7 +350,7 @@ export const AdminDashboard: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenCatalogModal()}
-              className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs flex items-center gap-1.5 transition min-h-[44px]"
+              className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs flex items-center gap-1.5 transition min-h-[44px]"
             >
               <Plus size={15} aria-hidden="true" /> Cadastrar Nova Obra / Documento
             </button>
@@ -418,9 +359,9 @@ export const AdminDashboard: React.FC = () => {
           <div className="text-xs text-stone-400 sm:hidden flex items-center gap-1.5 py-1">
             <span>Deslize a tabela para o lado para ver todos os campos</span>
           </div>
-          <div className="overflow-x-auto bg-[#15171f] border border-[#272b38] rounded-xl">
+          <div className="overflow-x-auto bg-ink-700 border border-line rounded-xl">
             <table className="w-full min-w-[720px] text-left text-xs text-stone-300">
-              <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
+              <thead className="bg-ink-800 text-stone-400 uppercase text-[10px] tracking-wider border-b border-line-soft">
                 <tr>
                   <th scope="col" className="p-3">Capa</th>
                   <th scope="col" className="p-3">Título & Autor</th>
@@ -431,16 +372,16 @@ export const AdminDashboard: React.FC = () => {
                   <th scope="col" className="p-3 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#20232e]">
+              <tbody className="divide-y divide-line-faint">
                 {catalog.map(item => (
-                  <tr key={item.id} className="hover:bg-[#1a1d26]">
+                  <tr key={item.id} className="hover:bg-ink-600">
                     <td className="p-3">
                       <img
                         src={item.coverImage}
                         alt={`Capa do exemplar ${item.title}`}
                         loading="lazy"
                         decoding="async"
-                        className="w-10 h-14 object-cover rounded border border-[#323644]"
+                        className="w-10 h-14 object-cover rounded border border-line-mid"
                       />
                     </td>
                     <td className="p-3">
@@ -483,7 +424,17 @@ export const AdminDashboard: React.FC = () => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => deleteCatalogItem(item.id)}
+                          onClick={() =>
+                            setConfirmRequest({
+                              title: 'Remover esta obra do catálogo?',
+                              body: `"${item.title}" sai do acervo, deixa de aparecer nas buscas e nas fichas de autor, e o estoque registrado é perdido. Não há como desfazer.`,
+                              confirmLabel: 'Remover obra',
+                              onConfirm: () => {
+                                deleteCatalogItem(item.id);
+                                notify(`"${item.title}" foi removida do catálogo.`, 'info');
+                              }
+                            })
+                          }
                           aria-label={`Excluir obra ${item.title}`}
                           className="p-2.5 rounded-lg text-dust hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                         >
@@ -496,12 +447,10 @@ export const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
+      </TabPanel>
 
       {/* Tab 3: Estoque & Inventário com alvos de toque maiores */}
-      {activeTab === 'inventory' && (
-        <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
+      <TabPanel group="admin" id="inventory" active={activeTab === 'inventory'} className="p-5 rounded-xl bg-ink-700 border border-line space-y-4">
           <h2 className="text-base font-cinzel font-bold text-white">
             Ajuste Rápido de Estoque Unitário
           </h2>
@@ -515,7 +464,7 @@ export const AdminDashboard: React.FC = () => {
               .map(item => (
                 <div
                   key={item.id}
-                  className="p-4 rounded-lg bg-[#1a1d26] border border-[#2b2f3d] flex items-center justify-between gap-3"
+                  className="p-4 rounded-lg bg-ink-600 border border-line flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <img
@@ -523,12 +472,12 @@ export const AdminDashboard: React.FC = () => {
                       alt={`Capa de ${item.title}`}
                       loading="lazy"
                       decoding="async"
-                      className="w-12 h-16 object-cover rounded border border-[#363a4a] shrink-0"
+                      className="w-12 h-16 object-cover rounded border border-line-strong shrink-0"
                     />
                     <div className="min-w-0">
                       <h4 className="text-xs font-semibold text-white truncate">{item.title}</h4>
                       <p className="text-[11px] text-stone-400">{item.condition}</p>
-                      <p className="text-xs text-[#c89b3c] font-bold">R$ {item.price.toFixed(2)}</p>
+                      <p className="text-xs text-gold font-bold">R$ {item.price.toFixed(2)}</p>
                     </div>
                   </div>
 
@@ -538,7 +487,7 @@ export const AdminDashboard: React.FC = () => {
                       type="button"
                       onClick={() => updateStock(item.id, -1)}
                       aria-label={`Diminuir estoque de ${item.title}`}
-                      className="min-w-[44px] min-h-[44px] rounded-lg bg-[#252834] hover:bg-[#323646] text-stone-200 flex items-center justify-center font-bold text-base transition"
+                      className="min-w-[44px] min-h-[44px] rounded-lg bg-ink-450 hover:bg-ink-350 text-stone-200 flex items-center justify-center font-bold text-base transition"
                     >
                       -
                     </button>
@@ -549,7 +498,7 @@ export const AdminDashboard: React.FC = () => {
                       type="button"
                       onClick={() => updateStock(item.id, 1)}
                       aria-label={`Aumentar estoque de ${item.title}`}
-                      className="min-w-[44px] min-h-[44px] rounded-lg bg-[#252834] hover:bg-[#323646] text-stone-200 flex items-center justify-center font-bold text-base transition"
+                      className="min-w-[44px] min-h-[44px] rounded-lg bg-ink-450 hover:bg-ink-350 text-stone-200 flex items-center justify-center font-bold text-base transition"
                     >
                       +
                     </button>
@@ -557,12 +506,10 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               ))}
           </div>
-        </div>
-      )}
+      </TabPanel>
 
       {/* Tab 4: Planos de Assinatura */}
-      {activeTab === 'plans' && (
-        <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
+      <TabPanel group="admin" id="plans" active={activeTab === 'plans'} className="p-5 rounded-xl bg-ink-700 border border-line space-y-4">
           <h2 className="text-base font-cinzel font-bold text-white">
             Administração dos Planos de Assinatura
           </h2>
@@ -574,11 +521,11 @@ export const AdminDashboard: React.FC = () => {
             {plans.map(plan => (
               <div
                 key={plan.id}
-                className="p-4 rounded-lg bg-[#1a1d26] border border-[#2b2f3d] space-y-3 text-xs"
+                className="p-4 rounded-lg bg-ink-600 border border-line space-y-3 text-xs"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-white text-sm">{plan.name}</span>
-                  <span className="text-[#c89b3c] font-mono">{plan.badge}</span>
+                  <span className="text-gold font-mono">{plan.badge}</span>
                 </div>
 
                 <div>
@@ -591,7 +538,7 @@ export const AdminDashboard: React.FC = () => {
                     step="0.1"
                     value={plan.priceMonthly}
                     onChange={e => updatePlan(plan.id, { priceMonthly: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
 
@@ -605,7 +552,7 @@ export const AdminDashboard: React.FC = () => {
                     step="1"
                     value={plan.priceYearly}
                     onChange={e => updatePlan(plan.id, { priceYearly: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
 
@@ -618,19 +565,17 @@ export const AdminDashboard: React.FC = () => {
                     rows={2}
                     value={plan.description}
                     onChange={e => updatePlan(plan.id, { description: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#313546] rounded p-2 text-white"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white"
                   />
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
+      </TabPanel>
 
       {/* Tab 5: Cupons Promocionais */}
-      {activeTab === 'coupons' && (
-        <div className="space-y-6">
-          <div className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] space-y-4">
+      <TabPanel group="admin" id="coupons" active={activeTab === 'coupons'} className="space-y-6">
+          <div className="p-5 rounded-xl bg-ink-700 border border-line space-y-4">
             <h2 className="text-base font-cinzel font-bold text-white">Criar Novo Cupom</h2>
             <form onSubmit={handleCreateCoupon} className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
               <input
@@ -639,7 +584,7 @@ export const AdminDashboard: React.FC = () => {
                 aria-label="Código promocional"
                 value={newCouponCode}
                 onChange={e => setNewCouponCode(e.target.value.toUpperCase())}
-                className="bg-[#101217] border border-[#313546] rounded p-2 text-white uppercase font-mono min-h-[44px]"
+                className="bg-ink-800 border border-line-mid rounded p-2 text-white uppercase font-mono min-h-[44px]"
               />
               <input
                 type="number"
@@ -647,27 +592,27 @@ export const AdminDashboard: React.FC = () => {
                 aria-label="Porcentagem de desconto"
                 value={newCouponDiscount}
                 onChange={e => setNewCouponDiscount(Number(e.target.value))}
-                className="bg-[#101217] border border-[#313546] rounded p-2 text-white font-mono min-h-[44px]"
+                className="bg-ink-800 border border-line-mid rounded p-2 text-white font-mono min-h-[44px]"
               />
               <input
                 type="date"
                 aria-label="Data de validade do cupom"
                 value={newCouponDate}
                 onChange={e => setNewCouponDate(e.target.value)}
-                className="bg-[#101217] border border-[#313546] rounded p-2 text-white min-h-[44px]"
+                className="bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
               />
               <button
                 type="submit"
-                className="bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold rounded px-4 py-2 transition min-h-[44px]"
+                className="bg-gold hover:bg-gold-light text-black font-semibold rounded px-4 py-2 transition min-h-[44px]"
               >
                 Cadastrar Cupom
               </button>
             </form>
           </div>
 
-          <div className="overflow-x-auto bg-[#15171f] border border-[#272b38] rounded-xl">
+          <div className="overflow-x-auto bg-ink-700 border border-line rounded-xl">
             <table className="w-full min-w-[620px] text-left text-xs text-stone-300">
-              <thead className="bg-[#101217] text-stone-400 uppercase text-[10px] tracking-wider border-b border-[#252834]">
+              <thead className="bg-ink-800 text-stone-400 uppercase text-[10px] tracking-wider border-b border-line-soft">
                 <tr>
                   <th scope="col" className="p-3">Código</th>
                   <th scope="col" className="p-3">Desconto</th>
@@ -676,10 +621,10 @@ export const AdminDashboard: React.FC = () => {
                   <th scope="col" className="p-3 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#20232e]">
+              <tbody className="divide-y divide-line-faint">
                 {coupons.map(c => (
-                  <tr key={c.code} className="hover:bg-[#1a1d26]">
-                    <td className="p-3 font-mono font-bold text-[#c89b3c]">{c.code}</td>
+                  <tr key={c.code} className="hover:bg-ink-600">
+                    <td className="p-3 font-mono font-bold text-gold">{c.code}</td>
                     <td className="p-3 font-bold text-white">{c.discountPercentage}% OFF</td>
                     <td className="p-3 text-stone-400">{c.validUntil}</td>
                     <td className="p-3">
@@ -703,8 +648,18 @@ export const AdminDashboard: React.FC = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => deleteCoupon(c.code)}
-                        className="text-red-400 hover:text-red-300 text-xs min-h-[44px] px-2"
+                        onClick={() =>
+                          setConfirmRequest({
+                            title: `Excluir o cupom ${c.code}?`,
+                            body: `Quem já tiver o código deixa de conseguir aplicá-lo na sacola. Para suspender sem apagar, use "Desativar".`,
+                            confirmLabel: 'Excluir cupom',
+                            onConfirm: () => {
+                              deleteCoupon(c.code);
+                              notify(`Cupom ${c.code} excluído.`, 'info');
+                            }
+                          })
+                        }
+                        className="min-h-[44px] px-2 text-xs text-red-400 transition hover:text-red-300"
                       >
                         Excluir
                       </button>
@@ -714,29 +669,28 @@ export const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
+      </TabPanel>
 
       {/* Tab 6: Configuração Gateway InfinitePay */}
-      {activeTab === 'gateway' && (
-        <div className="p-6 rounded-xl bg-[#15171f] border border-[#272b38] space-y-5">
+      <TabPanel group="admin" id="gateway" active={activeTab === 'gateway'} className="p-6 rounded-xl bg-ink-700 border border-line space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#1e212b] border border-[#323644] flex items-center justify-center text-[#c89b3c]">
+              <div className="w-10 h-10 rounded-lg bg-ink-550 border border-line-mid flex items-center justify-center text-gold">
                 <CreditCard size={20} aria-hidden="true" />
               </div>
               <div>
                 <h2 className="text-base font-cinzel font-bold text-white">
                   Integração com Gateway InfinitePay
                 </h2>
-                <p className="text-xs text-stone-400">
-                  Preencha as credenciais da sua conta InfinitePay para habilitar pagamentos reais via Pix e Cartão.
+                <p className="text-xs leading-relaxed text-stone-400">
+                  Campos preparados para a integração. Neste protótipo os valores ficam salvos apenas
+                  neste navegador e nenhuma cobrança é processada.
                 </p>
               </div>
             </div>
 
-            <span className="px-3 py-1 rounded-full text-xs font-mono bg-amber-950 text-amber-300 border border-amber-800/40">
-              {gatewayForm.mode === 'sandbox' ? 'Ambiente de Testes / Sandbox' : 'Ambiente de Produção'}
+            <span className="shrink-0 rounded-full border border-amber-800/40 bg-amber-950 px-3 py-1 font-mono text-xs text-amber-300">
+              {gatewayForm.mode === 'sandbox' ? 'Sandbox' : 'Produção'}
             </span>
           </div>
 
@@ -749,10 +703,10 @@ export const AdminDashboard: React.FC = () => {
                 id="gateway-mode"
                 value={gatewayForm.mode}
                 onChange={e => setGatewayForm({ ...gatewayForm, mode: e.target.value as any })}
-                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white min-h-[44px]"
+                className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
               >
-                <option value="sandbox">Sandbox (Simulação de Pix e Cartão para testes imediatos)</option>
-                <option value="production">Produção (Liquidará pagamentos reais na sua conta InfinitePay)</option>
+                <option value="sandbox">Sandbox — simulação de Pix e cartão</option>
+                <option value="production">Produção — exige a conta InfinitePay contratada</option>
               </select>
             </div>
 
@@ -765,21 +719,28 @@ export const AdminDashboard: React.FC = () => {
                 type="text"
                 value={gatewayForm.merchantId}
                 onChange={e => setGatewayForm({ ...gatewayForm, merchantId: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
+                className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
             <div>
               <label htmlFor="gateway-api-key" className="text-stone-300 block mb-1">
-                InfinitePay API Key (Chave Pública / Privada)
+                Chave de API
               </label>
               <input
                 id="gateway-api-key"
-                type="text"
+                type="password"
+                autoComplete="off"
+                spellCheck={false}
+                aria-describedby="gateway-api-key-nota"
                 value={gatewayForm.apiKey}
                 onChange={e => setGatewayForm({ ...gatewayForm, apiKey: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
+                className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
+              <p id="gateway-api-key-nota" className="mt-1.5 text-[11px] leading-relaxed text-dust">
+                Guardada apenas neste navegador, sem criptografia. Não use uma chave de produção
+                enquanto o protótipo não tiver servidor.
+              </p>
             </div>
 
             <div>
@@ -791,7 +752,7 @@ export const AdminDashboard: React.FC = () => {
                 type="text"
                 value={gatewayForm.walletId}
                 onChange={e => setGatewayForm({ ...gatewayForm, walletId: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
+                className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
@@ -804,14 +765,14 @@ export const AdminDashboard: React.FC = () => {
                 type="url"
                 value={gatewayForm.webhookUrl}
                 onChange={e => setGatewayForm({ ...gatewayForm, webhookUrl: e.target.value })}
-                className="w-full bg-[#101217] border border-[#313546] rounded-lg p-2.5 text-white font-mono min-h-[44px]"
+                className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-mono min-h-[44px]"
               />
             </div>
 
             <div className="pt-2 flex items-center gap-3">
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-1.5 shadow min-h-[44px]"
+                className="px-5 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition flex items-center gap-1.5 shadow min-h-[44px]"
               >
                 <Save size={15} aria-hidden="true" />
                 <span>Salvar Configurações InfinitePay</span>
@@ -824,24 +785,16 @@ export const AdminDashboard: React.FC = () => {
               )}
             </div>
           </form>
-        </div>
-      )}
+      </TabPanel>
 
       {/* Catalog Modal */}
-      {isCatalogModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="catalog-modal-title"
-          className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
-        >
-          <div
-            onClick={() => setIsCatalogModalOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-          <div className="relative w-full max-w-xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
-            <h2 id="catalog-modal-title" className="text-base font-cinzel font-bold text-white border-b border-[#252834] pb-2">
+      <Dialog
+        open={isCatalogModalOpen}
+        onClose={() => setIsCatalogModalOpen(false)}
+        labelledBy="catalog-modal-title"
+        panelClassName="w-full max-w-xl space-y-4 rounded-xl border border-line-mid bg-ink-700 p-6 shadow-2xl max-h-[90svh] overflow-y-auto"
+      >
+            <h2 id="catalog-modal-title" className="text-base font-cinzel font-bold text-white border-b border-line-soft pb-2">
               {editingItem ? 'Editar Obra do Catálogo' : 'Adicionar Nova Obra ao Catálogo'}
             </h2>
 
@@ -854,10 +807,22 @@ export const AdminDashboard: React.FC = () => {
                   id="cat-title"
                   type="text"
                   required
+                  aria-invalid={!!catalogFormError}
+                  aria-describedby={catalogFormError ? 'cat-title-erro' : undefined}
                   value={catalogFormData.title}
-                  onChange={e => setCatalogFormData({ ...catalogFormData, title: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                  onChange={e => {
+                    setCatalogFormData({ ...catalogFormData, title: e.target.value });
+                    if (catalogFormError) setCatalogFormError(null);
+                  }}
+                  className={`min-h-[44px] w-full rounded border bg-ink-800 p-2 text-white ${
+                    catalogFormError ? 'border-red-700' : 'border-line-mid'
+                  }`}
                 />
+                {catalogFormError && (
+                  <p id="cat-title-erro" role="alert" className="mt-1.5 text-[11px] text-red-300">
+                    {catalogFormError}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -870,7 +835,7 @@ export const AdminDashboard: React.FC = () => {
                     type="text"
                     value={catalogFormData.author}
                     onChange={e => setCatalogFormData({ ...catalogFormData, author: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -882,7 +847,7 @@ export const AdminDashboard: React.FC = () => {
                     type="number"
                     value={catalogFormData.year}
                     onChange={e => setCatalogFormData({ ...catalogFormData, year: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
                   />
                 </div>
               </div>
@@ -896,7 +861,7 @@ export const AdminDashboard: React.FC = () => {
                     id="cat-type"
                     value={catalogFormData.type}
                     onChange={e => setCatalogFormData({ ...catalogFormData, type: e.target.value as any })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
                   >
                     <option value="physical">Acervo Físico (Livro)</option>
                     <option value="digital">Acervo Digital</option>
@@ -911,7 +876,7 @@ export const AdminDashboard: React.FC = () => {
                     id="cat-access"
                     value={catalogFormData.access}
                     onChange={e => setCatalogFormData({ ...catalogFormData, access: e.target.value as any })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
                   >
                     <option value="sale">À Venda (E-commerce)</option>
                     <option value="exclusive">Exclusivo Assinantes</option>
@@ -928,7 +893,7 @@ export const AdminDashboard: React.FC = () => {
                     step="0.01"
                     value={catalogFormData.price}
                     onChange={e => setCatalogFormData({ ...catalogFormData, price: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white font-mono min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
               </div>
@@ -943,7 +908,7 @@ export const AdminDashboard: React.FC = () => {
                     type="number"
                     value={catalogFormData.stock}
                     onChange={e => setCatalogFormData({ ...catalogFormData, stock: Number(e.target.value) })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white font-mono min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white font-mono min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -956,7 +921,7 @@ export const AdminDashboard: React.FC = () => {
                     value={catalogFormData.condition}
                     onChange={e => setCatalogFormData({ ...catalogFormData, condition: e.target.value })}
                     placeholder="Ex: Raro / Peça Única, Usado - Excelente"
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
                   />
                 </div>
               </div>
@@ -970,7 +935,7 @@ export const AdminDashboard: React.FC = () => {
                   type="url"
                   value={catalogFormData.coverImage}
                   onChange={e => setCatalogFormData({ ...catalogFormData, coverImage: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white min-h-[44px]"
                 />
               </div>
 
@@ -983,7 +948,7 @@ export const AdminDashboard: React.FC = () => {
                   rows={3}
                   value={catalogFormData.description}
                   onChange={e => setCatalogFormData({ ...catalogFormData, description: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded p-2 text-white"
+                  className="w-full bg-ink-800 border border-line-mid rounded p-2 text-white"
                 />
               </div>
 
@@ -991,21 +956,21 @@ export const AdminDashboard: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsCatalogModalOpen(false)}
-                  className="px-4 py-2.5 rounded-lg bg-[#20232e] text-stone-300 min-h-[44px]"
+                  className="px-4 py-2.5 rounded-lg bg-ink-500 text-stone-300 min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold min-h-[44px]"
+                  className="px-5 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold min-h-[44px]"
                 >
                   Salvar Obra
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+        </form>
+      </Dialog>
+
+      <ConfirmDialog request={confirmRequest} onDismiss={() => setConfirmRequest(null)} />
     </div>
   );
 };

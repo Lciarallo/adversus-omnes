@@ -2,17 +2,44 @@
 
 @theme {
   --font-serif: "Cormorant Garamond", "Spectral", Georgia, serif;
+  --font-reading: "Spectral", Georgia, serif;
   --font-display: "Cinzel", Georgia, serif;
   --font-sans: "Outfit", system-ui, sans-serif;
+
+  /* Papel e tinta */
   --color-parchment: #fbf9f2;
   --color-parchment-dark: #eee8d8;
-  --color-ink: #101114;
-  --color-ink-surface: #15171f;
-  --color-ink-card: #1a1d26;
-  --color-ink-border: #282b38;
+  --color-bone: #e8e6e3;
   --color-dust: #8b857e;
+
+  /* Superfícies: do poço de imagem ao controle em destaque */
+  --color-ink: #101114;
+  --color-ink-950: #090a0d;
+  --color-ink-900: #0d0e12;
+  --color-ink-850: #101114;
+  --color-ink-800: #101217;
+  --color-ink-750: #12141a;
+  --color-ink-700: #15171f;
+  --color-ink-650: #181a22;
+  --color-ink-600: #1a1d26;
+  --color-ink-550: #1e212b;
+  --color-ink-500: #222530;
+  --color-ink-450: #252834;
+  --color-ink-400: #2a2e3b;
+  --color-ink-350: #303444;
+
+  /* Filetes: a moldura do acervo, da divisória interna à borda em foco */
+  --color-line-faint: #20232e;
+  --color-line-soft: #252834;
+  --color-line: #272b38;
+  --color-line-mid: #2e3343;
+  --color-line-strong: #353a4c;
+  --color-line-bright: #3d4254;
+
+  /* Ouro: a única cor de marca */
   --color-gold: #c89b3c;
   --color-gold-light: #dbaa42;
+  --color-gold-deep: #a87e28;
   --color-gold-dark: #966f21;
 }
 
@@ -31,7 +58,7 @@ body {
   font-family: var(--font-sans);
   background-color: #101114;
   color: #e5e3dd;
-  caret-color: #c89b3c;
+  caret-color: var(--color-gold);
   text-underline-offset: 3px;
 }
 
@@ -70,7 +97,7 @@ h1, h2, h3, .font-serif-title {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c89b3c;
+  background: var(--color-gold);
 }
 
 /* Watermark styles for secure reader */
@@ -225,7 +252,7 @@ h1, h2, h3, .font-serif-title {
   font-family: var(--font-serif);
   font-style: italic;
   font-size: clamp(2.4rem, 6vw, 4.6rem);
-  color: #c89b3c;
+  color: var(--color-gold);
   opacity: 0.11;
   filter: blur(10px);
 }
@@ -244,7 +271,7 @@ h1, h2, h3, .font-serif-title {
   font-size: clamp(3rem, 8vw, 6rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #c89b3c;
+  color: var(--color-gold);
   opacity: 0.08;
   filter: blur(16px);
 }
@@ -332,7 +359,7 @@ h1, h2, h3, .font-serif-title {
 }
 
 .frontis-title-gold {
-  color: #c89b3c;
+  color: var(--color-gold);
 }
 
 .frontis-rule {
@@ -352,7 +379,7 @@ h1, h2, h3, .font-serif-title {
 .frontis-rule-mark {
   width: 0.4rem;
   height: 0.4rem;
-  background: #c89b3c;
+  background: var(--color-gold);
   transform: rotate(45deg);
   box-shadow: 0 0 12px rgba(200, 155, 60, 0.5);
 }
@@ -365,7 +392,7 @@ h1, h2, h3, .font-serif-title {
   letter-spacing: 0.4em;
   text-indent: 0.4em;
   text-transform: uppercase;
-  color: #c89b3c;
+  color: var(--color-gold);
 }
 
 .frontis-tagline {
@@ -443,14 +470,14 @@ h1, h2, h3, .font-serif-title {
 .frontis-cta--quiet {
   background: rgba(20, 22, 29, 0.6);
   border-color: rgba(150, 111, 33, 0.55);
-  color: #c89b3c;
+  color: var(--color-gold);
   backdrop-filter: blur(6px);
 }
 
 .frontis-cta--quiet:hover {
   background: rgba(31, 34, 45, 0.85);
   border-color: rgba(200, 155, 60, 0.8);
-  color: #dbaa42;
+  color: var(--color-gold-light);
 }
 
 /* ---- Rodapé da página de rosto: o que há dentro do acervo ---- */
@@ -481,7 +508,7 @@ h1, h2, h3, .font-serif-title {
   width: 0.24rem;
   height: 0.24rem;
   margin: 0 0.75rem;
-  background: #c89b3c;
+  background: var(--color-gold);
   transform: rotate(45deg);
 }
 
@@ -501,7 +528,7 @@ h1, h2, h3, .font-serif-title {
   height: 3px;
   margin-left: -1px;
   border-radius: 50%;
-  background: #c89b3c;
+  background: var(--color-gold);
   box-shadow: 0 0 8px rgba(200, 155, 60, 0.9);
 }
 
@@ -809,7 +836,6 @@ h1, h2, h3, .font-serif-title {
               box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1),
               border-color 300ms ease;
   transform: perspective(1000px) translate3d(0, 0, 0);
-  will-change: transform, box-shadow;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -871,3 +897,192 @@ h1, h2, h3, .font-serif-title {
   }
 }
 
+
+/* ================================================================== *
+ * Primitivos de interface: pular conteúdo, avisos, foco de painel.    *
+ * ================================================================== */
+
+/* O primeiro Tab da página revela o atalho para o conteúdo. */
+.ch-skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, calc(-100% - 1.5rem));
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.7rem 1.25rem;
+  border: 1px solid rgba(200, 155, 60, 0.55);
+  border-radius: 0.55rem;
+  background: #15171f;
+  color: var(--color-gold-light);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.95);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ch-skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
+/* Aviso entrando: sobe e assenta. */
+.ch-toast {
+  animation: ch-toast-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ch-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* O painel de diálogo recebe o foco no início: o anel do contêiner
+   seria um retângulo de página inteira sem informação nenhuma. */
+[role='dialog']:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ch-skip-link,
+  .ch-toast {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ================================================================== *
+ * O ensaio: a única superfície do acervo feita para permanecer lendo. *
+ * Medida de 68ca, entrelinha larga e capitular de abertura.            *
+ * ================================================================== */
+
+.ch-prose {
+  max-width: 68ch;
+  font-family: var(--font-reading);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: #d8d4cc;
+  text-wrap: pretty;
+  hyphens: auto;
+}
+
+.ch-prose > p + p {
+  margin-top: 1.35em;
+}
+
+.ch-prose > p:first-of-type::first-letter {
+  float: left;
+  margin: 0.06em 0.09em 0 0;
+  font-family: var(--font-display);
+  font-size: 3.1em;
+  font-weight: 700;
+  line-height: 0.82;
+  color: var(--color-gold);
+}
+
+@media (max-width: 640px) {
+  .ch-prose {
+    font-size: 1rem;
+    line-height: 1.72;
+  }
+
+  .ch-prose > p:first-of-type::first-letter {
+    font-size: 2.7em;
+  }
+}
+
+/* ================================================================== *
+ * Leitor em texto: a mesma folha, legível por leitor de tela e por    *
+ * quem precisa ampliar. O desenho em tela continua sendo o padrão.    *
+ * ================================================================== */
+
+.ch-reader-page {
+  position: relative;
+  max-width: 68ch;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 5vw, 3.25rem) clamp(1.25rem, 5vw, 3rem);
+  color: #232220;
+  background: var(--color-parchment);
+}
+
+.ch-reader-page::before {
+  content: '';
+  position: absolute;
+  inset: clamp(0.6rem, 1.6vw, 1rem);
+  border: 1px solid #d9d2c2;
+  pointer-events: none;
+}
+
+.ch-reader-kicker {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #6e6a5e;
+}
+
+.ch-reader-title {
+  margin-top: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: #1c1c1a;
+  text-wrap: balance;
+}
+
+.ch-reader-byline {
+  margin-top: 0.6rem;
+  padding-bottom: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+  color: #8f7e53;
+  border-bottom: 1.5px solid #c89b3c;
+  width: 10rem;
+  margin-inline: auto;
+}
+
+.ch-reader-section {
+  margin-top: 2rem;
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-style: italic;
+  font-weight: 700;
+  color: #3a3832;
+}
+
+.ch-reader-body {
+  margin-top: 1rem;
+  font-family: var(--font-reading);
+  font-size: 1rem;
+  line-height: 1.8;
+  text-wrap: pretty;
+  hyphens: auto;
+}
+
+.ch-reader-body > p + p {
+  margin-top: 1.2em;
+}
+
+.ch-reader-colophon {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2dccc;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  text-align: center;
+  color: #6b6659;
+}

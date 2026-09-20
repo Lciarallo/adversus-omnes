@@ -14,6 +14,10 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { Author } from '../types';
+import { Dialog } from './ui/Dialog';
+import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
+import { EmptyState } from './ui/EmptyState';
+import { useToast } from './ui/Toast';
 
 export const AuthorManager: React.FC = () => {
   const {
@@ -24,8 +28,12 @@ export const AuthorManager: React.FC = () => {
     currentUser,
     catalog,
     openReader,
-    setActiveTab
+    setActiveTab,
+    setRole
   } = useStore();
+  const { notify } = useToast();
+
+  const isAdmin = currentUser.role === 'admin';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMovement, setSelectedMovement] = useState<string>('all');
@@ -52,6 +60,8 @@ export const AuthorManager: React.FC = () => {
 
   // Detailed View Modal
   const [viewAuthor, setViewAuthor] = useState<Author | null>(null);
+  const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const movements = Array.from(new Set(authors.map(a => a.politicalMovement)));
   const periods = Array.from(new Set(authors.map(a => a.period)));
@@ -105,18 +115,25 @@ export const AuthorManager: React.FC = () => {
   };
 
   const handleDeleteAuthor = (id: string, name: string) => {
-    if (window.confirm(`Tem certeza que deseja remover o autor "${name}"?`)) {
-      deleteAuthor(id);
-      if (viewAuthor?.id === id) setViewAuthor(null);
-    }
+    setConfirmRequest({
+      title: 'Remover este autor do catálogo?',
+      body: `${name} sai do índice de autores e deixa de ligar suas obras ao movimento e ao período. As obras permanecem no acervo, sem a ficha do autor. Não há como desfazer.`,
+      confirmLabel: 'Remover autor',
+      onConfirm: () => {
+        deleteAuthor(id);
+        if (viewAuthor?.id === id) setViewAuthor(null);
+        notify(`${name} foi removido do índice de autores.`, 'info');
+      }
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      alert('Por favor, informe o nome do autor.');
+      setFormError('O nome do autor é obrigatório: é ele que liga a ficha às obras do acervo.');
       return;
     }
+    setFormError(null);
 
     const payload = {
       name: formData.name.trim(),
@@ -144,7 +161,7 @@ export const AuthorManager: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#252834] pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-line-soft pb-6">
         <div className="space-y-1.5">
           <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
             Autores e suas Obras
@@ -154,34 +171,36 @@ export const AuthorManager: React.FC = () => {
           </p>
         </div>
 
-        {/* Add Author Action Button */}
+        {/* Catalogação é trabalho de administrador: o visitante vê o índice,
+            e tem um caminho explícito para assumir o perfil na demonstração. */}
         <div className="flex items-center gap-2">
-          {currentUser.role === 'admin' ? (
+          {isAdmin ? (
             <button
               type="button"
               onClick={handleOpenAddModal}
-              aria-label="Cadastrar novo autor na biblioteca"
-              className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-2 shadow-lg shadow-[#c89b3c]/20 min-h-[44px]"
+              className="flex min-h-[44px] items-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-xs font-semibold text-black shadow-lg shadow-gold/20 transition hover:bg-gold-light"
             >
               <Plus size={16} aria-hidden="true" />
-              <span>Novo Autor</span>
+              <span>Cadastrar autor</span>
             </button>
           ) : (
             <button
               type="button"
-              onClick={handleOpenAddModal}
-              aria-label="Cadastrar autor (modo admin demonstrativo)"
-              className="px-3.5 py-2 rounded-lg bg-[#20232e] hover:bg-[#2c303f] text-stone-300 text-xs border border-[#353a4b] transition flex items-center gap-1.5 min-h-[44px]"
+              onClick={() => {
+                setRole('admin');
+                notify('Perfil de administrador ativado para a demonstração.', 'info');
+              }}
+              className="flex min-h-[44px] items-center gap-1.5 rounded-lg border border-line-strong bg-ink-500 px-3.5 py-2 text-xs text-stone-300 transition hover:bg-ink-400 hover:text-white"
             >
-              <Plus size={14} className="text-[#c89b3c]" aria-hidden="true" />
-              <span>Cadastrar Autor (Admin)</span>
+              <UserCheck size={14} className="text-gold" aria-hidden="true" />
+              <span>Catalogar como administrador</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-[#15171e] p-4 rounded-xl border border-[#272a37] grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="bg-ink-700 p-4 rounded-xl border border-line grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Search */}
         <div className="relative">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dust pointer-events-none" aria-hidden="true" />
@@ -191,7 +210,7 @@ export const AuthorManager: React.FC = () => {
             placeholder="Buscar autor, tema ou obra..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2f3342] rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            className="w-full pl-10 pr-3 py-2.5 bg-ink-800 border border-line-mid rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-gold min-h-[44px]"
           />
         </div>
 
@@ -201,7 +220,7 @@ export const AuthorManager: React.FC = () => {
             aria-label="Filtrar por movimento político ou filosófico"
             value={selectedMovement}
             onChange={e => setSelectedMovement(e.target.value)}
-            className="w-full bg-[#101217] border border-[#2f3342] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
           >
             <option value="all">Todos os Movimentos Políticos / Ideias</option>
             {movements.map(m => (
@@ -218,7 +237,7 @@ export const AuthorManager: React.FC = () => {
             aria-label="Filtrar por período histórico de atuação"
             value={selectedPeriod}
             onChange={e => setSelectedPeriod(e.target.value)}
-            className="w-full bg-[#101217] border border-[#2f3342] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+            className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
           >
             <option value="all">Todos os Períodos Históricos</option>
             {periods.map(p => (
@@ -235,7 +254,7 @@ export const AuthorManager: React.FC = () => {
         {filteredAuthors.map(author => (
           <div
             key={author.id}
-            className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+            className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
           >
             <div className="p-6 space-y-4">
               <div className="flex items-start gap-4">
@@ -244,18 +263,18 @@ export const AuthorManager: React.FC = () => {
                   alt={`Retrato de ${author.name}`}
                   loading="lazy"
                   decoding="async"
-                  className="w-20 h-20 rounded-full object-cover border-2 border-[#373c4d] group-hover:border-[#c89b3c] transition shrink-0 shadow-md"
+                  className="w-20 h-20 rounded-full object-cover border-2 border-line-strong group-hover:border-gold transition shrink-0 shadow-md"
                 />
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#232734] text-stone-300 border border-[#34394c]">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-ink-450 text-stone-300 border border-line-strong">
                       {author.period}
                     </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950/60 text-[#c89b3c] border border-amber-800/40">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950/60 text-gold border border-amber-800/40">
                       {author.politicalMovement}
                     </span>
                   </div>
-                  <h2 className="text-base font-cinzel font-bold text-white mt-1.5 truncate group-hover:text-[#c89b3c] transition">
+                  <h2 className="text-base font-cinzel font-bold text-white mt-1.5 truncate group-hover:text-gold transition">
                     {author.name}
                   </h2>
                   <p className="text-[11px] text-stone-400 font-mono">
@@ -277,7 +296,7 @@ export const AuthorManager: React.FC = () => {
                 {author.themes.map(t => (
                   <span
                     key={t}
-                    className="px-2 py-0.5 rounded-full bg-[#1b1e27] text-stone-400 text-[10px] border border-[#2c303f]"
+                    className="px-2 py-0.5 rounded-full bg-ink-600 text-stone-400 text-[10px] border border-line-mid"
                   >
                     {t}
                   </span>
@@ -285,14 +304,14 @@ export const AuthorManager: React.FC = () => {
               </div>
 
               {/* Works overview */}
-              <div className="pt-2 border-t border-[#232634] space-y-1">
+              <div className="pt-2 border-t border-line-soft space-y-1">
                 <span className="text-[11px] font-semibold text-stone-400 block">
                   Obras de Referência:
                 </span>
                 <ul className="text-xs text-stone-300 space-y-0.5">
                   {author.works.slice(0, 3).map((w, idx) => (
                     <li key={idx} className="truncate flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#c89b3c]" aria-hidden="true" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true" />
                       <span className="italic">{w}</span>
                     </li>
                   ))}
@@ -301,16 +320,17 @@ export const AuthorManager: React.FC = () => {
             </div>
 
             {/* Card Footer Actions */}
-            <div className="px-6 py-3 bg-[#12141a] border-t border-[#222532] flex items-center justify-between text-xs">
+            <div className="px-6 py-3 bg-ink-750 border-t border-line-soft flex items-center justify-between text-xs">
               <button
                 type="button"
                 onClick={() => setViewAuthor(author)}
-                className="text-[#c89b3c] hover:underline font-medium flex items-center gap-1 min-h-[44px]"
+                className="text-gold hover:underline font-medium flex items-center gap-1 min-h-[44px]"
               >
                 <BookOpen size={14} aria-hidden="true" />
                 <span>Ver Biografia Completa</span>
               </button>
 
+              {isAdmin && (
               <div className="flex items-center gap-1">
                 <button
                   type="button"
@@ -329,37 +349,49 @@ export const AuthorManager: React.FC = () => {
                   <Trash2 size={15} aria-hidden="true" />
                 </button>
               </div>
+              )}
             </div>
           </div>
         ))}
       </div>
 
+      {filteredAuthors.length === 0 && (
+        <EmptyState
+          icon={<Search size={22} aria-hidden="true" />}
+          title="Nenhum autor com esses critérios"
+          body="A combinação de busca, movimento e período não encontrou ninguém no índice. Amplie um dos filtros para voltar ao catálogo completo."
+          action={{
+            label: 'Limpar filtros',
+            onClick: () => {
+              setSearchQuery('');
+              setSelectedMovement('all');
+              setSelectedPeriod('all');
+            }
+          }}
+        />
+      )}
+
       {/* Author Details Modal */}
-      {viewAuthor && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="author-detail-title"
-          className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
-        >
-          <div
-            onClick={() => setViewAuthor(null)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-          <div className="relative w-full max-w-2xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-5">
+      <Dialog
+        open={!!viewAuthor}
+        onClose={() => setViewAuthor(null)}
+        labelledBy="author-detail-title"
+        panelClassName="max-h-[90svh] w-full max-w-2xl space-y-5 overflow-y-auto rounded-xl border border-line-mid bg-ink-700 p-6 shadow-2xl"
+      >
+        {viewAuthor && (
+          <>
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
                 <img
                   src={viewAuthor.avatar}
                   alt={`Foto de ${viewAuthor.name}`}
-                  className="w-20 h-20 rounded-full object-cover border-2 border-[#c89b3c]"
+                  className="w-20 h-20 rounded-full object-cover border-2 border-gold"
                 />
                 <div>
                   <h2 id="author-detail-title" className="text-xl font-cinzel font-bold text-white">
                     {viewAuthor.name}
                   </h2>
-                  <div className="text-xs text-[#c89b3c] font-mono mt-0.5">
+                  <div className="text-xs text-gold font-mono mt-0.5">
                     {viewAuthor.politicalMovement} • {viewAuthor.period}
                   </div>
                   <div className="text-xs text-stone-400 font-mono">
@@ -399,10 +431,10 @@ export const AuthorManager: React.FC = () => {
                   return (
                     <div
                       key={idx}
-                      className="p-3 rounded-lg bg-[#1c1f2a] border border-[#2d3244] flex items-center justify-between text-xs"
+                      className="p-3 rounded-lg bg-ink-550 border border-line-mid flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-2">
-                        <BookOpen size={14} className="text-[#c89b3c]" aria-hidden="true" />
+                        <BookOpen size={14} className="text-gold" aria-hidden="true" />
                         <span className="text-white font-medium italic">{w}</span>
                       </div>
                       {catalogMatch ? (
@@ -416,7 +448,7 @@ export const AuthorManager: React.FC = () => {
                               openReader(catalogMatch);
                             }
                           }}
-                          className="px-3 py-1.5 rounded-lg bg-[#c89b3c] text-black font-semibold hover:bg-[#d9ab4b] transition text-[11px] min-h-[36px]"
+                          className="px-3 py-1.5 rounded-lg bg-gold text-black font-semibold hover:bg-gold-light transition text-[11px] min-h-[36px]"
                         >
                           Ver no Acervo ({catalogMatch.type === 'physical' ? 'Físico' : 'Digital'})
                         </button>
@@ -429,34 +461,27 @@ export const AuthorManager: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[#262a37] flex justify-end">
-              <button
-                type="button"
-                onClick={() => setViewAuthor(null)}
-                className="px-4 py-2.5 rounded-lg bg-[#222530] text-stone-300 hover:bg-[#2b2f3e] text-xs transition min-h-[44px]"
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
+        <div className="flex justify-end border-t border-line pt-3">
+          <button
+            type="button"
+            onClick={() => setViewAuthor(null)}
+            className="min-h-[44px] rounded-lg bg-ink-500 px-4 py-2.5 text-xs text-stone-300 transition hover:bg-ink-400"
+          >
+            Fechar
+          </button>
         </div>
-      )}
+          </>
+        )}
+      </Dialog>
 
       {/* CRUD Modal for Add/Edit Author */}
-      {isModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="author-crud-title"
-          className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
-        >
-          <div
-            onClick={() => setIsModalOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-          <div className="relative w-full max-w-xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
-            <div className="flex items-center justify-between border-b border-[#262a37] pb-3">
+      <Dialog
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        labelledBy="author-crud-title"
+        panelClassName="max-h-[90svh] w-full max-w-xl space-y-4 overflow-y-auto rounded-xl border border-line-mid bg-ink-700 p-6 shadow-2xl"
+      >
+            <div className="flex items-center justify-between border-b border-line pb-3">
               <h2 id="author-crud-title" className="text-base font-cinzel font-bold text-white">
                 {editingAuthor ? 'Editar Informações do Autor' : 'Cadastrar Novo Autor'}
               </h2>
@@ -479,10 +504,22 @@ export const AuthorManager: React.FC = () => {
                   id="author-fullname"
                   type="text"
                   required
+                  aria-invalid={!!formError}
+                  aria-describedby={formError ? 'author-fullname-erro' : undefined}
                   value={formData.name}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+                  onChange={e => {
+                    setFormData({ ...formData, name: e.target.value });
+                    if (formError) setFormError(null);
+                  }}
+                  className={`min-h-[44px] w-full rounded-lg border bg-ink-800 p-2.5 text-white focus:outline-none ${
+                    formError ? 'border-red-700 focus:border-red-500' : 'border-line-mid focus:border-gold'
+                  }`}
                 />
+                {formError && (
+                  <p id="author-fullname-erro" role="alert" className="mt-1.5 text-[11px] text-red-300">
+                    {formError}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -495,7 +532,7 @@ export const AuthorManager: React.FC = () => {
                     type="number"
                     value={formData.birthYear}
                     onChange={e => setFormData({ ...formData, birthYear: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -507,7 +544,7 @@ export const AuthorManager: React.FC = () => {
                     type="number"
                     value={formData.deathYear}
                     onChange={e => setFormData({ ...formData, deathYear: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   />
                 </div>
               </div>
@@ -522,7 +559,7 @@ export const AuthorManager: React.FC = () => {
                     type="text"
                     value={formData.period}
                     onChange={e => setFormData({ ...formData, period: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -534,7 +571,7 @@ export const AuthorManager: React.FC = () => {
                     type="text"
                     value={formData.politicalMovement}
                     onChange={e => setFormData({ ...formData, politicalMovement: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   />
                 </div>
               </div>
@@ -548,7 +585,7 @@ export const AuthorManager: React.FC = () => {
                   type="url"
                   value={formData.avatar}
                   onChange={e => setFormData({ ...formData, avatar: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                 />
               </div>
 
@@ -561,7 +598,7 @@ export const AuthorManager: React.FC = () => {
                   rows={4}
                   value={formData.bio}
                   onChange={e => setFormData({ ...formData, bio: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white"
                 />
               </div>
 
@@ -575,7 +612,7 @@ export const AuthorManager: React.FC = () => {
                   value={formData.themes}
                   onChange={e => setFormData({ ...formData, themes: e.target.value })}
                   placeholder="Ex: Democracia, Economia Política, Filosofia"
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                 />
               </div>
 
@@ -589,7 +626,7 @@ export const AuthorManager: React.FC = () => {
                   value={formData.works}
                   onChange={e => setFormData({ ...formData, works: e.target.value })}
                   placeholder="Ex: A Democracia na América, O Antigo Regime"
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                 />
               </div>
 
@@ -597,21 +634,21 @@ export const AuthorManager: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-lg bg-[#222530] text-stone-300 hover:bg-[#2b2f3e] min-h-[44px]"
+                  className="px-4 py-2.5 rounded-lg bg-ink-500 text-stone-300 hover:bg-ink-400 min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold min-h-[44px]"
+                  className="px-5 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold min-h-[44px]"
                 >
                   {editingAuthor ? 'Salvar Alterações' : 'Cadastrar Autor'}
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+        </form>
+      </Dialog>
+
+      <ConfirmDialog request={confirmRequest} onDismiss={() => setConfirmRequest(null)} />
     </div>
   );
 };

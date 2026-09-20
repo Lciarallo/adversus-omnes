@@ -21,21 +21,25 @@ export const SubscriptionPlans: React.FC = () => {
         {/* Billing cycle switch */}
         <div className="pt-3 flex items-center justify-center gap-3">
           <button
+            type="button"
             onClick={() => setBillingCycle('monthly')}
+            aria-pressed={billingCycle === 'monthly'}
             className={`px-5 py-2.5 rounded-full text-xs font-semibold transition min-h-[44px] ${
               billingCycle === 'monthly'
-                ? 'bg-[#c89b3c] text-black shadow-lg shadow-[#c89b3c]/20'
-                : 'bg-[#1a1d26] text-stone-400 hover:text-white border border-[#2b2f3e]'
+                ? 'bg-gold text-black shadow-lg shadow-gold/20'
+                : 'bg-ink-600 text-stone-400 hover:text-white border border-line-mid'
             }`}
           >
             Cobrança Mensal
           </button>
           <button
+            type="button"
             onClick={() => setBillingCycle('yearly')}
+            aria-pressed={billingCycle === 'yearly'}
             className={`px-5 py-2.5 rounded-full text-xs font-semibold transition flex items-center gap-1.5 min-h-[44px] ${
               billingCycle === 'yearly'
-                ? 'bg-[#c89b3c] text-black shadow-lg shadow-[#c89b3c]/20'
-                : 'bg-[#1a1d26] text-stone-400 hover:text-white border border-[#2b2f3e]'
+                ? 'bg-gold text-black shadow-lg shadow-gold/20'
+                : 'bg-ink-600 text-stone-400 hover:text-white border border-line-mid'
             }`}
           >
             <span>Cobrança Anual</span>
@@ -57,19 +61,19 @@ export const SubscriptionPlans: React.FC = () => {
               key={plan.id}
               className={`rounded-2xl flex flex-col justify-between p-6 sm:p-8 transition-all relative ${
                 plan.isPopular
-                  ? 'bg-gradient-to-b from-[#1c1f2b] to-[#14161f] border-2 border-[#c89b3c] shadow-2xl shadow-[#c89b3c]/15 scale-105 z-10'
-                  : 'bg-[#15171e] border border-[#282b38] hover:border-[#3d4255]'
+                  ? 'bg-gradient-to-b from-ink-550 to-ink-700 border-2 border-gold shadow-2xl shadow-gold/15 scale-105 z-10'
+                  : 'bg-ink-700 border border-line hover:border-line-bright'
               }`}
             >
               {plan.isPopular && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#c89b3c] text-black font-cinzel text-[11px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-lg">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gold text-black font-cinzel text-[11px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-lg">
                   Mais Recomendado
                 </div>
               )}
 
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-sans font-semibold uppercase tracking-wider text-[#c89b3c]">
+                  <span className="text-xs font-sans font-semibold uppercase tracking-wider text-gold">
                     {plan.badge}
                   </span>
                   {isCurrentActive && (
@@ -85,7 +89,7 @@ export const SubscriptionPlans: React.FC = () => {
                   {plan.description}
                 </p>
 
-                <div className="mt-6 mb-6 pb-6 border-b border-[#242735]">
+                <div className="mt-6 mb-6 pb-6 border-b border-line-soft">
                   <div className="flex items-baseline gap-1">
                     <span className="text-xs text-stone-400">R$</span>
                     <span className="text-4xl font-cinzel font-bold text-white">
@@ -107,7 +111,7 @@ export const SubscriptionPlans: React.FC = () => {
                   </span>
                   {plan.features.map((feat, idx) => (
                     <div key={idx} className="flex items-start gap-2.5">
-                      <div className="w-4 h-4 rounded-full bg-[#202430] border border-[#353a4c] text-[#c89b3c] flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-4 h-4 rounded-full bg-ink-500 border border-line-strong text-gold flex items-center justify-center shrink-0 mt-0.5">
                         <Check size={11} />
                       </div>
                       <span className="leading-tight">{feat}</span>
@@ -121,20 +125,21 @@ export const SubscriptionPlans: React.FC = () => {
                 {isCurrentActive ? (
                   <button
                     disabled
-                    className="w-full py-3.5 rounded-lg bg-[#202430] text-emerald-400 border border-emerald-800/40 text-xs font-semibold cursor-default min-h-[48px] flex items-center justify-center"
+                    className="w-full py-3.5 rounded-lg bg-ink-500 text-emerald-400 border border-emerald-800/40 text-xs font-semibold cursor-default min-h-[48px] flex items-center justify-center"
                   >
                     Plano Ativo na sua Conta
                   </button>
                 ) : (
                   <button
+                    type="button"
                     onClick={() => startSubscriptionCheckout(plan)}
                     className={`w-full py-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg min-h-[48px] ${
                       plan.isPopular
-                        ? 'bg-[#c89b3c] hover:bg-[#d9ab4b] text-black shadow-[#c89b3c]/20'
-                        : 'bg-[#222532] hover:bg-[#2e3244] text-white border border-[#373c4e]'
+                        ? 'bg-gold hover:bg-gold-light text-black shadow-gold/20'
+                        : 'bg-ink-500 hover:bg-ink-350 text-white border border-line-strong'
                     }`}
                   >
-                    <span>Assinar via InfinitePay</span>
+                    <span>Assinar plano</span>
                   </button>
                 )}
               </div>
@@ -144,23 +149,23 @@ export const SubscriptionPlans: React.FC = () => {
       </div>
 
       {/* FAQ / Guarantees micro-box */}
-      <div className="border border-[#262a37] rounded-xl p-6 bg-[#13151b] max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-stone-400">
+      <div className="border border-line rounded-xl p-6 bg-ink-750 max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-stone-400">
         <div className="flex items-start gap-3">
-          <Shield className="text-[#c89b3c] w-6 h-6 shrink-0 mt-0.5" />
+          <Shield className="text-gold w-6 h-6 shrink-0 mt-0.5" />
           <div>
             <strong className="text-white block mb-1">Sem Fidelidade</strong>
             Cancele ou pause sua assinatura a qualquer momento com um único clique em sua conta.
           </div>
         </div>
         <div className="flex items-start gap-3">
-          <Truck className="text-[#c89b3c] w-6 h-6 shrink-0 mt-0.5" />
+          <Truck className="text-gold w-6 h-6 shrink-0 mt-0.5" />
           <div>
-            <strong className="text-white block mb-1">Correios Rastreável</strong>
-            Envios físicos protegidos e segurados para todos os estados do Brasil.
+            <strong className="mb-1 block text-white">Rastreio dos Correios</strong>
+            Todo envio sai com código de rastreamento, para qualquer estado do país.
           </div>
         </div>
         <div className="flex items-start gap-3">
-          <Gift className="text-[#c89b3c] w-6 h-6 shrink-0 mt-0.5" />
+          <Gift className="text-gold w-6 h-6 shrink-0 mt-0.5" />
           <div>
             <strong className="text-white block mb-1">Curadoria Especial</strong>
             Livros raros higienizados e acondicionados em papel livre de ácido.

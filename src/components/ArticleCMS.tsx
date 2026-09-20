@@ -15,6 +15,10 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { Article } from '../types';
+import { Dialog } from './ui/Dialog';
+import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
+import { EmptyState } from './ui/EmptyState';
+import { useToast } from './ui/Toast';
 
 export const ArticleCMS: React.FC = () => {
   const {
@@ -24,11 +28,17 @@ export const ArticleCMS: React.FC = () => {
     deleteArticle,
     currentUser,
     selectedArticle,
-    setSelectedArticle
+    setSelectedArticle,
+    setRole
   } = useStore();
+  const { notify } = useToast();
+
+  const isAdmin = currentUser.role === 'admin';
 
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Filter
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -84,18 +94,25 @@ export const ArticleCMS: React.FC = () => {
   };
 
   const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Excluir artigo "${title}"?`)) {
-      deleteArticle(id);
-      if (selectedArticle?.id === id) setSelectedArticle(null);
-    }
+    setConfirmRequest({
+      title: 'Excluir este ensaio?',
+      body: `"${title}" sai do índice editorial e deixa de ser lido no site. Não há como desfazer.`,
+      confirmLabel: 'Excluir ensaio',
+      onConfirm: () => {
+        deleteArticle(id);
+        if (selectedArticle?.id === id) setSelectedArticle(null);
+        notify('Ensaio excluído do índice editorial.', 'info');
+      }
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title.trim() || !formData.content.trim()) {
-      alert('Preencha pelo menos o título e o conteúdo do artigo.');
+      setFormError('Título e corpo do ensaio são obrigatórios para publicar.');
       return;
     }
+    setFormError(null);
 
     const payload = {
       title: formData.title.trim(),
@@ -141,9 +158,9 @@ export const ArticleCMS: React.FC = () => {
             <span>Voltar a todos os Artigos</span>
           </button>
 
-          <div className="space-y-3 border-b border-[#292c3a] pb-6">
+          <div className="space-y-3 border-b border-line pb-6">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#212431] text-[#c89b3c] border border-[#323648]">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-ink-500 text-gold border border-line-strong">
                 {selectedArticle.category}
               </span>
               <span className="text-dust text-xs">•</span>
@@ -169,9 +186,21 @@ export const ArticleCMS: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => alert('Link copiado para a área de transferência!')}
-                  aria-label="Compartilhar artigo"
-                  className="p-2 rounded-lg bg-[#1f222c] hover:bg-[#2c303f] text-stone-300 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  onClick={async () => {
+                    const url = `${window.location.origin}/?ensaio=${selectedArticle.slug}`;
+                    try {
+                      if (navigator.share) {
+                        await navigator.share({ title: selectedArticle.title, url });
+                        return;
+                      }
+                      await navigator.clipboard.writeText(url);
+                      notify('Link do ensaio copiado.', 'success');
+                    } catch {
+                      notify('Não foi possível copiar o link deste ensaio.', 'error');
+                    }
+                  }}
+                  aria-label={`Compartilhar o ensaio ${selectedArticle.title}`}
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-ink-550 p-2 text-stone-300 transition hover:bg-ink-400 hover:text-white"
                 >
                   <Share2 size={16} aria-hidden="true" />
                 </button>
@@ -180,7 +209,7 @@ export const ArticleCMS: React.FC = () => {
           </div>
 
           {/* Cover image */}
-          <div className="rounded-xl overflow-hidden shadow-2xl border border-[#2e3343]">
+          <div className="rounded-xl overflow-hidden shadow-2xl border border-line-mid">
             <img
               src={selectedArticle.coverImage}
               alt={`Imagem do artigo ${selectedArticle.title}`}
@@ -191,16 +220,22 @@ export const ArticleCMS: React.FC = () => {
           </div>
 
           {/* Content */}
-          <div className="prose prose-invert max-w-none text-stone-200 font-serif text-lg leading-relaxed space-y-6 pt-4 whitespace-pre-line">
-            {selectedArticle.content}
+          <div className="ch-prose pt-4">
+            {selectedArticle.content
+              .split(/\n+/)
+              .map(paragraph => paragraph.trim())
+              .filter(Boolean)
+              .map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
           </div>
 
           {/* Tags */}
-          <div className="pt-6 border-t border-[#262936] flex flex-wrap gap-2">
+          <div className="pt-6 border-t border-line-soft flex flex-wrap gap-2">
             {selectedArticle.tags.map(t => (
               <span
                 key={t}
-                className="px-2.5 py-1 rounded-full bg-[#1b1e27] text-stone-400 text-xs border border-[#2b2f3d]"
+                className="px-2.5 py-1 rounded-full bg-ink-600 text-stone-400 text-xs border border-line"
               >
                 #{t}
               </span>
@@ -210,7 +245,7 @@ export const ArticleCMS: React.FC = () => {
       ) : (
         /* Articles List & Grid */
         <>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#252834] pb-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-line-soft pb-6">
             <div className="space-y-1.5">
               <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
                 Artigos Autorais e Ensaios
@@ -221,23 +256,26 @@ export const ArticleCMS: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              {currentUser.role === 'admin' ? (
+              {isAdmin ? (
                 <button
                   type="button"
                   onClick={handleOpenNew}
-                  className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-2 shadow-lg shadow-[#c89b3c]/20 min-h-[44px]"
+                  className="flex min-h-[44px] items-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-xs font-semibold text-black shadow-lg shadow-gold/20 transition hover:bg-gold-light"
                 >
                   <Plus size={16} aria-hidden="true" />
-                  <span>Escrever Novo Artigo (CMS)</span>
+                  <span>Escrever ensaio</span>
                 </button>
               ) : (
                 <button
                   type="button"
-                  onClick={handleOpenNew}
-                  className="px-3.5 py-2 rounded-lg bg-[#20232e] hover:bg-[#2c303f] text-stone-300 text-xs border border-[#353a4b] transition flex items-center gap-1.5 min-h-[44px]"
+                  onClick={() => {
+                    setRole('admin');
+                    notify('Perfil de administrador ativado para a demonstração.', 'info');
+                  }}
+                  className="flex min-h-[44px] items-center gap-1.5 rounded-lg border border-line-strong bg-ink-500 px-3.5 py-2 text-xs text-stone-300 transition hover:bg-ink-400 hover:text-white"
                 >
-                  <Plus size={14} className="text-[#c89b3c]" aria-hidden="true" />
-                  <span>Novo Artigo (Admin)</span>
+                  <Edit3 size={14} className="text-gold" aria-hidden="true" />
+                  <span>Escrever como administrador</span>
                 </button>
               )}
             </div>
@@ -250,8 +288,8 @@ export const ArticleCMS: React.FC = () => {
               onClick={() => setSelectedCategory('all')}
               className={`px-3.5 py-2 rounded-lg text-xs font-medium transition min-h-[44px] flex items-center ${
                 selectedCategory === 'all'
-                  ? 'bg-[#c89b3c] text-black font-semibold'
-                  : 'bg-[#181a22] text-stone-400 hover:text-white border border-[#272b38]'
+                  ? 'bg-gold text-black font-semibold'
+                  : 'bg-ink-650 text-stone-400 hover:text-white border border-line'
               }`}
             >
               Todas as Categorias
@@ -263,8 +301,8 @@ export const ArticleCMS: React.FC = () => {
                 onClick={() => setSelectedCategory(c)}
                 className={`px-3.5 py-2 rounded-lg text-xs font-medium transition min-h-[44px] flex items-center ${
                   selectedCategory === c
-                    ? 'bg-[#c89b3c] text-black font-semibold'
-                    : 'bg-[#181a22] text-stone-400 hover:text-white border border-[#272b38]'
+                    ? 'bg-gold text-black font-semibold'
+                    : 'bg-ink-650 text-stone-400 hover:text-white border border-line'
                 }`}
               >
                 {c}
@@ -277,7 +315,7 @@ export const ArticleCMS: React.FC = () => {
             {filteredArticles.map(art => (
               <div
                 key={art.id}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
               >
                 <div>
                   <div className="relative h-48 overflow-hidden">
@@ -289,7 +327,7 @@ export const ArticleCMS: React.FC = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-3 left-3 flex gap-2">
-                      <span className="px-2.5 py-0.5 rounded text-[10px] font-medium bg-black/85 backdrop-blur text-[#c89b3c] border border-amber-900/40">
+                      <span className="px-2.5 py-0.5 rounded text-[10px] font-medium bg-black/85 backdrop-blur text-gold border border-amber-900/40">
                         {art.category}
                       </span>
                       {art.status === 'draft' && (
@@ -307,19 +345,14 @@ export const ArticleCMS: React.FC = () => {
                       <span>{art.readTime}</span>
                     </div>
 
-                    <h2
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => setSelectedArticle(art)}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setSelectedArticle(art);
-                        }
-                      }}
-                      className="text-lg font-serif font-bold text-white hover:text-[#c89b3c] cursor-pointer transition line-clamp-2"
-                    >
-                      {art.title}
+                    <h2 className="font-serif text-lg font-bold leading-snug">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedArticle(art)}
+                        className="line-clamp-2 py-1 text-left text-white transition hover:text-gold"
+                      >
+                        {art.title}
+                      </button>
                     </h2>
 
                     <p className="text-xs text-stone-300 line-clamp-3 leading-relaxed font-serif">
@@ -328,11 +361,12 @@ export const ArticleCMS: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-5 pt-0 border-t border-[#20232f] mt-3 flex items-center justify-between text-xs">
+                <div className="p-5 pt-0 border-t border-line-faint mt-3 flex items-center justify-between text-xs">
                   <span className="text-[11px] text-stone-400 truncate">
                     Por {art.authorName}
                   </span>
 
+                  {isAdmin && (
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
@@ -351,28 +385,31 @@ export const ArticleCMS: React.FC = () => {
                       <Trash2 size={15} aria-hidden="true" />
                     </button>
                   </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
+
+          {filteredArticles.length === 0 && (
+            <EmptyState
+              icon={<FileText size={22} aria-hidden="true" />}
+              title="Nenhum ensaio nesta categoria"
+              body="O índice editorial ainda não tem textos publicados sob este recorte."
+              action={{ label: 'Ver todas as categorias', onClick: () => setSelectedCategory('all') }}
+            />
+          )}
         </>
       )}
 
       {/* Article CMS Editor Modal */}
-      {isEditorOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="article-modal-heading"
-          className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
-        >
-          <div
-            onClick={() => setIsEditorOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-          <div className="relative w-full max-w-2xl bg-[#161821] border border-[#2d3242] rounded-xl shadow-2xl p-6 z-10 space-y-4">
-            <div className="flex items-center justify-between border-b border-[#262a37] pb-3">
+      <Dialog
+        open={isEditorOpen}
+        onClose={() => setIsEditorOpen(false)}
+        labelledBy="article-modal-heading"
+        panelClassName="max-h-[90svh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-xl border border-line-mid bg-ink-700 p-6 shadow-2xl"
+      >
+            <div className="flex items-center justify-between border-b border-line pb-3">
               <h2 id="article-modal-heading" className="text-base font-cinzel font-bold text-white">
                 {editingArticle ? 'Editar Artigo no CMS' : 'Publicar Novo Artigo / Ensaio'}
               </h2>
@@ -397,7 +434,7 @@ export const ArticleCMS: React.FC = () => {
                   required
                   value={formData.title}
                   onChange={e => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white font-serif text-sm min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-serif text-sm min-h-[44px]"
                 />
               </div>
 
@@ -410,7 +447,7 @@ export const ArticleCMS: React.FC = () => {
                   type="text"
                   value={formData.subtitle}
                   onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                 />
               </div>
 
@@ -424,7 +461,7 @@ export const ArticleCMS: React.FC = () => {
                     type="text"
                     value={formData.authorName}
                     onChange={e => setFormData({ ...formData, authorName: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -436,7 +473,7 @@ export const ArticleCMS: React.FC = () => {
                     type="text"
                     value={formData.category}
                     onChange={e => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -447,7 +484,7 @@ export const ArticleCMS: React.FC = () => {
                     id="article-status"
                     value={formData.status}
                     onChange={e => setFormData({ ...formData, status: e.target.value as any })}
-                    className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                   >
                     <option value="published">Publicado</option>
                     <option value="draft">Rascunho</option>
@@ -464,7 +501,7 @@ export const ArticleCMS: React.FC = () => {
                   type="url"
                   value={formData.coverImage}
                   onChange={e => setFormData({ ...formData, coverImage: e.target.value })}
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                 />
               </div>
 
@@ -479,7 +516,7 @@ export const ArticleCMS: React.FC = () => {
                   value={formData.content}
                   onChange={e => setFormData({ ...formData, content: e.target.value })}
                   placeholder="Escreva seu ensaio crítico, anotações arquivísticas e referências..."
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white font-serif leading-relaxed"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-serif leading-relaxed"
                 />
               </div>
 
@@ -493,29 +530,35 @@ export const ArticleCMS: React.FC = () => {
                   value={formData.tags}
                   onChange={e => setFormData({ ...formData, tags: e.target.value })}
                   placeholder="Ex: Filosofia Política, História, Canudos"
-                  className="w-full bg-[#101217] border border-[#2e3343] rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
                 />
               </div>
+
+              {formError && (
+                <p role="alert" className="text-[11px] text-red-300">
+                  {formError}
+                </p>
+              )}
 
               <div className="pt-3 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsEditorOpen(false)}
-                  className="px-4 py-2.5 rounded-lg bg-[#222530] text-stone-300 hover:bg-[#2b2f3e] min-h-[44px]"
+                  className="px-4 py-2.5 rounded-lg bg-ink-500 text-stone-300 hover:bg-ink-400 min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold min-h-[44px]"
+                  className="px-5 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold min-h-[44px]"
                 >
                   {editingArticle ? 'Salvar Artigo' : 'Publicar Artigo'}
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+        </form>
+      </Dialog>
+
+      <ConfirmDialog request={confirmRequest} onDismiss={() => setConfirmRequest(null)} />
     </div>
   );
 };

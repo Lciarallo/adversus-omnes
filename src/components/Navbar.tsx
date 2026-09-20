@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   BookOpen,
   ShoppingBag,
@@ -14,7 +14,13 @@ import {
   X
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
-import { UserRole } from '../types';
+import { useDismissable } from '../hooks/useDismissable';
+
+const ROLE_LABEL: Record<string, string> = {
+  admin: 'Administrador',
+  subscriber: 'Assinante',
+  visitor: 'Visitante'
+};
 
 export const Navbar: React.FC = () => {
   const {
@@ -29,7 +35,17 @@ export const Navbar: React.FC = () => {
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const roleMenuRef = useRef<HTMLDivElement | null>(null);
+  const roleTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const mobileMenuRef = useRef<HTMLElement | null>(null);
+  const mobileTriggerRef = useRef<HTMLButtonElement | null>(null);
+
+  // Um menu aberto fecha com Escape e com um clique fora dele.
+  useDismissable(roleMenuOpen, () => setRoleMenuOpen(false), roleMenuRef, roleTriggerRef);
+  useDismissable(mobileMenuOpen, () => setMobileMenuOpen(false), mobileMenuRef, mobileTriggerRef);
+
   const totalCartCount = cart.reduce((acc, curr) => acc + curr.quantity, 0);
+  const roleLabel = ROLE_LABEL[currentUser.role] ?? 'Visitante';
 
   const handleNav = (tab: string) => {
     setActiveTab(tab);
@@ -38,43 +54,39 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#121316]/95 backdrop-blur-md border-b border-[#282b38] transition-all">
+    <header className="sticky top-0 z-40 bg-ink-800/95 backdrop-blur-md border-b border-line transition-all">
       {/* Top micro-bar with Role Switcher Demo notice */}
-      <div className="bg-[#161820] border-b border-[#222530] text-xs py-1 px-3 sm:px-8 flex items-center justify-between min-h-[44px] max-w-full overflow-hidden">
+      <div className="bg-ink-700 border-b border-line-faint text-xs py-1 px-3 sm:px-8 flex items-center justify-between min-h-[44px] max-w-full overflow-hidden">
         <div className="flex items-center gap-2 text-stone-400 min-w-0 overflow-hidden">
           <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true" />
           <span className="truncate">Ambiente de Testes</span>
           <span className="text-stone-600 hidden md:inline">|</span>
-          <span className="text-[#c89b3c] font-medium font-cinzel truncate hidden md:inline">Edição de Colecionador & Acervo Crítico</span>
+          <span className="text-gold font-medium font-cinzel truncate hidden md:inline">Edição de Colecionador & Acervo Crítico</span>
         </div>
 
         {/* Interactive Role Switcher for instant testing */}
         <div className="relative shrink-0">
           <button
+            ref={roleTriggerRef}
             type="button"
             onClick={() => setRoleMenuOpen(!roleMenuOpen)}
-            aria-haspopup="true"
+            aria-haspopup="menu"
             aria-expanded={roleMenuOpen}
-            aria-label={`Perfil de teste atual: ${currentUser.role}. Clique para alternar.`}
-            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded bg-[#20232d] hover:bg-[#2a2e3b] border border-[#343948] text-stone-200 transition text-xs min-h-[44px] whitespace-nowrap shrink-0 ml-2"
+            aria-label={`Perfil de demonstração: ${roleLabel}. Alternar perfil.`}
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded bg-ink-550 hover:bg-ink-400 border border-line-strong text-stone-200 transition text-xs min-h-[44px] whitespace-nowrap shrink-0 ml-2"
           >
             <span className="text-stone-400">Perfil:</span>
-            <span className="font-semibold text-[#c89b3c] capitalize">
-              {currentUser.role === 'admin'
-                ? 'Admin'
-                : currentUser.role === 'subscriber'
-                ? `Assinante`
-                : 'Visitante'}
-            </span>
+            <span className="font-semibold text-gold">{roleLabel}</span>
             <ChevronDown size={14} className="text-stone-400 shrink-0" aria-hidden="true" />
           </button>
 
           {roleMenuOpen && (
             <div
+              ref={roleMenuRef}
               role="menu"
-              className="absolute right-0 mt-1 w-64 max-w-[calc(100vw-1.5rem)] bg-[#181a22] border border-[#323646] rounded-lg shadow-2xl py-1.5 z-50 text-xs"
+              className="absolute right-0 mt-1 w-64 max-w-[calc(100vw-1.5rem)] bg-ink-650 border border-line-mid rounded-lg shadow-2xl py-1.5 z-50 text-xs"
             >
-              <div className="px-3 py-1.5 text-xs uppercase font-bold tracking-wider text-stone-400 border-b border-[#242735]">
+              <div className="px-3 py-1.5 text-xs uppercase font-bold tracking-wider text-stone-400 border-b border-line-soft">
                 Simular Perfil de Acesso:
               </div>
               <button
@@ -84,15 +96,15 @@ export const Navbar: React.FC = () => {
                   setRole('visitor');
                   setRoleMenuOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2.5 hover:bg-[#222532] flex items-center justify-between min-h-[44px] ${
-                  currentUser.role === 'visitor' ? 'text-[#c89b3c] font-semibold bg-[#1f222e]' : 'text-stone-300'
+                className={`w-full text-left px-3 py-2.5 hover:bg-ink-500 flex items-center justify-between min-h-[44px] ${
+                  currentUser.role === 'visitor' ? 'text-gold font-semibold bg-ink-550' : 'text-stone-300'
                 }`}
               >
                 <div>
                   <div className="font-medium">Visitante / Público</div>
                   <div className="text-xs text-stone-400">Visualiza loja física e PDFs livres</div>
                 </div>
-                {currentUser.role === 'visitor' && <CheckCircle size={14} className="text-[#c89b3c]" />}
+                {currentUser.role === 'visitor' && <CheckCircle size={14} className="text-gold" />}
               </button>
 
               <button
@@ -102,15 +114,15 @@ export const Navbar: React.FC = () => {
                   setRole('subscriber');
                   setRoleMenuOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2.5 hover:bg-[#222532] flex items-center justify-between min-h-[44px] ${
-                  currentUser.role === 'subscriber' ? 'text-[#c89b3c] font-semibold bg-[#1f222e]' : 'text-stone-300'
+                className={`w-full text-left px-3 py-2.5 hover:bg-ink-500 flex items-center justify-between min-h-[44px] ${
+                  currentUser.role === 'subscriber' ? 'text-gold font-semibold bg-ink-550' : 'text-stone-300'
                 }`}
               >
                 <div>
                   <div className="font-medium">Cliente Assinante (Pesquisador)</div>
                   <div className="text-xs text-stone-400">Acesso ao leitor protegido + 15% off</div>
                 </div>
-                {currentUser.role === 'subscriber' && <CheckCircle size={14} className="text-[#c89b3c]" />}
+                {currentUser.role === 'subscriber' && <CheckCircle size={14} className="text-gold" />}
               </button>
 
               <button
@@ -120,15 +132,15 @@ export const Navbar: React.FC = () => {
                   setRole('admin');
                   setRoleMenuOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2.5 hover:bg-[#222532] flex items-center justify-between min-h-[44px] ${
-                  currentUser.role === 'admin' ? 'text-[#c89b3c] font-semibold bg-[#1f222e]' : 'text-stone-300'
+                className={`w-full text-left px-3 py-2.5 hover:bg-ink-500 flex items-center justify-between min-h-[44px] ${
+                  currentUser.role === 'admin' ? 'text-gold font-semibold bg-ink-550' : 'text-stone-300'
                 }`}
               >
                 <div>
                   <div className="font-medium text-amber-300">Administrador do Site</div>
                   <div className="text-xs text-stone-400">CRUD de Autores, Artigos, Estoque & InfinitePay</div>
                 </div>
-                {currentUser.role === 'admin' && <CheckCircle size={14} className="text-[#c89b3c]" />}
+                {currentUser.role === 'admin' && <CheckCircle size={14} className="text-gold" />}
               </button>
             </div>
           )}
@@ -145,8 +157,8 @@ export const Navbar: React.FC = () => {
             aria-label="Contra Homines - Ir para a página inicial"
             className="flex items-center gap-2 sm:gap-3 text-left group select-none min-h-[44px] min-w-0 shrink"
           >
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-gradient-to-br from-[#c89b3c] to-[#966f21] p-[1px] shadow-lg shadow-[#c89b3c]/10 overflow-hidden shrink-0">
-              <div className="w-full h-full bg-[#121316] flex items-center justify-center group-hover:opacity-90 transition">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-gradient-to-br from-gold to-gold-dark p-[1px] shadow-lg shadow-gold/10 overflow-hidden shrink-0">
+              <div className="w-full h-full bg-ink-800 flex items-center justify-center group-hover:opacity-90 transition">
                 <img
                   src="/logo.jpg"
                   alt="Contra Homines"
@@ -155,7 +167,7 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
             <div className="min-w-0">
-              <div className="font-cinzel text-sm sm:text-xl font-bold tracking-wide sm:tracking-wider text-stone-100 group-hover:text-[#c89b3c] transition truncate">
+              <div className="font-cinzel text-sm sm:text-xl font-bold tracking-wide sm:tracking-wider text-stone-100 group-hover:text-gold transition truncate">
                 CONTRA HOMINES
               </div>
               {/* A assinatura não cabe ao lado dos controles no celular: era cortada
@@ -173,8 +185,8 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNav('home')}
               className={`px-3 py-2 rounded-lg text-sm transition font-medium min-h-[44px] flex items-center ${
                 activeTab === 'home'
-                  ? 'text-[#c89b3c] bg-[#1d2028]'
-                  : 'text-stone-300 hover:text-white hover:bg-[#171922]'
+                  ? 'text-gold bg-ink-550'
+                  : 'text-stone-300 hover:text-white hover:bg-ink-650'
               }`}
             >
               Início
@@ -185,13 +197,13 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNav('fisico')}
               className={`px-3 py-2 rounded-lg text-sm transition font-medium flex items-center gap-1.5 min-h-[44px] ${
                 activeTab === 'fisico'
-                  ? 'text-[#c89b3c] bg-[#1d2028]'
-                  : 'text-stone-300 hover:text-white hover:bg-[#171922]'
+                  ? 'text-gold bg-ink-550'
+                  : 'text-stone-300 hover:text-white hover:bg-ink-650'
               }`}
             >
-              <BookMarked size={16} className="text-[#c89b3c]" aria-hidden="true" />
+              <BookMarked size={16} className="text-gold" aria-hidden="true" />
               <span>Acervo Físico</span>
-              <span className="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800/50 px-1.5 py-0.2 rounded font-mono">
+              <span className="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800/50 px-1.5 py-0.5 rounded font-mono">
                 Raros
               </span>
             </button>
@@ -201,11 +213,11 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNav('digital')}
               className={`px-3 py-2 rounded-lg text-sm transition font-medium flex items-center gap-1.5 min-h-[44px] ${
                 activeTab === 'digital'
-                  ? 'text-[#c89b3c] bg-[#1d2028]'
-                  : 'text-stone-300 hover:text-white hover:bg-[#171922]'
+                  ? 'text-gold bg-ink-550'
+                  : 'text-stone-300 hover:text-white hover:bg-ink-650'
               }`}
             >
-              <Scroll size={16} className="text-[#c89b3c]" aria-hidden="true" />
+              <Scroll size={16} className="text-gold" aria-hidden="true" />
               <span>Acervo Online</span>
             </button>
 
@@ -214,8 +226,8 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNav('autores')}
               className={`px-3 py-2 rounded-lg text-sm transition font-medium min-h-[44px] flex items-center ${
                 activeTab === 'autores'
-                  ? 'text-[#c89b3c] bg-[#1d2028]'
-                  : 'text-stone-300 hover:text-white hover:bg-[#171922]'
+                  ? 'text-gold bg-ink-550'
+                  : 'text-stone-300 hover:text-white hover:bg-ink-650'
               }`}
             >
               Autores
@@ -226,8 +238,8 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNav('artigos')}
               className={`px-3 py-2 rounded-lg text-sm transition font-medium min-h-[44px] flex items-center ${
                 activeTab === 'artigos'
-                  ? 'text-[#c89b3c] bg-[#1d2028]'
-                  : 'text-stone-300 hover:text-white hover:bg-[#171922]'
+                  ? 'text-gold bg-ink-550'
+                  : 'text-stone-300 hover:text-white hover:bg-ink-650'
               }`}
             >
               Artigos & Ensaios
@@ -238,11 +250,11 @@ export const Navbar: React.FC = () => {
               onClick={() => handleNav('planos')}
               className={`px-3 py-2 rounded-lg text-sm transition font-medium flex items-center gap-1.5 min-h-[44px] ${
                 activeTab === 'planos'
-                  ? 'text-[#c89b3c] bg-[#1d2028]'
-                  : 'text-stone-300 hover:text-white hover:bg-[#171922]'
+                  ? 'text-gold bg-ink-550'
+                  : 'text-stone-300 hover:text-white hover:bg-ink-650'
               }`}
             >
-              <Sparkles size={15} className="text-[#c89b3c]" aria-hidden="true" />
+              <Sparkles size={15} className="text-gold" aria-hidden="true" />
               <span>Assinaturas</span>
             </button>
           </nav>
@@ -281,10 +293,10 @@ export const Navbar: React.FC = () => {
               type="button"
               onClick={() => handleNav('minha-conta')}
               aria-label={currentUser.role === 'subscriber' ? 'Portal do Assinante' : 'Minha Conta'}
-              className={`p-2 sm:p-2.5 rounded-lg border transition flex items-center gap-2 min-h-[44px] min-w-[40px] sm:min-w-[44px] justify-center ${
+              className={`p-2 sm:p-2.5 rounded-lg border transition flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center ${
                 activeTab === 'minha-conta'
-                  ? 'border-[#c89b3c] text-[#c89b3c] bg-[#22242e]'
-                  : 'border-[#2d303b] text-stone-300 hover:text-white hover:bg-[#1b1e26]'
+                  ? 'border-gold text-gold bg-ink-500'
+                  : 'border-line text-stone-300 hover:text-white hover:bg-ink-600'
               }`}
             >
               <User size={18} aria-hidden="true" />
@@ -298,11 +310,11 @@ export const Navbar: React.FC = () => {
               type="button"
               onClick={() => setIsCartOpen(true)}
               aria-label={`Abrir sacola de compras com ${totalCartCount} item(ns)`}
-              className="relative p-2 sm:p-2.5 rounded-lg border border-[#353945] bg-[#181a22] hover:border-[#c89b3c] text-stone-200 transition min-h-[44px] min-w-[40px] sm:min-w-[44px] flex items-center justify-center group"
+              className="relative p-2 sm:p-2.5 rounded-lg border border-line-strong bg-ink-650 hover:border-gold text-stone-200 transition min-h-[44px] min-w-[44px] flex items-center justify-center group"
             >
-              <ShoppingBag size={18} className="group-hover:text-[#c89b3c] transition" aria-hidden="true" />
+              <ShoppingBag size={18} className="group-hover:text-gold transition" aria-hidden="true" />
               {totalCartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#c89b3c] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg transition-transform duration-200 scale-100">
+                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg transition-transform duration-200 scale-100">
                   {totalCartCount}
                 </span>
               )}
@@ -310,11 +322,12 @@ export const Navbar: React.FC = () => {
 
             {/* Mobile Hamburger */}
             <button
+              ref={mobileTriggerRef}
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
               aria-expanded={mobileMenuOpen}
-              className="md:hidden p-2 sm:p-2.5 rounded-lg text-stone-300 hover:text-white hover:bg-[#1d2028] min-h-[44px] min-w-[40px] sm:min-w-[44px] flex items-center justify-center"
+              className="md:hidden p-2 sm:p-2.5 rounded-lg text-stone-300 hover:text-white hover:bg-ink-550 min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               {mobileMenuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
             </button>
@@ -325,64 +338,65 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <nav
+          ref={mobileMenuRef}
           aria-label="Navegação móvel"
-          className="md:hidden bg-[#15171d] border-b border-[#2e323e] px-4 pt-2 pb-6 space-y-2"
+          className="md:hidden bg-ink-700 border-b border-line-mid px-4 pt-2 pb-6 space-y-2"
         >
           <button
             type="button"
             onClick={() => handleNav('home')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] min-h-[44px] flex items-center"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 min-h-[44px] flex items-center"
           >
             Início
           </button>
           <button
             type="button"
             onClick={() => handleNav('fisico')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] flex items-center justify-between min-h-[44px]"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 flex items-center justify-between min-h-[44px]"
           >
             <span className="flex items-center gap-2">
-              <BookMarked size={16} className="text-[#c89b3c]" aria-hidden="true" /> Acervo Físico (Raros & Usados)
+              <BookMarked size={16} className="text-gold" aria-hidden="true" /> Acervo Físico (Raros & Usados)
             </span>
           </button>
           <button
             type="button"
             onClick={() => handleNav('digital')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] flex items-center gap-2 min-h-[44px]"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 flex items-center gap-2 min-h-[44px]"
           >
-            <Scroll size={16} className="text-[#c89b3c]" aria-hidden="true" /> Acervo Digital & Documentos
+            <Scroll size={16} className="text-gold" aria-hidden="true" /> Acervo Digital & Documentos
           </button>
           <button
             type="button"
             onClick={() => handleNav('autores')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] min-h-[44px] flex items-center"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 min-h-[44px] flex items-center"
           >
             Autores & Biografias
           </button>
           <button
             type="button"
             onClick={() => handleNav('artigos')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] min-h-[44px] flex items-center"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 min-h-[44px] flex items-center"
           >
             Artigos Autorais & Blog
           </button>
           <button
             type="button"
             onClick={() => handleNav('planos')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] flex items-center gap-2 min-h-[44px]"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 flex items-center gap-2 min-h-[44px]"
           >
-            <Sparkles size={16} className="text-[#c89b3c]" aria-hidden="true" /> Planos de Assinatura
+            <Sparkles size={16} className="text-gold" aria-hidden="true" /> Planos de Assinatura
           </button>
           <button
             type="button"
             onClick={() => handleNav('minha-conta')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-[#20232c] flex items-center gap-2 min-h-[44px]"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-stone-200 hover:bg-ink-550 flex items-center gap-2 min-h-[44px]"
           >
-            <User size={16} className="text-[#c89b3c]" aria-hidden="true" /> Minha Conta / Assinante
+            <User size={16} className="text-gold" aria-hidden="true" /> Minha Conta / Assinante
           </button>
           <button
             type="button"
             onClick={() => handleNav('admin')}
-            className="w-full text-left py-3 px-3 rounded-lg text-sm text-amber-300 font-semibold hover:bg-[#20232c] flex items-center gap-2 min-h-[44px]"
+            className="w-full text-left py-3 px-3 rounded-lg text-sm text-amber-300 font-semibold hover:bg-ink-550 flex items-center gap-2 min-h-[44px]"
           >
             <Shield size={16} aria-hidden="true" /> Painel Administrativo
           </button>

@@ -34,7 +34,7 @@ export const HomePage: React.FC = () => {
       <div className="frontis-curtain space-y-20">
         {/* Section 1: Rare Physical Books */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
             <div className="space-y-1.5">
               <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Raridades do Acervo Físico
@@ -50,7 +50,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('fisico');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todo o catálogo físico</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -61,19 +61,19 @@ export const HomePage: React.FC = () => {
             {featuredPhysical.map(item => (
               <div
                 key={item.id}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group codex-card"
+                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group codex-card"
               >
                 <div>
-                  <div className="relative h-64 bg-[#0b0c0e] p-4 flex items-center justify-center overflow-hidden border-b border-[#20232e]">
+                  <div className="relative h-64 bg-ink-950 p-4 flex items-center justify-center overflow-hidden border-b border-line-faint">
                     <img
                       src={item.coverImage}
                       alt={`Capa do exemplar ${item.title}`}
                       loading="lazy"
                       decoding="async"
-                      className="max-h-full max-w-[80%] object-cover rounded shadow-2xl border border-[#323644]"
+                      className="max-h-full max-w-[80%] object-cover rounded shadow-2xl border border-line-mid"
                     />
                     {item.condition && (
-                      <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded bg-black/85 text-[#c89b3c] border border-amber-800/50 text-[10px] font-mono">
+                      <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded bg-black/85 text-gold border border-amber-800/50 text-[10px] font-mono">
                         {item.condition}
                       </span>
                     )}
@@ -83,15 +83,15 @@ export const HomePage: React.FC = () => {
                     <div className="text-[11px] text-stone-400 font-mono">
                       {item.politicalMovement} • {item.year}
                     </div>
-                    <h3 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition line-clamp-2">
+                    <h3 className="text-base font-cinzel font-bold text-white group-hover:text-gold transition line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-[#c89b3c] font-serif italic">{item.author}</p>
+                    <p className="text-xs text-gold font-serif italic">{item.author}</p>
                     <p className="text-xs text-stone-400 line-clamp-2 font-serif">{item.description}</p>
                   </div>
                 </div>
 
-                <div className="p-5 pt-3 border-t border-[#20232e] bg-[#12141a] flex items-center justify-between">
+                <div className="p-5 pt-3 border-t border-line-faint bg-ink-750 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] uppercase text-dust block">Preço</span>
                     <div className="text-base font-cinzel font-bold text-white">
@@ -102,7 +102,7 @@ export const HomePage: React.FC = () => {
                     type="button"
                     onClick={() => addToCart(item)}
                     aria-label={`Adicionar ${item.title} à sacola`}
-                    className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition min-h-[44px]"
+                    className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition min-h-[44px]"
                   >
                     Adicionar à Sacola
                   </button>
@@ -114,13 +114,13 @@ export const HomePage: React.FC = () => {
 
         {/* Section 2: Protected Online Documents */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
             <div className="space-y-1.5">
               <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Documentos & Fac-símiles Digitais
               </h2>
               <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
-                Consulte manifestos e cartas históricas digitalizadas com proteção per-session contra extração de dados.
+                Manifestos e cartas históricas digitalizados, abertos ao público ou reservados a assinantes no leitor protegido.
               </p>
             </div>
 
@@ -130,7 +130,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('digital');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todo o acervo digital</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -141,7 +141,7 @@ export const HomePage: React.FC = () => {
             {featuredDigital.map(item => (
               <div
                 key={item.id}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4 codex-card"
+                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4 codex-card"
               >
                 <div className="flex items-start gap-4">
                   <img
@@ -150,12 +150,12 @@ export const HomePage: React.FC = () => {
                     loading="lazy"
                     decoding="async"
                     style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
-                    className="w-16 h-22 object-cover rounded border border-[#323644] shrink-0"
+                    className="w-16 h-22 object-cover rounded border border-line-mid shrink-0"
                   />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
                       {item.access === 'exclusive' ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-[#c89b3c] border border-amber-800/40 flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-gold border border-amber-800/40 flex items-center gap-1">
                           <Lock size={10} aria-hidden="true" /> Assinante
                         </span>
                       ) : (
@@ -164,19 +164,14 @@ export const HomePage: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <h3
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => openReader(item)}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          openReader(item);
-                        }
-                      }}
-                      className="text-sm font-cinzel font-bold text-white group-hover:text-[#c89b3c] cursor-pointer transition line-clamp-2"
-                    >
-                      {item.title}
+                    <h3 className="font-cinzel text-sm font-bold leading-snug">
+                      <button
+                        type="button"
+                        onClick={() => openReader(item)}
+                        className="line-clamp-2 py-1 text-left text-white transition group-hover:text-gold"
+                      >
+                        {item.title}
+                      </button>
                     </h3>
                     <p className="text-xs text-stone-400 font-serif italic truncate">{item.author}</p>
                   </div>
@@ -190,7 +185,7 @@ export const HomePage: React.FC = () => {
                   type="button"
                   onClick={() => openReader(item)}
                   aria-label={`Abrir ${item.title} no leitor seguro`}
-                  className="w-full py-2.5 px-3 rounded-lg bg-[#1e212b] hover:bg-[#292d3b] text-stone-200 hover:text-white border border-[#33384a] text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
+                  className="w-full py-2.5 px-3 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-200 hover:text-white border border-line-strong text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
                 >
                   <span>Abrir no Leitor Seguro</span>
                   <ArrowRight size={13} aria-hidden="true" />
@@ -202,7 +197,7 @@ export const HomePage: React.FC = () => {
 
         {/* Section 3: Authors Spotlight */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
             <div className="space-y-1.5">
               <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Pensadores e Teóricos em Destaque
@@ -218,7 +213,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('autores');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todos os autores</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -242,20 +237,20 @@ export const HomePage: React.FC = () => {
                     window.scrollTo(0, 0);
                   }
                 }}
-                className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] hover:border-[#c89b3c]/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg codex-card"
+                className="p-5 rounded-xl bg-ink-700 border border-line hover:border-gold/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg codex-card"
               >
                 <img
                   src={author.avatar}
                   alt={`Foto de ${author.name}`}
                   loading="lazy"
                   decoding="async"
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-[#373c4d] group-hover:border-[#c89b3c] transition shadow-md"
+                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-line-strong group-hover:border-gold transition shadow-md"
                 />
                 <div className="space-y-0.5">
-                  <span className="text-[10px] font-sans font-medium text-[#c89b3c] uppercase tracking-wider block">
+                  <span className="text-[10px] font-sans font-medium text-gold uppercase tracking-wider block">
                     {author.politicalMovement}
                   </span>
-                  <h3 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition">
+                  <h3 className="text-base font-cinzel font-bold text-white group-hover:text-gold transition">
                     {author.name}
                   </h3>
                   <p className="text-xs text-stone-400 font-serif italic">{author.period}</p>
@@ -271,7 +266,7 @@ export const HomePage: React.FC = () => {
 
         {/* Section 4: Latest Articles from Editorial Blog */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252834] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
             <div className="space-y-1.5">
               <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
                 Últimos Artigos Publicados
@@ -287,7 +282,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('artigos');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-[#c89b3c] hover:text-[#dbaa42] font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ler todos os artigos</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -313,7 +308,7 @@ export const HomePage: React.FC = () => {
                     window.scrollTo(0, 0);
                   }
                 }}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between codex-card"
+                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between codex-card"
               >
                 <div>
                   <img
@@ -325,18 +320,18 @@ export const HomePage: React.FC = () => {
                   />
                   <div className="p-5 space-y-2">
                     <div className="flex items-center gap-2 text-[11px] text-stone-400">
-                      <span className="text-[#c89b3c] font-medium">{art.category}</span>
+                      <span className="text-gold font-medium">{art.category}</span>
                       <span>•</span>
                       <span>{art.readTime}</span>
                     </div>
-                    <h3 className="text-base font-serif font-bold text-white group-hover:text-[#c89b3c] transition line-clamp-2">
+                    <h3 className="text-base font-serif font-bold text-white group-hover:text-gold transition line-clamp-2">
                       {art.title}
                     </h3>
                     <p className="text-xs text-stone-400 font-serif line-clamp-2">{art.subtitle}</p>
                   </div>
                 </div>
 
-                <div className="p-5 pt-0 text-[11px] text-stone-400 font-mono border-t border-[#20232e] mt-2 pt-2">
+                <div className="p-5 pt-0 text-[11px] text-stone-400 font-mono border-t border-line-faint mt-2 pt-2">
                   Por {art.authorName}
                 </div>
               </div>

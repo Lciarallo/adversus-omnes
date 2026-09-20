@@ -12,11 +12,13 @@ import {
   Sparkles,
   BookOpen,
   ArrowLeft,
-  Eye,
+  Type,
+  Image as ImageIcon,
   FileText
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { CatalogItem } from '../types';
+import { useToast } from './ui/Toast';
 
 interface DigitalViewerProps {
   item: CatalogItem;
@@ -25,7 +27,11 @@ interface DigitalViewerProps {
 
 export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) => {
   const { currentUser, plans, startSubscriptionCheckout, transitioningCoverId, setTransitioningCoverId } = useStore();
+  const { notify } = useToast();
 
+  // O leitor dissuade a extração casual, mas o conteúdo do acervo não pode
+  // ser inacessível a quem lê por leitor de tela ou precisa ampliar o texto.
+  const [textMode, setTextMode] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [zoom, setZoom] = useState(100);
   const [copiedAlert, setCopiedAlert] = useState(false);
@@ -70,6 +76,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
   ];
 
   const totalPages = pages.length;
+  const activePage = pages[currentPage - 1] || pages[0];
   const isExclusive = item.access === 'exclusive';
   const hasAccess = !isExclusive || currentUser.role === 'subscriber' || currentUser.role === 'admin';
 
@@ -111,7 +118,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
   // Render text to canvas to prevent DOM text extraction
   useEffect(() => {
-    if (!hasAccess) return;
+    if (!hasAccess || textMode) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -143,7 +150,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     ctx.strokeRect(34, 34, 732, 1032);
 
     // Page header
-    ctx.fillStyle = '#6e6a5e';
+    ctx.fillStyle = '#5f5a4e';
     ctx.font = 'italic 12px "Cormorant Garamond", Georgia, serif';
     ctx.textAlign = 'center';
     ctx.fillText(
@@ -153,7 +160,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     );
 
     // Document Title
-    const activePageData = pages[currentPage - 1] || pages[0];
+    const activePageData = activePage;
     ctx.fillStyle = '#1c1c1a';
     ctx.font = 'bold 22px "Cormorant Garamond", Georgia, serif';
     ctx.textAlign = 'center';
@@ -202,7 +209,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     ctx.fillText(line, 70, y);
 
     // Archival metadata footer in canvas
-    ctx.fillStyle = '#8a8577';
+    ctx.fillStyle = '#6b6659';
     ctx.font = '11px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(
@@ -225,21 +232,27 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
       }
       ctx.restore();
     }
-  }, [item, currentPage, zoom, hasAccess, currentUser, isExclusive, totalPages, pages, frameWidth]);
+  }, [item, currentPage, zoom, hasAccess, textMode, currentUser, isExclusive, totalPages, activePage, frameWidth]);
+
+  useEffect(() => {
+    const sync = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', sync);
+    return () => document.removeEventListener('fullscreenchange', sync);
+  }, []);
 
   const toggleFullscreen = () => {
     if (!viewerContainerRef.current) return;
     if (!document.fullscreenElement) {
-      viewerContainerRef.current.requestFullscreen().catch(err => alert(err.message));
-      setIsFullscreen(true);
+      viewerContainerRef.current
+        .requestFullscreen()
+        .catch(() => notify('Este navegador não permitiu abrir o leitor em tela cheia.', 'error'));
     } else {
       document.exitFullscreen();
-      setIsFullscreen(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0e12] py-6 px-3 sm:px-6">
+    <div className="min-h-screen bg-ink-900 py-6 px-3 sm:px-6">
       {/* Alert toast when copy is blocked */}
       {copiedAlert && (
         <div
@@ -255,7 +268,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
       <div className="max-w-6xl mx-auto space-y-4">
         {/* Top bar with back button & item summary */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-[#14161c] border border-[#262934] rounded-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-ink-700 border border-line-soft rounded-xl">
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <button
               type="button"
@@ -264,7 +277,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                 setTimeout(() => setTransitioningCoverId(null), 480);
               }}
               aria-label="Voltar para a lista do acervo"
-              className="px-3 py-2 rounded-lg bg-[#1e212b] hover:bg-[#2a2e3c] text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium min-h-[44px] shrink-0 whitespace-nowrap"
+              className="px-3 py-2 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium min-h-[44px] shrink-0 whitespace-nowrap"
             >
               <ArrowLeft size={16} aria-hidden="true" />
               <span className="sm:hidden">Voltar</span>
@@ -277,7 +290,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   {item.title}
                 </h1>
                 {isExclusive ? (
-                  <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-950 text-[#c89b3c] border border-amber-800/40 flex items-center gap-1 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-950 text-gold border border-amber-800/40 flex items-center gap-1 shrink-0">
                     <Shield size={11} aria-hidden="true" /> Exclusivo
                   </span>
                 ) : (
@@ -299,7 +312,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
               target="_blank"
               rel="noreferrer"
               aria-label={`Baixar PDF completo de ${item.title}`}
-              className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-2 self-start sm:self-auto shadow-md min-h-[44px]"
+              className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition flex items-center gap-2 self-start sm:self-auto shadow-md min-h-[44px]"
             >
               <Download size={15} aria-hidden="true" />
               <span>Baixar PDF Completo</span>
@@ -309,8 +322,8 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
         {/* Access check / Paywall */}
         {!hasAccess ? (
-          <div className="p-8 sm:p-12 rounded-2xl bg-gradient-to-b from-[#181a22] to-[#121317] border border-[#2f3342] text-center space-y-6 shadow-2xl">
-            <div className="w-16 h-16 rounded-full bg-amber-950/80 border border-[#c89b3c]/50 text-[#c89b3c] flex items-center justify-center mx-auto shadow-lg">
+          <div className="p-8 sm:p-12 rounded-2xl bg-gradient-to-b from-ink-650 to-ink-800 border border-line-mid text-center space-y-6 shadow-2xl">
+            <div className="w-16 h-16 rounded-full bg-amber-950/80 border border-gold/50 text-gold flex items-center justify-center mx-auto shadow-lg">
               <Lock size={32} aria-hidden="true" />
             </div>
 
@@ -318,20 +331,22 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
               <h2 className="text-2xl font-cinzel font-bold text-white">
                 Material Restrito a Membros Assinantes
               </h2>
-              <p className="text-stone-300 text-sm leading-relaxed">
-                Este fac-símile, ata inédita e seus manuscritos associados fazem parte da coleção reservada de <strong>Contra Homines</strong>. Para consultar o documento completo com leitor de alta definição protegido, torne-se um membro assinante.
+              <p className="text-sm leading-relaxed text-stone-300">
+                Este documento faz parte da coleção reservada de <strong>Contra Homines</strong>. A
+                assinatura abre o acervo digital completo no leitor protegido, com a ficha de
+                proveniência de cada peça.
               </p>
             </div>
 
-            <div className="p-4 max-w-lg mx-auto bg-[#1a1d26] border border-[#2b2f3e] rounded-xl text-left text-xs space-y-2 text-stone-300">
+            <div className="p-4 max-w-lg mx-auto bg-ink-600 border border-line-mid rounded-xl text-left text-xs space-y-2 text-stone-300">
               <div className="font-semibold text-amber-300 flex items-center gap-1.5">
                 <Sparkles size={14} aria-hidden="true" /> Vantagens da Assinatura:
               </div>
               <ul className="space-y-1 text-stone-400">
-                <li>• Acesso ilimitado a centenas de documentos raros e cartas históricas</li>
-                <li>• Leitor com renderização vetorial e proteção de proveniência</li>
-                <li>• Descontos de 15% a 20% em todo o nosso acervo físico de livros</li>
-                <li>• Envio de relatórios bibliográficos e ensaios exclusivos</li>
+                <li>• Acervo digital completo, incluindo os documentos reservados a assinantes</li>
+                <li>• Leitor protegido com marca de proveniência e modo de texto acessível</li>
+                <li>• 15% a 20% de desconto em todo o acervo físico</li>
+                <li>• Ensaios e notas de pesquisa exclusivos do clube</li>
               </ul>
             </div>
 
@@ -339,14 +354,14 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
               <button
                 type="button"
                 onClick={() => startSubscriptionCheckout(plans[1] || plans[0])}
-                className="px-6 py-3.5 rounded-lg bg-gradient-to-r from-[#c89b3c] to-[#a87e28] hover:from-[#d9ab4b] hover:to-[#b88c32] text-black font-bold text-sm transition shadow-xl flex items-center justify-center gap-2 min-h-[44px]"
+                className="px-6 py-3.5 rounded-lg bg-gradient-to-r from-gold to-gold-deep hover:from-gold-light hover:to-gold-deep text-black font-bold text-sm transition shadow-xl flex items-center justify-center gap-2 min-h-[44px]"
               >
                 <span>Assinar Plano Pesquisador (R$ 59,90/mês)</span>
               </button>
               <button
                 type="button"
                 onClick={onBack}
-                className="px-5 py-3.5 rounded-lg bg-[#222530] text-stone-300 text-sm hover:bg-[#2b2f3d] transition min-h-[44px]"
+                className="px-5 py-3.5 rounded-lg bg-ink-500 text-stone-300 text-sm hover:bg-ink-400 transition min-h-[44px]"
               >
                 Explorar Acervo Aberto
               </button>
@@ -356,12 +371,12 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
           /* Authorized Reader Canvas with Security Controls */
           <div
             ref={viewerContainerRef}
-            className={`bg-[#121317] border border-[#282b37] rounded-xl overflow-hidden shadow-2xl flex flex-col ${
+            className={`bg-ink-800 border border-line rounded-xl overflow-hidden shadow-2xl flex flex-col ${
               isFullscreen ? 'fixed inset-0 z-50 rounded-none' : ''
             }`}
           >
             {/* Reader Toolbar */}
-            <div className="bg-[#181a22] px-4 py-2.5 border-b border-[#252834] flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="bg-ink-650 px-4 py-2.5 border-b border-line-soft flex flex-wrap items-center justify-between gap-3 text-xs">
               {/* Pagination controls with 44px min-touch */}
               <div className="flex items-center gap-2">
                 <button
@@ -369,7 +384,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   disabled={currentPage <= 1}
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   aria-label="Página anterior"
-                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2.5 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-300 disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <ChevronLeft size={18} aria-hidden="true" />
                 </button>
@@ -381,7 +396,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   disabled={currentPage >= totalPages}
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   aria-label="Próxima página"
-                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2.5 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-300 disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <ChevronRight size={18} aria-hidden="true" />
                 </button>
@@ -389,9 +404,12 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
               {/* Security indicator for exclusive */}
               {isExclusive && (
-                <div className="flex items-center gap-2 text-[11px] text-amber-300 bg-amber-950/40 border border-amber-800/30 px-3 py-1.5 rounded-full">
-                  <Shield size={13} className="text-[#c89b3c]" aria-hidden="true" />
-                  <span>Leitor Protegido Ativo • Extração e Cópia Bloqueadas</span>
+                <div
+                  className="flex items-center gap-2 rounded-full border border-amber-800/30 bg-amber-950/40 px-3 py-1.5 text-[11px] text-amber-300"
+                  title="A página é desenhada em tela e marcada com sua identidade. Isso dificulta a extração casual, mas não impede captura de tela."
+                >
+                  <Shield size={13} className="text-gold" aria-hidden="true" />
+                  <span>Leitor protegido • página marcada com sua identidade</span>
                 </div>
               )}
 
@@ -401,7 +419,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   type="button"
                   onClick={() => setZoom(prev => Math.max(70, prev - 15))}
                   aria-label="Diminuir zoom da leitura"
-                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2.5 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <ZoomOut size={16} aria-hidden="true" />
                 </button>
@@ -410,42 +428,94 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   type="button"
                   onClick={() => setZoom(prev => Math.min(150, prev + 15))}
                   aria-label="Aumentar zoom da leitura"
-                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2.5 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <ZoomIn size={16} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
+                  onClick={() => setTextMode(v => !v)}
+                  aria-pressed={textMode}
+                  aria-label={textMode ? 'Ver a página desenhada' : 'Ler em texto acessível'}
+                  title={textMode ? 'Ver a página desenhada' : 'Ler em texto acessível'}
+                  className={`flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2.5 transition ${
+                    textMode
+                      ? 'bg-gold text-black'
+                      : 'bg-ink-550 text-stone-300 hover:bg-ink-400'
+                  }`}
+                >
+                  {textMode ? <ImageIcon size={16} aria-hidden="true" /> : <Type size={16} aria-hidden="true" />}
+                </button>
+                <button
+                  type="button"
                   onClick={toggleFullscreen}
                   aria-label={isFullscreen ? 'Sair da tela cheia' : 'Entrar em tela cheia'}
-                  className="p-2.5 rounded-lg bg-[#20232d] hover:bg-[#2a2e3a] text-stone-300 ml-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2.5 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-300 ml-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <Maximize2 size={16} aria-hidden="true" />
                 </button>
               </div>
             </div>
 
-            {/* Canvas Viewer Container */}
+            {/* Página: desenhada em tela, ou em texto corrido quando pedido */}
             <div
               ref={pageFrameRef}
-              className={`flex-1 overflow-auto p-2 sm:p-8 flex justify-center items-start sm:items-center bg-[#090a0d] user-select-none max-w-full ${
+              className={`flex-1 overflow-auto p-2 sm:p-8 flex justify-center items-start sm:items-center bg-ink-950 user-select-none max-w-full ${
                 isExclusive ? 'select-none pointer-events-auto' : ''
               }`}
             >
               <div
                 style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
-                className="relative shadow-2xl border border-stone-800 rounded bg-[#fbf9f2] max-w-full overflow-hidden"
+                className={`relative max-w-full overflow-hidden rounded border border-stone-800 bg-parchment shadow-2xl ${
+                  textMode ? 'w-full' : ''
+                }`}
               >
-                <canvas
-                  ref={canvasRef}
-                  aria-label={`Visualização gráfica da página ${currentPage} de ${item.title}`}
-                  className="block mx-auto rounded transition-transform max-w-full h-auto"
-                />
+                {textMode ? (
+                  <article className="ch-reader-page">
+                    <p className="ch-reader-kicker">
+                      Contra Homines — Bibliotheca et Archivum
+                    </p>
+                    <h2 className="ch-reader-title">{item.title}</h2>
+                    <p className="ch-reader-byline">{item.author || 'Arquivo Histórico'}</p>
+                    <h3 className="ch-reader-section">{activePage.title}</h3>
+                    <div className="ch-reader-body">
+                      {activePage.content
+                        .split(/\n+/)
+                        .map(part => part.trim())
+                        .filter(Boolean)
+                        .map((part, index) => (
+                          <p key={index}>{part}</p>
+                        ))}
+                    </div>
+                    <p className="ch-reader-colophon">
+                      Página {currentPage} de {totalPages} · Ano {item.year} · Proveniência:{' '}
+                      {item.publisher || 'Arquivo Contra Homines'}
+                      {isExclusive && ` · Licenciado para ${currentUser.name} (${currentUser.email})`}
+                    </p>
+                  </article>
+                ) : (
+                  <>
+                    <canvas
+                      ref={canvasRef}
+                      role="img"
+                      aria-label={`Página ${currentPage} de ${totalPages} de ${item.title}, desenhada em tela. Use "Ler em texto acessível" na barra do leitor para o conteúdo em texto.`}
+                      className="mx-auto block h-auto max-w-full rounded transition-transform"
+                    />
 
-                {isExclusive && (
-                  <div className="absolute bottom-1.5 left-0 right-0 text-center pointer-events-none text-xs text-stone-600 font-mono px-2 truncate">
-                    Licenciado para: {currentUser.name} ({currentUser.email}) • Sessão #2026-CH
-                  </div>
+                    {/* O conteúdo da página também chega a quem lê por leitor de
+                        tela, sem alterar a composição visual. */}
+                    <div className="sr-only">
+                      <h2>{item.title}</h2>
+                      <h3>{activePage.title}</h3>
+                      <p>{activePage.content}</p>
+                    </div>
+
+                    {isExclusive && (
+                      <div className="pointer-events-none absolute bottom-1.5 left-0 right-0 truncate px-2 text-center font-mono text-xs text-stone-600">
+                        Licenciado para: {currentUser.name} ({currentUser.email})
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

@@ -12,7 +12,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
-import { CatalogItem } from '../types';
+import { EmptyState } from './ui/EmptyState';
 
 export const PhysicalCatalog: React.FC = () => {
   const { catalog, addToCart, cart, currentUser } = useStore();
@@ -53,7 +53,7 @@ export const PhysicalCatalog: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Title & Editorial Intro */}
-      <div className="border-b border-[#262936] pb-6 space-y-2">
+      <div className="border-b border-line-soft pb-6 space-y-2">
         <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
           Acervo Físico: Livros Usados, Raros e Esgotados
         </h1>
@@ -73,7 +73,7 @@ export const PhysicalCatalog: React.FC = () => {
       </div>
 
       {/* Multi-faceted Filter Bar */}
-      <div className="bg-[#15171e] p-4 sm:p-5 rounded-xl border border-[#272b38] space-y-3">
+      <div className="bg-ink-700 p-4 sm:p-5 rounded-xl border border-line space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <div className="relative">
@@ -84,7 +84,7 @@ export const PhysicalCatalog: React.FC = () => {
               placeholder="Buscar por título, autor ou assunto..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-[#101217] border border-[#2e3343] rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+              className="w-full pl-10 pr-3 py-2.5 bg-ink-800 border border-line-mid rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-gold min-h-[44px]"
             />
           </div>
 
@@ -94,7 +94,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Filtrar por movimento político ou filosófico"
               value={selectedMovement}
               onChange={e => setSelectedMovement(e.target.value)}
-              className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+              className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
             >
               <option value="all">Todos os Movimentos Políticos</option>
               {movements.map(m => (
@@ -111,7 +111,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Filtrar por período histórico"
               value={selectedPeriod}
               onChange={e => setSelectedPeriod(e.target.value)}
-              className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+              className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
             >
               <option value="all">Todos os Períodos Históricos</option>
               {periods.map(p => (
@@ -128,7 +128,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Filtrar por condição de conservação da obra"
               value={selectedCondition}
               onChange={e => setSelectedCondition(e.target.value)}
-              className="w-full bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#c89b3c] min-h-[44px]"
+              className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
             >
               <option value="all">Todas as Condições</option>
               {conditions.map(c => (
@@ -141,7 +141,7 @@ export const PhysicalCatalog: React.FC = () => {
         </div>
 
         {/* Sorting options */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#222532] text-xs text-stone-400">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-line-soft text-xs text-stone-400">
           <span>{filteredItems.length} exemplar(es) encontrado(s)</span>
           <div className="flex items-center gap-2">
             <label htmlFor="sort-physical" className="text-stone-400">
@@ -152,7 +152,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Ordenar livros físicos por critério"
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="bg-[#101217] border border-[#2e3343] rounded-lg px-3 py-1.5 text-xs text-stone-200 min-h-[40px]"
+              className="bg-ink-800 border border-line-mid rounded-lg px-3 py-1.5 text-xs text-stone-200 min-h-[40px]"
             >
               <option value="featured">Destaques da Curadoria</option>
               <option value="priceAsc">Menor Preço</option>
@@ -164,6 +164,23 @@ export const PhysicalCatalog: React.FC = () => {
       </div>
 
       {/* Catalog Grid */}
+      {filteredItems.length === 0 && (
+        <EmptyState
+          icon={<Search size={22} aria-hidden="true" />}
+          title="Nenhum exemplar com esses critérios"
+          body="O acervo físico é feito de peças únicas: quando a combinação de busca, movimento, período e estado não encontra nada, costuma bastar afrouxar um dos filtros."
+          action={{
+            label: 'Limpar filtros',
+            onClick: () => {
+              setSearch('');
+              setSelectedMovement('all');
+              setSelectedPeriod('all');
+              setSelectedCondition('all');
+            }
+          }}
+        />
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredItems.map(item => {
           const inCart = cart.find(i => i.item.id === item.id);
@@ -172,23 +189,23 @@ export const PhysicalCatalog: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
+              className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
             >
               <div>
                 {/* Book Cover Image */}
-                <div className="relative h-72 bg-[#0c0d10] p-4 flex items-center justify-center overflow-hidden border-b border-[#20232e]">
+                <div className="relative h-72 bg-ink-900 p-4 flex items-center justify-center overflow-hidden border-b border-line-faint">
                   <img
                     src={item.coverImage}
                     alt={`Capa original da obra ${item.title}`}
                     loading="lazy"
                     decoding="async"
-                    className="max-h-full max-w-[85%] object-cover rounded shadow-2xl border border-[#353949]"
+                    className="max-h-full max-w-[85%] object-cover rounded shadow-2xl border border-line-strong"
                   />
 
                   {/* Condition badge */}
                   <div className="absolute top-3 left-3 flex flex-col gap-1">
                     {item.condition && (
-                      <span className="px-2.5 py-1 rounded bg-black/85 backdrop-blur text-[#c89b3c] border border-amber-800/50 text-[10px] font-mono font-medium shadow">
+                      <span className="px-2.5 py-1 rounded bg-black/85 backdrop-blur text-gold border border-amber-800/50 text-[10px] font-mono font-medium shadow">
                         {item.condition}
                       </span>
                     )}
@@ -210,11 +227,11 @@ export const PhysicalCatalog: React.FC = () => {
                     <span>{item.pages} págs</span>
                   </div>
 
-                  <h2 className="text-base font-cinzel font-bold text-white group-hover:text-[#c89b3c] transition line-clamp-2">
+                  <h2 className="text-base font-cinzel font-bold text-white group-hover:text-gold transition line-clamp-2">
                     {item.title}
                   </h2>
 
-                  <p className="text-xs text-[#c89b3c] font-medium font-serif italic">
+                  <p className="text-xs text-gold font-medium font-serif italic">
                     {item.author}
                   </p>
 
@@ -238,7 +255,7 @@ export const PhysicalCatalog: React.FC = () => {
               </div>
 
               {/* Price & Action */}
-              <div className="p-5 pt-3 border-t border-[#20232e] bg-[#12141a] flex items-center justify-between">
+              <div className="p-5 pt-3 border-t border-line-faint bg-ink-750 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] uppercase tracking-wider text-dust block">
                     Valor do Exemplar
@@ -262,7 +279,7 @@ export const PhysicalCatalog: React.FC = () => {
                     type="button"
                     onClick={() => addToCart(item)}
                     aria-label={`Comprar ${item.title}`}
-                    className="px-4 py-2.5 rounded-lg bg-[#c89b3c] hover:bg-[#d9ab4b] text-black font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-[#c89b3c]/15 min-h-[44px]"
+                    className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-gold/15 min-h-[44px]"
                   >
                     <ShoppingBag size={15} aria-hidden="true" />
                     <span>{inCart ? `Adicionado (${inCart.quantity})` : 'Comprar'}</span>

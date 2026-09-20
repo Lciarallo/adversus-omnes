@@ -1,5 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { StoreProvider, useStore } from './context/StoreContext';
+import { ToastProvider } from './components/ui/Toast';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
@@ -34,7 +36,7 @@ const CustomerPortal = lazy(() =>
 
 const ViewLoadingFallback: React.FC = () => (
   <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-3 py-20">
-    <div className="w-8 h-8 border-2 border-[#c89b3c] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+    <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" aria-hidden="true" />
     <span className="text-xs font-mono text-stone-400">Carregando acervo...</span>
   </div>
 );
@@ -103,9 +105,16 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#101114] text-[#e8e6e3] flex flex-col justify-between selection:bg-[#c89b3c] selection:text-black w-full max-w-full overflow-x-clip">
+    <div className="min-h-screen bg-ink-850 text-bone flex flex-col justify-between selection:bg-gold selection:text-black w-full max-w-full overflow-x-clip">
+      <a href="#conteudo" className="ch-skip-link">
+        Pular para o conteúdo
+      </a>
       <Navbar />
-      <main className="flex-grow w-full max-w-full overflow-x-clip">{renderContent()}</main>
+      <main id="conteudo" tabIndex={-1} className="flex-grow w-full max-w-full overflow-x-clip outline-none">
+        {/* A chave remonta a fronteira a cada troca de seção: um erro numa
+            view não deixa as outras inacessíveis. */}
+        <ErrorBoundary key={activeTab}>{renderContent()}</ErrorBoundary>
+      </main>
       <Footer />
       <CartDrawer />
       <InfinitePayModal />
@@ -115,9 +124,11 @@ const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <StoreProvider>
-      <AppContent />
-    </StoreProvider>
+    <ToastProvider>
+      <StoreProvider>
+        <AppContent />
+      </StoreProvider>
+    </ToastProvider>
   );
 };
 

@@ -46,17 +46,17 @@ export const CustomerPortal: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Profile Header */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-ink-650 via-ink-700 to-ink-750 border border-line flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-paper-700 via-paper-700 to-paper-400 border border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-ink-500 border-2 border-gold flex items-center justify-center text-gold text-xl font-cinzel font-bold shadow-lg shrink-0">
+          <div className="w-16 h-16 rounded-full bg-paper-400 border-2 border-rubrica flex items-center justify-center text-rubrica text-xl font-cinzel font-bold shadow-lg shrink-0">
             {currentUser.name.charAt(0)}
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-cinzel font-bold text-white">
+              <h1 className="text-xl sm:text-2xl font-cinzel font-bold text-ink">
                 {currentUser.name}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-amber-950 text-gold border border-amber-800/50">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-ocre-tint text-rubrica border border-ocre/35">
                 {currentUser.role === 'admin'
                   ? 'Administrador Geral'
                   : currentUser.role === 'subscriber'
@@ -64,20 +64,20 @@ export const CustomerPortal: React.FC = () => {
                   : 'Visitante Registrado'}
               </span>
             </div>
-            <p className="text-xs text-stone-400 mt-0.5">{currentUser.email}</p>
+            <p className="text-xs text-ink-soft mt-0.5">{currentUser.email}</p>
           </div>
         </div>
 
         {/* Quick Role Toggle in Customer Area for testing */}
-        <div className="flex items-center gap-2 bg-ink-850 p-2 rounded-lg border border-line text-xs">
-          <span className="text-stone-400">Perfil de Teste:</span>
+        <div className="flex items-center gap-2 bg-paper-500 p-2 rounded-lg border border-rule text-xs">
+          <span className="text-ink-soft">Perfil de Teste:</span>
           <button
             type="button"
             onClick={() => setRole('subscriber')}
             className={`px-3.5 py-2.5 rounded-lg transition min-h-[44px] min-w-[84px] flex items-center justify-center ${
               currentUser.role === 'subscriber'
-                ? 'bg-gold text-black font-semibold'
-                : 'text-stone-300 hover:text-white'
+                ? 'bg-rubrica text-paper-800 font-semibold'
+                : 'text-ink-soft hover:text-ink'
             }`}
           >
             Assinante
@@ -87,8 +87,8 @@ export const CustomerPortal: React.FC = () => {
             onClick={() => setRole('visitor')}
             className={`px-3.5 py-2.5 rounded-lg transition min-h-[44px] min-w-[84px] flex items-center justify-center ${
               currentUser.role === 'visitor'
-                ? 'bg-gold text-black font-semibold'
-                : 'text-stone-300 hover:text-white'
+                ? 'bg-rubrica text-paper-800 font-semibold'
+                : 'text-ink-soft hover:text-ink'
             }`}
           >
             Visitante
@@ -123,35 +123,35 @@ export const CustomerPortal: React.FC = () => {
       {/* Tab Content: Plan */}
       <TabPanel group="conta" id="plan" active={activeTab === 'plan'} className="space-y-6">
           {currentUser.activePlan ? (
-            <div className="p-6 rounded-xl bg-ink-700 border border-line space-y-4 max-w-2xl">
+            <div className="p-6 rounded-xl bg-paper-700 border border-rule space-y-4 max-w-2xl">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs text-stone-400 block">Status da sua Assinatura</span>
-                  <h2 className="text-2xl font-cinzel font-bold text-white mt-0.5">
+                  <span className="text-xs text-ink-soft block">Status da sua Assinatura</span>
+                  <h2 className="text-2xl font-cinzel font-bold text-ink mt-0.5">
                     Plano {currentUser.activePlan}
                   </h2>
                 </div>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1.5">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-verdete-tint text-verdete border border-verdete/35 flex items-center gap-1.5">
                   <CheckCircle2 size={13} aria-hidden="true" /> Ativa
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-line-faint">
+              <div className="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-rule-faint">
                 <div>
-                  <span className="text-stone-400 block">Data de Expiração / Próxima Renovação</span>
-                  <span className="font-mono text-white text-sm">
+                  <span className="text-ink-soft block">Data de Expiração / Próxima Renovação</span>
+                  <span className="font-mono text-ink text-sm">
                     {currentUser.subscriptionExpiresAt || 'Renovação Automática em 2027'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-stone-400 block">Forma de Pagamento</span>
-                  <span className="font-mono text-white text-sm">InfinitePay (Recorrente)</span>
+                  <span className="text-ink-soft block">Forma de Pagamento</span>
+                  <span className="font-mono text-ink text-sm">InfinitePay (Recorrente)</span>
                 </div>
               </div>
 
-              <div className="p-4 rounded-lg bg-ink-600 border border-line-mid space-y-2 text-xs">
-                <span className="font-semibold text-amber-300 block">Vantagens Ativas no seu Perfil:</span>
-                <ul className="space-y-1 text-stone-300">
+              <div className="p-4 rounded-lg bg-paper-600 border border-rule space-y-2 text-xs">
+                <span className="font-semibold text-ocre block">Vantagens Ativas no seu Perfil:</span>
+                <ul className="space-y-1 text-ink-soft">
                   <li>• Acesso irrestrito a todos os documentos do Leitor Protegido com selo de proveniência</li>
                   <li>• Desconto automático exclusivo em livros físicos e raros na sacola</li>
                   <li>• Notificações antecipadas de garimpo de primeiras edições</li>
@@ -162,34 +162,34 @@ export const CustomerPortal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('digital')}
-                  className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition min-h-[44px]"
+                  className="px-4 py-2.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold text-xs transition min-h-[44px]"
                 >
                   Ir para Acervo Exclusivo
                 </button>
                 <button
                   type="button"
                   onClick={cancelSubscription}
-                  className="text-stone-400 hover:text-red-400 text-xs transition underline min-h-[44px] px-2"
+                  className="text-ink-soft hover:text-rubrica text-xs transition underline min-h-[44px] px-2"
                 >
                   Pausar / Cancelar Assinatura
                 </button>
               </div>
             </div>
           ) : (
-            <div className="p-8 rounded-xl bg-ink-700 border border-line text-center space-y-4 max-w-xl mx-auto">
-              <div className="w-12 h-12 rounded-full bg-ink-500 text-gold flex items-center justify-center mx-auto">
+            <div className="p-8 rounded-xl bg-paper-700 border border-rule text-center space-y-4 max-w-xl mx-auto">
+              <div className="w-12 h-12 rounded-full bg-paper-400 text-rubrica flex items-center justify-center mx-auto">
                 <Sparkles size={24} aria-hidden="true" />
               </div>
-              <h2 className="text-lg font-cinzel font-bold text-white">
+              <h2 className="text-lg font-cinzel font-bold text-ink">
                 Você ainda não possui um plano de assinatura ativo
               </h2>
-              <p className="text-xs text-stone-400 leading-relaxed">
+              <p className="text-xs text-ink-soft leading-relaxed">
                 Assine agora para desfrutar de acesso ilimitado ao acervo digital exclusivo, leituras protegidas de fac-símiles históricos e até 20% de desconto em todo o acervo físico.
               </p>
               <button
                 type="button"
                 onClick={() => setActiveTab('planos')}
-                className="px-5 py-3 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition shadow-lg shadow-gold/20 min-h-[44px]"
+                className="px-5 py-3 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold text-xs transition shadow-lg shadow-rubrica/20 min-h-[44px]"
               >
                 Conhecer os Planos do Clube
               </button>
@@ -210,18 +210,18 @@ export const CustomerPortal: React.FC = () => {
             userOrders.map(order => (
               <div
                 key={order.id}
-                className="p-5 rounded-xl bg-ink-700 border border-line space-y-4"
+                className="p-5 rounded-xl bg-paper-700 border border-rule space-y-4"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-line-faint pb-3 text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rule-faint pb-3 text-xs">
                   <div>
-                    <span className="text-stone-400">Pedido</span>{' '}
-                    <strong className="text-gold font-mono text-sm">{order.id}</strong>
-                    <span className="text-stone-400 ml-2 font-mono">
+                    <span className="text-ink-soft">Pedido</span>{' '}
+                    <strong className="text-rubrica font-mono text-sm">{order.id}</strong>
+                    <span className="text-ink-soft ml-2 font-mono">
                       ({new Date(order.createdAt).toLocaleDateString('pt-BR')})
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">
+                    <span className="px-2.5 py-0.5 rounded text-[10px] bg-verdete-tint text-verdete border border-verdete/35 font-mono">
                       Pagamento Confirmado (InfinitePay)
                     </span>
                   </div>
@@ -232,25 +232,25 @@ export const CustomerPortal: React.FC = () => {
                   {order.items.map(i => (
                     <div
                       key={i.id}
-                      className="flex items-center gap-3 p-2.5 rounded-lg bg-ink-600 border border-line"
+                      className="flex items-center gap-3 p-2.5 rounded-lg bg-paper-600 border border-rule"
                     >
                       <img
                         src={i.coverImage}
                         alt={`Capa de ${i.title}`}
                         loading="lazy"
                         decoding="async"
-                        className="w-10 h-14 object-cover rounded border border-line-strong"
+                        className="w-10 h-14 object-cover rounded border border-rule-strong"
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-white truncate">{i.title}</div>
+                        <div className="text-xs font-semibold text-ink truncate">{i.title}</div>
                         {i.condition && (
-                          <div className="text-[10px] text-amber-300 font-mono">{i.condition}</div>
+                          <div className="text-[10px] text-ocre font-mono">{i.condition}</div>
                         )}
-                        <div className="text-[11px] text-stone-400">
+                        <div className="text-[11px] text-ink-soft">
                           {i.quantity}x R$ {i.price.toFixed(2)}
                         </div>
                       </div>
-                      <div className="text-xs font-bold text-white font-cinzel">
+                      <div className="text-xs font-bold text-ink font-cinzel">
                         R$ {(i.price * i.quantity).toFixed(2)}
                       </div>
                     </div>
@@ -258,21 +258,21 @@ export const CustomerPortal: React.FC = () => {
                 </div>
 
                 {/* Tracking & Address details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2 border-t border-line-faint">
-                  <div className="p-3.5 rounded-lg bg-ink-800 border border-line-soft space-y-1">
-                    <div className="flex items-center gap-1.5 font-semibold text-white">
-                      <Truck size={15} className="text-gold" aria-hidden="true" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2 border-t border-rule-faint">
+                  <div className="p-3.5 rounded-lg bg-paper-600 border border-rule-faint space-y-1">
+                    <div className="flex items-center gap-1.5 font-semibold text-ink">
+                      <Truck size={15} className="text-rubrica" aria-hidden="true" />
                       <span>Rastreamento Correios ({order.shippingMethod}):</span>
                     </div>
-                    <div className="font-mono text-amber-300 text-sm">{order.trackingCode}</div>
-                    <div className="text-[11px] text-emerald-400 flex items-center gap-1">
+                    <div className="font-mono text-ocre text-sm">{order.trackingCode}</div>
+                    <div className="text-[11px] text-verdete flex items-center gap-1">
                       <Clock size={12} aria-hidden="true" /> Objeto postado na agência central — Em trânsito
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-lg bg-ink-800 border border-line-soft space-y-1">
-                    <span className="font-semibold text-white block">Endereço de Entrega:</span>
-                    <p className="text-stone-400 text-[11px] leading-relaxed">
+                  <div className="p-3.5 rounded-lg bg-paper-600 border border-rule-faint space-y-1">
+                    <span className="font-semibold text-ink block">Endereço de Entrega:</span>
+                    <p className="text-ink-soft text-[11px] leading-relaxed">
                       {order.shippingAddress.street}, {order.shippingAddress.number}{' '}
                       {order.shippingAddress.complement} — {order.shippingAddress.neighborhood}
                       <br />
@@ -288,7 +288,7 @@ export const CustomerPortal: React.FC = () => {
 
       {/* Tab Content: Accessible Digital Library */}
       <TabPanel group="conta" id="library" active={activeTab === 'library'} className="space-y-4">
-          <div className="text-xs text-stone-400">
+          <div className="text-xs text-ink-soft">
             Materiais históricos, fac-símiles e livros digitais desbloqueados para o seu perfil:
           </div>
 
@@ -305,7 +305,7 @@ export const CustomerPortal: React.FC = () => {
             {accessibleItems.map(item => (
               <div
                 key={item.id}
-                className="p-4 rounded-xl bg-ink-700 border border-line flex flex-col justify-between gap-3"
+                className="p-4 rounded-xl bg-paper-700 border border-rule flex flex-col justify-between gap-3"
               >
                 <div className="flex gap-3">
                   <img
@@ -313,15 +313,15 @@ export const CustomerPortal: React.FC = () => {
                     alt={`Capa de ${item.title}`}
                     loading="lazy"
                     decoding="async"
-                    className="w-14 h-20 object-cover rounded border border-line-mid shrink-0"
+                    className="w-14 h-20 object-cover rounded border border-rule shrink-0"
                   />
                   <div className="min-w-0">
-                    <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-ink-450 text-stone-300">
+                    <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-paper-300 text-ink-soft">
                       {item.type === 'physical' ? 'Obra Adquirida' : item.access === 'exclusive' ? 'Acervo Assinante' : 'PDF Aberto'}
                     </span>
-                    <h2 className="text-xs font-semibold text-white truncate mt-1">{item.title}</h2>
-                    <p className="text-[11px] text-stone-400 truncate">{item.author}</p>
-                    <p className="text-[10px] text-gold font-mono">{item.year}</p>
+                    <h2 className="text-xs font-semibold text-ink truncate mt-1">{item.title}</h2>
+                    <p className="text-[11px] text-ink-soft truncate">{item.author}</p>
+                    <p className="text-[10px] text-rubrica font-mono">{item.year}</p>
                   </div>
                 </div>
 
@@ -329,9 +329,9 @@ export const CustomerPortal: React.FC = () => {
                   type="button"
                   onClick={() => openReader(item)}
                   aria-label={`Abrir ${item.title} no leitor seguro`}
-                  className="w-full py-2.5 px-3 rounded-lg bg-ink-500 hover:bg-ink-350 text-stone-200 hover:text-white border border-line-strong text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
+                  className="w-full py-2.5 px-3 rounded-lg bg-paper-400 hover:bg-paper-300 text-ink hover:text-ink border border-rule-strong text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
                 >
-                  <Eye size={14} className="text-gold" aria-hidden="true" />
+                  <Eye size={14} className="text-rubrica" aria-hidden="true" />
                   <span>Abrir no Leitor Seguro</span>
                 </button>
               </div>

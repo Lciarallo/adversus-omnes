@@ -1,46 +1,48 @@
 @import "tailwindcss";
 
+/* ==================================================================== *
+ * ADVERSUS OMNES — Rubrica                                              *
+ *                                                                       *
+ * O mundo é papel. Fundo de trapo, tinta preta quente, e uma única cor: *
+ * o mínio com que o copista rubricava o que importava numa página.      *
+ * Nenhum dourado, nenhum azul-carvão: essa é a paleta que o banco usa.  *
+ * ==================================================================== */
+
 @theme {
   --font-serif: "Cormorant Garamond", "Spectral", Georgia, serif;
   --font-reading: "Spectral", Georgia, serif;
   --font-display: "Cinzel", Georgia, serif;
   --font-sans: "Outfit", system-ui, sans-serif;
 
-  /* Papel e tinta */
-  --color-parchment: #fbf9f2;
-  --color-parchment-dark: #eee8d8;
-  --color-bone: #e8e6e3;
-  --color-dust: #8b857e;
+  /* Papel: quanto maior o número, mais clara e mais elevada a superfície */
+  --color-paper-300: #e2d8c4; /* poço de imagem, controle premido */
+  --color-paper-400: #ebe3d4; /* faixa, rodapé de ficha, controle */
+  --color-paper-500: #f2ede3; /* o fundo do mundo */
+  --color-paper-600: #f7f3ea; /* campo de formulário, bloco interno */
+  --color-paper-700: #fbf8f1; /* ficha, folha */
+  --color-paper-800: #ffffff; /* elevação máxima: diálogo */
 
-  /* Superfícies: do poço de imagem ao controle em destaque */
-  --color-ink: #101114;
-  --color-ink-950: #090a0d;
-  --color-ink-900: #0d0e12;
-  --color-ink-850: #101114;
-  --color-ink-800: #101217;
-  --color-ink-750: #12141a;
-  --color-ink-700: #15171f;
-  --color-ink-650: #181a22;
-  --color-ink-600: #1a1d26;
-  --color-ink-550: #1e212b;
-  --color-ink-500: #222530;
-  --color-ink-450: #252834;
-  --color-ink-400: #2a2e3b;
-  --color-ink-350: #303444;
+  /* Tinta */
+  --color-ink: #14110e;
+  --color-ink-soft: #4a4236;
+  --color-ink-faint: #68573d;
 
-  /* Filetes: a moldura do acervo, da divisória interna à borda em foco */
-  --color-line-faint: #20232e;
-  --color-line-soft: #252834;
-  --color-line: #272b38;
-  --color-line-mid: #2e3343;
-  --color-line-strong: #353a4c;
-  --color-line-bright: #3d4254;
+  /* Filetes */
+  --color-rule-faint: #e6dcc9;
+  --color-rule: #d8ccb4;
+  --color-rule-strong: #bdae92;
+  --color-rule-ink: #14110e;
 
-  /* Ouro: a única cor de marca */
-  --color-gold: #c89b3c;
-  --color-gold-light: #dbaa42;
-  --color-gold-deep: #a87e28;
-  --color-gold-dark: #966f21;
+  /* Rubrica: mínio. A única cor do acervo. */
+  --color-rubrica: #b8311a;
+  --color-rubrica-deep: #8e2412;
+  --color-rubrica-tint: #f3e0db;
+
+  /* Tintas de estado, todas legíveis sobre papel */
+  --color-verdete: #2f6b4a;
+  --color-verdete-tint: #e2ece4;
+  --color-ocre: #7d621b;
+  --color-ocre-tint: #f1e9d2;
 }
 
 html,
@@ -56,13 +58,13 @@ body {
 
 body {
   font-family: var(--font-sans);
-  background-color: #101114;
-  color: #e5e3dd;
-  caret-color: var(--color-gold);
+  background-color: var(--color-paper-500);
+  color: var(--color-ink);
+  caret-color: var(--color-rubrica);
   text-underline-offset: 3px;
 }
 
-/* Numerals in tabular data and monetary values */
+/* Numerais em dados tabulares e valores monetários */
 .font-mono,
 table,
 .tabular-nums {
@@ -77,41 +79,46 @@ h1, h2, h3, .font-serif-title {
   font-family: var(--font-display);
 }
 
-/* Accessibility: Consistent focus rings */
+::selection {
+  background: var(--color-rubrica);
+  color: var(--color-paper-700);
+}
+
+/* Acessibilidade: anel de foco em rubrica */
 *:focus-visible {
-  outline: 2px solid #c89b3c;
+  outline: 2px solid var(--color-rubrica);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Custom refined scrollbars */
+/* Barras de rolagem: filete de papel */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #101114;
+  background: var(--color-paper-400);
 }
 ::-webkit-scrollbar-thumb {
-  background: #282b38;
-  border-radius: 4px;
+  background: var(--color-rule-strong);
+  border: 2px solid var(--color-paper-400);
+  border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold);
+  background: var(--color-rubrica);
 }
 
-/* Watermark styles for secure reader */
+/* Marca d'água do leitor protegido */
 .secure-watermark {
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(200, 155, 60, 0.04),
-    rgba(200, 155, 60, 0.04) 120px,
+    rgba(184, 49, 26, 0.045),
+    rgba(184, 49, 26, 0.045) 120px,
     transparent 120px,
     transparent 240px
   );
 }
 
-/* No select & protection */
 .user-select-none {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -119,24 +126,17 @@ h1, h2, h3, .font-serif-title {
   user-select: none;
 }
 
-
 /* ================================================================== *
- * Frontispício — a abertura cinematográfica da home.                  *
+ * Frontispício — a abertura do arquivo.                               *
  *                                                                     *
  * Padrão (sem scroll-timeline ou com movimento reduzido): uma página  *
  * de rosto inteira, composta e legível em uma dobra.                  *
- * Com suporte: a mesma página se imprime, os estratos do acervo       *
- * atravessam o fundo e o acervo sobe por cima dela como uma cortina.  *
- *                                                                     *
- * Curso do sticky = --frontis-h menos uma dobra. Todos os intervalos  *
- * de rolagem abaixo cabem dentro desse curso.                         *
+ * Com suporte: a página se imprime, os estratos atravessam o papel    *
+ * como transparência do verso, e o acervo sobe por cima dela.         *
  * ================================================================== */
 
 :root {
-  /* Altura real do cabeçalho sticky; HeroOpening corrige no primeiro quadro. */
   --frontis-nav: 8.25rem;
-  /* Altura total da abertura e o curso do sticky dentro dela. A cortina é
-     irmã do frontispício, então estes valores moram na raiz para alcançá-la. */
   --frontis-h: 188svh;
   --frontis-travel: 88svh;
 }
@@ -144,7 +144,7 @@ h1, h2, h3, .font-serif-title {
 .frontis {
   position: relative;
   min-height: calc(100svh - var(--frontis-nav));
-  background: #0d0e12;
+  background: var(--color-paper-500);
   max-width: 100%;
   overflow-x: clip;
 }
@@ -185,23 +185,25 @@ h1, h2, h3, .font-serif-title {
   contain: paint;
 }
 
+/* Luz de mesa caindo sobre a folha, e a sombra que a encadernação faz. */
 .frontis-wash {
   background:
-    radial-gradient(62% 48% at 50% 34%, rgba(200, 155, 60, 0.16), transparent 70%),
-    radial-gradient(90% 70% at 50% 108%, rgba(29, 33, 46, 0.9), transparent 72%);
-  opacity: 0.55;
+    radial-gradient(64% 50% at 50% 30%, rgba(255, 253, 247, 0.95), transparent 72%),
+    radial-gradient(90% 68% at 50% 112%, rgba(184, 49, 26, 0.07), transparent 70%);
+  opacity: 0.85;
 }
 
 .frontis-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-  opacity: 0.05;
-  mix-blend-mode: soft-light;
+  opacity: 0.085;
+  mix-blend-mode: multiply;
 }
 
+/* A borda da folha escurece, como página escaneada. */
 .frontis-vignette {
   background:
-    radial-gradient(74% 62% at 50% 46%, transparent 42%, rgba(8, 9, 12, 0.72) 100%),
-    linear-gradient(to bottom, rgba(8, 9, 12, 0.6), transparent 20%, transparent 72%, rgba(8, 9, 12, 0.88));
+    radial-gradient(76% 64% at 50% 46%, transparent 44%, rgba(124, 106, 78, 0.16) 100%),
+    linear-gradient(to bottom, rgba(124, 106, 78, 0.1), transparent 18%, transparent 74%, rgba(124, 106, 78, 0.14));
 }
 
 .frontis-dust {
@@ -209,7 +211,7 @@ h1, h2, h3, .font-serif-title {
   height: 100%;
 }
 
-/* ---- Estratos: o vocabulário real do acervo, em profundidades ---- */
+/* ---- Estratos: o acervo atravessando o papel como o verso da folha ---- */
 
 .frontis-stratum {
   position: absolute;
@@ -243,8 +245,8 @@ h1, h2, h3, .font-serif-title {
   font-size: clamp(1.15rem, 2.3vw, 2rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #d8d3c8;
-  opacity: 0.12;
+  color: var(--color-ink);
+  opacity: 0.11;
   filter: blur(4px);
 }
 
@@ -252,16 +254,16 @@ h1, h2, h3, .font-serif-title {
   font-family: var(--font-serif);
   font-style: italic;
   font-size: clamp(2.4rem, 6vw, 4.6rem);
-  color: var(--color-gold);
-  opacity: 0.11;
+  color: var(--color-rubrica);
+  opacity: 0.13;
   filter: blur(10px);
 }
 
 .frontis-stratum--works {
   font-family: var(--font-serif);
   font-size: clamp(1.4rem, 3vw, 2.6rem);
-  color: #d8d3c8;
-  opacity: 0.13;
+  color: var(--color-ink-soft);
+  opacity: 0.12;
   filter: blur(5px);
 }
 
@@ -271,12 +273,12 @@ h1, h2, h3, .font-serif-title {
   font-size: clamp(3rem, 8vw, 6rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-gold);
-  opacity: 0.08;
+  color: var(--color-ink);
+  opacity: 0.07;
   filter: blur(16px);
 }
 
-/* ---- Moldura de filete duplo: ecoa a página do leitor protegido ---- */
+/* ---- Moldura de filete duplo: ecoa a página do leitor ---- */
 
 .frontis-frame {
   inset: clamp(0.7rem, 1.9vw, 1.6rem);
@@ -285,12 +287,12 @@ h1, h2, h3, .font-serif-title {
 .frontis-frame-rule {
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(200, 155, 60, 0.28);
+  border: 1px solid rgba(20, 17, 14, 0.38);
 }
 
 .frontis-frame-rule--inner {
   inset: 6px;
-  border-color: rgba(200, 155, 60, 0.12);
+  border-color: rgba(184, 49, 26, 0.3);
 }
 
 /* ---- Núcleo: a página de rosto ---- */
@@ -314,8 +316,8 @@ h1, h2, h3, .font-serif-title {
   z-index: -1;
   background: radial-gradient(
     58% 56% at 50% 50%,
-    rgba(13, 14, 18, 0.94) 0%,
-    rgba(13, 14, 18, 0.8) 46%,
+    rgba(250, 247, 240, 0.95) 0%,
+    rgba(250, 247, 240, 0.82) 46%,
     transparent 78%
   );
   pointer-events: none;
@@ -326,8 +328,9 @@ h1, h2, h3, .font-serif-title {
   height: 5.25rem;
   padding: 2px;
   border-radius: 1rem;
-  background: linear-gradient(145deg, #dbaa42, #7d5c19 52%, #c89b3c);
-  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.5);
+  background: var(--color-paper-800);
+  border: 1px solid var(--color-rule-strong);
+  box-shadow: 0 14px 30px -18px rgba(60, 45, 25, 0.45);
 }
 
 .frontis-emblem img {
@@ -336,7 +339,7 @@ h1, h2, h3, .font-serif-title {
   height: 100%;
   object-fit: cover;
   border-radius: calc(1rem - 3px);
-  background: #121316;
+  background: var(--color-paper-700);
 }
 
 .frontis-title {
@@ -347,11 +350,7 @@ h1, h2, h3, .font-serif-title {
   line-height: 0.92;
   letter-spacing: 0.035em;
   text-transform: uppercase;
-  color: #f4f1ea;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.08),
-    0 -1px 1px rgba(0, 0, 0, 0.7),
-    0 18px 42px rgba(0, 0, 0, 0.55);
+  color: var(--color-ink);
 }
 
 .frontis-title span {
@@ -359,7 +358,7 @@ h1, h2, h3, .font-serif-title {
 }
 
 .frontis-title-gold {
-  color: var(--color-gold);
+  color: var(--color-rubrica);
 }
 
 .frontis-rule {
@@ -373,15 +372,14 @@ h1, h2, h3, .font-serif-title {
 .frontis-rule-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(200, 155, 60, 0.75), transparent);
+  background: linear-gradient(to right, transparent, rgba(20, 17, 14, 0.5), transparent);
 }
 
 .frontis-rule-mark {
   width: 0.4rem;
   height: 0.4rem;
-  background: var(--color-gold);
+  background: var(--color-rubrica);
   transform: rotate(45deg);
-  box-shadow: 0 0 12px rgba(200, 155, 60, 0.5);
 }
 
 .frontis-latin {
@@ -392,7 +390,7 @@ h1, h2, h3, .font-serif-title {
   letter-spacing: 0.4em;
   text-indent: 0.4em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-rubrica);
 }
 
 .frontis-tagline {
@@ -401,7 +399,7 @@ h1, h2, h3, .font-serif-title {
   font-style: italic;
   font-size: clamp(1.2rem, 2.9vw, 1.85rem);
   line-height: 1.35;
-  color: #e7e3da;
+  color: var(--color-ink);
   text-wrap: balance;
 }
 
@@ -410,7 +408,7 @@ h1, h2, h3, .font-serif-title {
   max-width: 58ch;
   font-size: 0.9375rem;
   line-height: 1.7;
-  color: #a9a49b;
+  color: var(--color-ink-soft);
   text-wrap: pretty;
 }
 
@@ -429,7 +427,7 @@ h1, h2, h3, .font-serif-title {
   gap: 0.55rem;
   min-height: 44px;
   padding: 0.8rem 1.35rem;
-  border-radius: 0.55rem;
+  border-radius: 0.3rem;
   border: 1px solid transparent;
   font-size: 0.7rem;
   font-weight: 600;
@@ -444,43 +442,40 @@ h1, h2, h3, .font-serif-title {
 }
 
 .frontis-cta--gold {
-  background: linear-gradient(to right, #c89b3c, #a87e28);
-  color: #0d0e12;
-  box-shadow: 0 14px 30px -14px rgba(200, 155, 60, 0.75);
+  background: var(--color-rubrica);
+  color: var(--color-paper-700);
+  box-shadow: 0 10px 22px -12px rgba(142, 36, 18, 0.7);
 }
 
 .frontis-cta--gold:hover {
-  background: linear-gradient(to right, #dbaa42, #b88c32);
-  box-shadow: 0 18px 38px -14px rgba(200, 155, 60, 0.85);
+  background: var(--color-rubrica-deep);
+  box-shadow: 0 14px 28px -12px rgba(142, 36, 18, 0.8);
 }
 
 .frontis-cta--ghost {
-  background: rgba(26, 29, 38, 0.72);
-  border-color: #34384a;
-  color: #e2ded6;
-  backdrop-filter: blur(6px);
+  background: var(--color-paper-700);
+  border-color: var(--color-rule-strong);
+  color: var(--color-ink);
 }
 
 .frontis-cta--ghost:hover {
-  background: rgba(37, 41, 54, 0.9);
-  border-color: #454a5f;
-  color: #ffffff;
+  background: var(--color-paper-800);
+  border-color: var(--color-ink);
 }
 
 .frontis-cta--quiet {
-  background: rgba(20, 22, 29, 0.6);
-  border-color: rgba(150, 111, 33, 0.55);
-  color: var(--color-gold);
-  backdrop-filter: blur(6px);
+  background: transparent;
+  border-color: rgba(184, 49, 26, 0.45);
+  color: var(--color-rubrica);
 }
 
 .frontis-cta--quiet:hover {
-  background: rgba(31, 34, 45, 0.85);
-  border-color: rgba(200, 155, 60, 0.8);
-  color: var(--color-gold-light);
+  background: var(--color-rubrica-tint);
+  border-color: var(--color-rubrica);
+  color: var(--color-rubrica-deep);
 }
 
-/* ---- Rodapé da página de rosto: o que há dentro do acervo ---- */
+/* ---- Rodapé da página de rosto ---- */
 
 .frontis-foot {
   position: relative;
@@ -500,7 +495,7 @@ h1, h2, h3, .font-serif-title {
   font-size: 0.6875rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #9b968e;
+  color: var(--color-ink-faint);
 }
 
 .frontis-ledger .frontis-sep {
@@ -508,7 +503,7 @@ h1, h2, h3, .font-serif-title {
   width: 0.24rem;
   height: 0.24rem;
   margin: 0 0.75rem;
-  background: var(--color-gold);
+  background: var(--color-rubrica);
   transform: rotate(45deg);
 }
 
@@ -517,7 +512,7 @@ h1, h2, h3, .font-serif-title {
   display: block;
   width: 1px;
   height: 2.5rem;
-  background: linear-gradient(to bottom, rgba(200, 155, 60, 0.45), transparent);
+  background: linear-gradient(to bottom, rgba(20, 17, 14, 0.4), transparent);
 }
 
 .frontis-cue-dot {
@@ -528,8 +523,7 @@ h1, h2, h3, .font-serif-title {
   height: 3px;
   margin-left: -1px;
   border-radius: 50%;
-  background: var(--color-gold);
-  box-shadow: 0 0 8px rgba(200, 155, 60, 0.9);
+  background: var(--color-rubrica);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -550,8 +544,8 @@ h1, h2, h3, .font-serif-title {
 .frontis-curtain {
   position: relative;
   z-index: 1;
-  background: #101114;
-  border-top: 1px solid #242735;
+  background: var(--color-paper-500);
+  border-top: 1px solid var(--color-rule);
   padding-top: 4.5rem;
   max-width: 100%;
   overflow-x: clip;
@@ -566,10 +560,8 @@ h1, h2, h3, .font-serif-title {
     }
 
     .frontis-curtain {
-      /* Sobe exatamente uma dobra: encosta no rodapé da tela em repouso e
-         cobre o palco no mesmo ponto em que a composição termina de recuar. */
       margin-top: calc((var(--frontis-travel) + var(--frontis-nav)) * -1);
-      box-shadow: 0 -40px 70px -24px rgba(0, 0, 0, 0.95);
+      box-shadow: 0 -30px 50px -28px rgba(60, 45, 25, 0.35);
     }
 
     .frontis-wash,
@@ -615,9 +607,9 @@ h1, h2, h3, .font-serif-title {
 }
 
 @keyframes frontis-wash {
-  from { opacity: 0.32; transform: translate3d(0, 3%, 0) scale(1.02); }
-  52% { opacity: 0.82; }
-  to { opacity: 0.2; transform: translate3d(0, -7%, 0) scale(1.14); }
+  from { opacity: 0.6; transform: translate3d(0, 3%, 0) scale(1.02); }
+  52% { opacity: 1; }
+  to { opacity: 0.5; transform: translate3d(0, -7%, 0) scale(1.14); }
 }
 
 @keyframes frontis-drift {
@@ -626,12 +618,12 @@ h1, h2, h3, .font-serif-title {
 }
 
 @keyframes frontis-print {
-  from { transform: scale(1.028); opacity: 0.5; }
+  from { transform: scale(1.028); opacity: 0.4; }
   to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes frontis-recede {
-  from { transform: translate3d(0, 0, 0) scale(1); opacity: 1; filter: blur(0); }
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: 1; filter: blur(0px); }
   to { transform: translate3d(0, -3rem, 0) scale(0.95); opacity: 0; filter: blur(7px); }
 }
 
@@ -748,7 +740,6 @@ h1, h2, h3, .font-serif-title {
   }
 }
 
-/* Telas muito baixas: o rodapé cede espaço à página de rosto. */
 @media (max-height: 620px) {
   .frontis-foot {
     display: none;
@@ -756,14 +747,13 @@ h1, h2, h3, .font-serif-title {
 }
 
 /* ================================================================== *
- * Overdrive: Códice em Expansão — View Transitions & Motion Physics  *
+ * Transições de página e matéria das fichas                           *
  * ================================================================== */
 
 @view-transition {
   navigation: auto;
 }
 
-/* Page-to-page root view transitions */
 ::view-transition-old(root) {
   animation: 320ms cubic-bezier(0.16, 1, 0.3, 1) both codex-page-leave;
 }
@@ -773,32 +763,15 @@ h1, h2, h3, .font-serif-title {
 }
 
 @keyframes codex-page-leave {
-  from {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.985);
-    filter: blur(2px);
-  }
+  from { opacity: 1; transform: scale(1); filter: blur(0px); }
+  to { opacity: 0; transform: scale(0.985); filter: blur(2px); }
 }
 
 @keyframes codex-page-enter {
-  from {
-    opacity: 0;
-    transform: scale(1.015);
-    filter: blur(2px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
-  }
+  from { opacity: 0; transform: scale(1.015); filter: blur(2px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0px); }
 }
 
-/* Shared element transition: Codex Cover to Reader Parchment Canvas */
 ::view-transition-old(codex-cover) {
   animation: 420ms cubic-bezier(0.2, 0.9, 0.2, 1) both codex-cover-morph-out;
 }
@@ -808,46 +781,33 @@ h1, h2, h3, .font-serif-title {
 }
 
 @keyframes codex-cover-morph-out {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.06);
-  }
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.06); }
 }
 
 @keyframes codex-cover-morph-in {
-  from {
-    opacity: 0;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* Physical Codex Card 3D Depth & Tactile Hover */
+/* A ficha levanta do papel: sombra quente, nunca preta. */
 .codex-card {
   position: relative;
   transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1),
               border-color 300ms ease;
   transform: perspective(1000px) translate3d(0, 0, 0);
+  box-shadow: 0 1px 2px rgba(60, 45, 25, 0.06);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .codex-card:hover {
     transform: perspective(1000px) translate3d(0, -6px, 12px) rotateX(1.5deg);
-    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.75),
-                0 0 0 1px rgba(200, 155, 60, 0.35),
-                0 2px 8px rgba(200, 155, 60, 0.15);
+    box-shadow: 0 18px 32px -16px rgba(60, 45, 25, 0.35),
+                0 0 0 1px rgba(184, 49, 26, 0.35);
   }
 }
 
-/* Cart Drawer Folio Unfolding with @starting-style */
 .cart-drawer-panel {
   transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
               opacity 360ms ease,
@@ -861,7 +821,6 @@ h1, h2, h3, .font-serif-title {
   }
 }
 
-/* Modal Stamp/Seal Entrance with @starting-style */
 .codex-modal-panel {
   transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
               opacity 380ms ease,
@@ -876,7 +835,6 @@ h1, h2, h3, .font-serif-title {
   }
 }
 
-/* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
@@ -897,12 +855,10 @@ h1, h2, h3, .font-serif-title {
   }
 }
 
-
 /* ================================================================== *
- * Primitivos de interface: pular conteúdo, avisos, foco de painel.    *
+ * Primitivos: pular conteúdo, avisos, foco de painel.                 *
  * ================================================================== */
 
-/* O primeiro Tab da página revela o atalho para o conteúdo. */
 .ch-skip-link {
   position: fixed;
   top: 0.75rem;
@@ -913,15 +869,15 @@ h1, h2, h3, .font-serif-title {
   align-items: center;
   min-height: 44px;
   padding: 0.7rem 1.25rem;
-  border: 1px solid rgba(200, 155, 60, 0.55);
-  border-radius: 0.55rem;
-  background: #15171f;
-  color: var(--color-gold-light);
+  border: 1px solid var(--color-rubrica);
+  border-radius: 0.3rem;
+  background: var(--color-paper-800);
+  color: var(--color-rubrica-deep);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.95);
+  box-shadow: 0 14px 30px -16px rgba(60, 45, 25, 0.6);
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -929,24 +885,15 @@ h1, h2, h3, .font-serif-title {
   transform: translate(-50%, 0);
 }
 
-/* Aviso entrando: sobe e assenta. */
 .ch-toast {
   animation: ch-toast-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes ch-toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(0.75rem) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(0.75rem) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* O painel de diálogo recebe o foco no início: o anel do contêiner
-   seria um retângulo de página inteira sem informação nenhuma. */
 [role='dialog']:focus-visible {
   outline: none;
 }
@@ -960,8 +907,7 @@ h1, h2, h3, .font-serif-title {
 }
 
 /* ================================================================== *
- * O ensaio: a única superfície do acervo feita para permanecer lendo. *
- * Medida de 68ca, entrelinha larga e capitular de abertura.            *
+ * O ensaio: a superfície feita para permanecer lendo.                 *
  * ================================================================== */
 
 .ch-prose {
@@ -969,7 +915,7 @@ h1, h2, h3, .font-serif-title {
   font-family: var(--font-reading);
   font-size: 1.0625rem;
   line-height: 1.75;
-  color: #d8d4cc;
+  color: var(--color-ink);
   text-wrap: pretty;
   hyphens: auto;
 }
@@ -978,6 +924,7 @@ h1, h2, h3, .font-serif-title {
   margin-top: 1.35em;
 }
 
+/* A capitular rubricada: a cor entra onde o copista a punha. */
 .ch-prose > p:first-of-type::first-letter {
   float: left;
   margin: 0.06em 0.09em 0 0;
@@ -985,7 +932,7 @@ h1, h2, h3, .font-serif-title {
   font-size: 3.1em;
   font-weight: 700;
   line-height: 0.82;
-  color: var(--color-gold);
+  color: var(--color-rubrica);
 }
 
 @media (max-width: 640px) {
@@ -1000,8 +947,7 @@ h1, h2, h3, .font-serif-title {
 }
 
 /* ================================================================== *
- * Leitor em texto: a mesma folha, legível por leitor de tela e por    *
- * quem precisa ampliar. O desenho em tela continua sendo o padrão.    *
+ * Leitor em texto: a folha do documento, sobre a mesa de exame.       *
  * ================================================================== */
 
 .ch-reader-page {
@@ -1009,15 +955,15 @@ h1, h2, h3, .font-serif-title {
   max-width: 68ch;
   margin-inline: auto;
   padding: clamp(1.75rem, 5vw, 3.25rem) clamp(1.25rem, 5vw, 3rem);
-  color: #232220;
-  background: var(--color-parchment);
+  color: var(--color-ink);
+  background: var(--color-paper-700);
 }
 
 .ch-reader-page::before {
   content: '';
   position: absolute;
   inset: clamp(0.6rem, 1.6vw, 1rem);
-  border: 1px solid #d9d2c2;
+  border: 1px solid var(--color-rule);
   pointer-events: none;
 }
 
@@ -1026,7 +972,7 @@ h1, h2, h3, .font-serif-title {
   font-style: italic;
   font-size: 0.75rem;
   text-align: center;
-  color: #6e6a5e;
+  color: var(--color-ink-faint);
 }
 
 .ch-reader-title {
@@ -1038,7 +984,7 @@ h1, h2, h3, .font-serif-title {
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.01em;
-  color: #1c1c1a;
+  color: var(--color-ink);
   text-wrap: balance;
 }
 
@@ -1049,8 +995,8 @@ h1, h2, h3, .font-serif-title {
   font-size: 0.8125rem;
   font-weight: 600;
   text-align: center;
-  color: #8f7e53;
-  border-bottom: 1.5px solid #c89b3c;
+  color: var(--color-rubrica);
+  border-bottom: 1.5px solid var(--color-rubrica);
   width: 10rem;
   margin-inline: auto;
 }
@@ -1061,7 +1007,7 @@ h1, h2, h3, .font-serif-title {
   font-size: 1.125rem;
   font-style: italic;
   font-weight: 700;
-  color: #3a3832;
+  color: var(--color-ink-soft);
 }
 
 .ch-reader-body {
@@ -1080,9 +1026,27 @@ h1, h2, h3, .font-serif-title {
 .ch-reader-colophon {
   margin-top: 2.5rem;
   padding-top: 1rem;
-  border-top: 1px solid #e2dccc;
+  border-top: 1px solid var(--color-rule-faint);
   font-size: 0.6875rem;
   line-height: 1.6;
   text-align: center;
-  color: #6b6659;
+  color: var(--color-ink-faint);
+}
+
+/* A mesa de exame: a única superfície escura do acervo. A folha precisa
+   de um fundo que a destaque, e é sobre tinta que se fotografa uma peça. */
+.ch-reader-stage {
+  background-color: #1b1712;
+  background-image:
+    radial-gradient(120% 90% at 50% 0%, rgba(184, 49, 26, 0.08), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  background-blend-mode: normal, overlay;
+}
+
+.ch-reader-sheet {
+  background: var(--color-paper-700);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 24px 48px -20px rgba(0, 0, 0, 0.75),
+    0 4px 10px rgba(0, 0, 0, 0.35);
 }

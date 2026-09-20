@@ -23,17 +23,17 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ request, onDismiss
     onClose={onDismiss}
     labelledBy="confirm-dialog-title"
     describedBy="confirm-dialog-body"
-    panelClassName="w-full max-w-md rounded-2xl border border-line-mid bg-ink-700 p-6 shadow-2xl"
+    panelClassName="w-full max-w-md rounded-2xl border border-rule bg-paper-700 p-6 shadow-2xl"
   >
     <div className="flex items-start gap-4">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-red-900/60 bg-red-950/50 text-red-300">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-rubrica/40 bg-rubrica-tint/50 text-rubrica-deep">
         <AlertTriangle size={20} aria-hidden="true" />
       </div>
       <div className="min-w-0 space-y-1.5">
-        <h2 id="confirm-dialog-title" className="font-cinzel text-base font-bold text-white">
+        <h2 id="confirm-dialog-title" className="font-cinzel text-base font-bold text-ink">
           {request?.title}
         </h2>
-        <p id="confirm-dialog-body" className="text-xs leading-relaxed text-stone-300">
+        <p id="confirm-dialog-body" className="text-xs leading-relaxed text-ink-soft">
           {request?.body}
         </p>
       </div>
@@ -43,7 +43,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ request, onDismiss
       <button
         type="button"
         onClick={onDismiss}
-        className="min-h-[44px] rounded-lg bg-ink-500 px-4 py-2.5 text-xs font-medium text-stone-300 transition hover:bg-ink-400"
+        className="min-h-[44px] rounded-lg bg-paper-400 px-4 py-2.5 text-xs font-medium text-ink-soft transition hover:bg-paper-300"
       >
         Manter no acervo
       </button>
@@ -54,7 +54,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ request, onDismiss
           request?.onConfirm();
           onDismiss();
         }}
-        className="min-h-[44px] rounded-lg border border-red-800/60 bg-red-950/70 px-5 py-2.5 text-xs font-semibold text-red-200 transition hover:bg-red-900/70 hover:text-white"
+        className="min-h-[44px] rounded-lg border border-rubrica/50 bg-rubrica-tint/70 px-5 py-2.5 text-xs font-semibold text-rubrica-deep transition hover:bg-rubrica-tint/70 hover:text-ink"
       >
         {request?.confirmLabel}
       </button>

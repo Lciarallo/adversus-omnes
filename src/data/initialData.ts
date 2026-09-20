@@ -87,7 +87,7 @@ export const INITIAL_ARTICLES: Article[] = [
     title: 'O Conflito de Narrativas na República das Letras: A correspondência esquecida de 1888',
     slug: 'conflito-narrativas-republica-das-letras-1888',
     subtitle: 'Como cartas privadas revelam o pânico e a euforia dos intelectuais brasileiros às vésperas da abolição e da proclamação.',
-    authorName: 'Redação Contra Homines / Arquivo Histórico',
+    authorName: 'Redação Adversus Omnes / Arquivo Histórico',
     publishedAt: '2026-08-15',
     readTime: '8 min',
     category: 'História e Sociedade',
@@ -129,7 +129,7 @@ Nesta resenha crítica apoiada na rara edição em fac-símile de seus manuscrit
     title: 'Guia do Colecionador: Como Identificar Primeiras Edições e Manuscritos Raros',
     slug: 'guia-colecionador-primeiras-edicoes-manuscritos',
     subtitle: 'Mapeamento tipográfico, marcas d’água do papel de trapo e elementos de encadernação oitocentista.',
-    authorName: 'Equipe de Curadoria Contra Homines',
+    authorName: 'Equipe de Curadoria Adversus Omnes',
     publishedAt: '2026-09-02',
     readTime: '10 min',
     category: 'Bibliófilia e Preservação',
@@ -137,7 +137,7 @@ Nesta resenha crítica apoiada na rara edição em fac-símile de seus manuscrit
     coverImage: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=800',
     content: `A bibliófilia não é mero fetiche pelo objeto antigo, mas uma ciência arqueológica do livro. Identificar se um exemplar de Os Sertões é de fato a primeira tiragem de 1902 exige a inspeção minuciosa de pequenos erros tipográficos que foram corrigidos ainda na gráfica de Laemmert & Cia.
 
-Neste guia prático preparado pelos restauradores de Contra Homines, apresentamos as ferramentas básicas do avaliador:
+Neste guia prático preparado pelos restauradores de Adversus Omnes, apresentamos as ferramentas básicas do avaliador:
 1. Análise da gramatura e textura do papel (papel bíblia, papel trapo, vergê).
 2. Verificação de frontispícios, vinhetas e gravuras originais.
 3. Avaliação de carimbos de proveniência e ex-líbris históricos.
@@ -339,7 +339,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     coverImage: 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=600',
     description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. Notas pessoais, telegramas cifrados e cartas escritas nas semanas que antecederam o levante espartaquista de janeiro de 1919 em Berlim. Acesso protegido contra extração e download indevido.',
     pages: 142,
-    publisher: 'Fundo Arquivístico Contra Homines',
+    publisher: 'Fundo Arquivístico Adversus Omnes',
     politicalMovement: 'Socialismo Democrático',
     period: 'Século XX',
     event: 'Revolução Alemã (1918–1919)',
@@ -374,7 +374,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     coverImage: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&q=80&w=600',
     description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. Transcrição fidedigna das deliberações em sessões secretas sobre o presidencialismo militar de Deodoro da Fonseca, a secularização dos cemitérios e a separação entre Igreja e Estado.',
     pages: 310,
-    publisher: 'Arquivo Nacional / Edição Crítica Contra Homines',
+    publisher: 'Arquivo Nacional / Edição Crítica Adversus Omnes',
     politicalMovement: 'Republicanismo Histórico',
     period: 'Século XIX',
     event: 'Promulgação da 1ª Constituição Republicana',
@@ -405,7 +405,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     coverImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600',
     description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. O diálogo imediato pós-queda do Terceiro Reich, a culpa metafísica, a reconstrução da universidade e a formulação inicial dos conceitos de totalitarismo.',
     pages: 188,
-    publisher: 'Contra Homines Digital',
+    publisher: 'Adversus Omnes Digital',
     politicalMovement: 'Filosofia Política Republicana',
     period: 'Século XX',
     event: 'Fim da Segunda Guerra Mundial e Julgamentos de Nuremberg',
@@ -469,7 +469,7 @@ export const INITIAL_PLANS: SubscriptionPlan[] = [
       '20% de desconto em todo o acervo físico',
       'Frete Grátis SEDEX ilimitado para todo o Brasil em compras físicas',
       'Envio semestral de 1 livro raro/usado selecionado pela nossa curadoria na sua porta',
-      'Certificado nominal de membro benemérito de Contra Homines'
+      'Certificado nominal de membro benemérito de Adversus Omnes'
     ],
     isPopular: false
   }
@@ -506,9 +506,9 @@ export const INITIAL_INFINITEPAY_CONFIG: InfinitePayConfig = {
   merchantId: 'inf_merch_live_83921049281',
   apiKey: 'inf_live_key_9f9301824a87c10b91e847',
   clientSecret: 'inf_sec_8921b7c4a10',
-  walletId: 'inf_wallet_contas_contrahomines_br',
+  walletId: 'inf_wallet_contas_adversusomnes_br',
   mode: 'sandbox',
-  webhookUrl: 'https://contra-homines.luizeduardociarallo.workers.dev/api/webhooks/infinitepay',
+  webhookUrl: 'https://adversus-omnes.luizeduardociarallo.workers.dev/api/webhooks/infinitepay',
   enabled: true
 };
 

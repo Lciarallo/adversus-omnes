@@ -155,7 +155,7 @@ export const Dialog: React.FC<DialogProps> = ({
     <div className={shell}>
       <div
         onClick={() => onCloseRef.current()}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 bg-ink/45 backdrop-blur-[2px]"
         aria-hidden="true"
       />
       <div

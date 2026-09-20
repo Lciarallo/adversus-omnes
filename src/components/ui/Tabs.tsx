@@ -71,7 +71,7 @@ export function Tabs<T extends string>({
       ref={listRef}
       role="tablist"
       aria-label={label}
-      className={`flex flex-wrap gap-2 border-b border-line-soft pb-1 text-xs ${className}`}
+      className={`flex flex-wrap gap-2 border-b border-rule-faint pb-1 text-xs ${className}`}
     >
       {items.map((item, index) => {
         const selected = item.id === value;
@@ -88,8 +88,8 @@ export function Tabs<T extends string>({
             onKeyDown={e => onKeyDown(e, index)}
             className={`flex min-h-[44px] items-center gap-1.5 rounded-lg px-4 py-2.5 font-semibold transition ${
               selected
-                ? 'border border-line-strong bg-ink-500 text-gold'
-                : 'border border-transparent text-stone-400 hover:bg-ink-600 hover:text-white'
+                ? 'border border-rule-strong bg-paper-400 text-rubrica'
+                : 'border border-transparent text-ink-soft hover:bg-paper-600 hover:text-ink'
             }`}
           >
             {item.icon}
@@ -98,7 +98,7 @@ export function Tabs<T extends string>({
             {typeof item.count === 'number' && (
               <span
                 className={`ml-0.5 rounded px-1.5 py-0.5 font-mono text-[10px] tabular-nums ${
-                  selected ? 'bg-ink-400 text-gold-light' : 'bg-ink-550 text-stone-400'
+                  selected ? 'bg-paper-300 text-rubrica-deep' : 'bg-paper-600 text-ink-soft'
                 }`}
               >
                 {item.count}

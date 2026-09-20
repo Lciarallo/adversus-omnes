@@ -80,15 +80,15 @@ export const CartDrawer: React.FC = () => {
       labelledBy="cart-drawer-heading"
       placement="right"
       motionClassName="cart-drawer-panel"
-      panelClassName="flex h-full w-full max-w-md flex-col border-l border-line-mid bg-ink-700 shadow-2xl"
+      panelClassName="flex h-full w-full max-w-md flex-col border-l border-rule bg-paper-700 shadow-2xl"
     >
       {/* Header */}
-      <div className="flex shrink-0 items-center justify-between border-b border-line-soft bg-ink-750 px-4 py-4 sm:px-6 sm:py-5">
+      <div className="flex shrink-0 items-center justify-between border-b border-rule-faint bg-paper-400 px-4 py-4 sm:px-6 sm:py-5">
         <div className="min-w-0">
-          <h2 id="cart-drawer-heading" className="font-cinzel text-lg font-bold tracking-wide text-white">
+          <h2 id="cart-drawer-heading" className="font-cinzel text-lg font-bold tracking-wide text-ink">
             Sua Sacola de Obras
           </h2>
-          <p className="font-serif text-xs italic text-stone-400">
+          <p className="font-serif text-xs italic text-ink-soft">
             {cart.length === 0
               ? 'Nenhum exemplar selecionado'
               : cart.length === 1
@@ -100,7 +100,7 @@ export const CartDrawer: React.FC = () => {
           type="button"
           onClick={close}
           aria-label="Fechar sacola de compras"
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2.5 text-stone-400 transition hover:bg-ink-450 hover:text-white"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2.5 text-ink-soft transition hover:bg-paper-300 hover:text-ink"
         >
           <X size={20} aria-hidden="true" />
         </button>
@@ -110,11 +110,11 @@ export const CartDrawer: React.FC = () => {
       <div className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
         {cart.length === 0 ? (
           <div className="py-12 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-line-mid bg-ink-550 text-gold">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-rule bg-paper-600 text-rubrica">
               <BookMarked size={26} aria-hidden="true" />
             </div>
-            <h3 className="font-cinzel text-base font-bold text-white">Sua sacola está vazia</h3>
-            <p className="mx-auto mt-2 max-w-xs font-serif text-xs italic leading-relaxed text-stone-400">
+            <h3 className="font-cinzel text-base font-bold text-ink">Sua sacola está vazia</h3>
+            <p className="mx-auto mt-2 max-w-xs font-serif text-xs italic leading-relaxed text-ink-soft">
               O acervo físico reúne primeiras edições, exemplares esgotados e peças únicas — cada
               uma com sua ficha de conservação e procedência.
             </p>
@@ -124,7 +124,7 @@ export const CartDrawer: React.FC = () => {
                 close();
                 setActiveTab('fisico');
               }}
-              className="mt-5 min-h-[44px] rounded-lg border border-line-bright bg-ink-550 px-5 py-2.5 text-xs font-semibold text-stone-200 transition hover:border-gold/60 hover:text-white"
+              className="mt-5 min-h-[44px] rounded-lg border border-rule-strong bg-paper-600 px-5 py-2.5 text-xs font-semibold text-ink transition hover:border-rubrica/60 hover:text-ink"
             >
               Percorrer o acervo físico
             </button>
@@ -133,55 +133,55 @@ export const CartDrawer: React.FC = () => {
           cart.map(({ item, quantity }) => (
             <div
               key={item.id}
-              className="relative flex gap-3.5 rounded-lg border border-line bg-ink-600 p-3"
+              className="relative flex gap-3.5 rounded-lg border border-rule bg-paper-600 p-3"
             >
               <img
                 src={item.coverImage}
                 alt={`Capa de ${item.title}`}
                 loading="lazy"
                 decoding="async"
-                className="h-22 w-16 shrink-0 rounded border border-line-strong object-cover shadow-md"
+                className="h-22 w-16 shrink-0 rounded border border-rule-strong object-cover shadow-md"
               />
               <div className="flex min-w-0 flex-1 flex-col justify-between">
                 <div className="min-w-0">
                   {item.condition && (
-                    <span className="mb-1 inline-block rounded border border-amber-800/40 bg-amber-950/80 px-1.5 py-0.5 font-mono text-[10px] text-gold">
+                    <span className="mb-1 inline-block rounded border border-ocre/35 bg-ocre-tint/80 px-1.5 py-0.5 font-mono text-[10px] text-rubrica">
                       {item.condition}
                     </span>
                   )}
-                  <h3 className="truncate text-xs font-semibold text-white" title={item.title}>
+                  <h3 className="truncate text-xs font-semibold text-ink" title={item.title}>
                     {item.title}
                   </h3>
-                  <p className="truncate text-[11px] text-stone-400">{item.author}</p>
+                  <p className="truncate text-[11px] text-ink-soft">{item.author}</p>
                 </div>
 
-                <div className="mt-2 flex items-center justify-between gap-2 border-t border-line pt-1">
-                  <div className="flex items-center gap-1 rounded border border-line-mid bg-ink-700">
+                <div className="mt-2 flex items-center justify-between gap-2 border-t border-rule pt-1">
+                  <div className="flex items-center gap-1 rounded border border-rule bg-paper-700">
                     <button
                       type="button"
                       onClick={() => updateCartQuantity(item.id, quantity - 1)}
                       aria-label={`Diminuir quantidade de ${item.title}`}
-                      className="flex min-h-[44px] min-w-[44px] items-center justify-center text-stone-300 transition hover:text-white"
+                      className="flex min-h-[44px] min-w-[44px] items-center justify-center text-ink-soft transition hover:text-ink"
                     >
                       <Minus size={13} aria-hidden="true" />
                     </button>
-                    <span className="px-2 text-xs font-semibold tabular-nums text-white">{quantity}</span>
+                    <span className="px-2 text-xs font-semibold tabular-nums text-ink">{quantity}</span>
                     <button
                       type="button"
                       onClick={() => updateCartQuantity(item.id, quantity + 1)}
                       aria-label={`Aumentar quantidade de ${item.title}`}
-                      className="flex min-h-[44px] min-w-[44px] items-center justify-center text-stone-300 transition hover:text-white"
+                      className="flex min-h-[44px] min-w-[44px] items-center justify-center text-ink-soft transition hover:text-ink"
                     >
                       <Plus size={13} aria-hidden="true" />
                     </button>
                   </div>
 
                   <div className="text-right">
-                    <div className="text-xs font-bold tabular-nums text-gold">
+                    <div className="text-xs font-bold tabular-nums text-rubrica">
                       R$ {(item.price * quantity).toFixed(2)}
                     </div>
                     {item.stock === 1 && (
-                      <div className="text-[9px] font-medium text-red-400">Peça única</div>
+                      <div className="text-[9px] font-medium text-rubrica">Peça única</div>
                     )}
                   </div>
                 </div>
@@ -191,7 +191,7 @@ export const CartDrawer: React.FC = () => {
                 type="button"
                 onClick={() => removeFromCart(item.id)}
                 aria-label={`Remover ${item.title} da sacola`}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center self-start text-stone-400 transition hover:text-red-400"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center self-start text-ink-soft transition hover:text-rubrica"
               >
                 <Trash2 size={16} aria-hidden="true" />
               </button>
@@ -201,9 +201,9 @@ export const CartDrawer: React.FC = () => {
 
         {/* Correios Shipping Simulator */}
         {cart.length > 0 && (
-          <div className="space-y-3 rounded-lg border border-line-mid bg-ink-600 p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-stone-200">
-              <Truck size={16} className="text-gold" aria-hidden="true" />
+          <div className="space-y-3 rounded-lg border border-rule bg-paper-600 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-ink">
+              <Truck size={16} className="text-rubrica" aria-hidden="true" />
               <span>Frete pelos Correios</span>
             </div>
 
@@ -226,29 +226,29 @@ export const CartDrawer: React.FC = () => {
                     setCepInput(e.target.value);
                     if (cepError) setCepError(null);
                   }}
-                  className={`min-h-[44px] w-full rounded-lg border bg-ink-750 px-3 py-2 text-xs text-white placeholder-dust focus:outline-none ${
-                    cepError ? 'border-red-700 focus:border-red-500' : 'border-line-strong focus:border-gold'
+                  className={`min-h-[44px] w-full rounded-lg border bg-paper-400 px-3 py-2 text-xs text-ink placeholder-ink-faint focus:outline-none ${
+                    cepError ? 'border-rubrica focus:border-rubrica' : 'border-rule-strong focus:border-rubrica'
                   }`}
                 />
               </div>
               <button
                 type="submit"
                 disabled={isCalculatingShipping}
-                className="min-h-[44px] shrink-0 rounded-lg border border-line-bright bg-ink-400 px-4 py-2 text-xs text-stone-200 transition hover:bg-ink-350 disabled:opacity-50"
+                className="min-h-[44px] shrink-0 rounded-lg border border-rule-strong bg-paper-300 px-4 py-2 text-xs text-ink transition hover:bg-paper-300 disabled:opacity-50"
               >
                 {isCalculatingShipping ? 'Calculando...' : 'Calcular'}
               </button>
             </form>
 
             {cepError && (
-              <p id="cart-cep-erro" role="alert" className="flex items-center gap-1.5 text-[11px] text-red-300">
+              <p id="cart-cep-erro" role="alert" className="flex items-center gap-1.5 text-[11px] text-rubrica-deep">
                 <AlertCircle size={12} aria-hidden="true" />
                 <span>{cepError}</span>
               </p>
             )}
 
             {isFreeShipping && (
-              <div className="flex items-center gap-1.5 rounded-lg border border-emerald-800/40 bg-emerald-950/50 p-2.5 text-[11px] text-emerald-300">
+              <div className="flex items-center gap-1.5 rounded-lg border border-verdete/35 bg-verdete-tint/50 p-2.5 text-[11px] text-verdete">
                 <CheckCircle size={13} aria-hidden="true" />
                 <span>
                   Benefício Membro do Círculo: <strong>frete SEDEX incluso</strong>
@@ -264,8 +264,8 @@ export const CartDrawer: React.FC = () => {
                     key={quote.service}
                     className={`flex min-h-[44px] cursor-pointer items-center justify-between rounded-lg border p-3 text-xs transition ${
                       selectedShipping?.service === quote.service
-                        ? 'border-gold bg-ink-450 text-white'
-                        : 'border-line bg-ink-700 text-stone-400 hover:border-line-bright'
+                        ? 'border-rubrica bg-paper-300 text-ink'
+                        : 'border-rule bg-paper-700 text-ink-soft hover:border-rule-strong'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
@@ -274,16 +274,16 @@ export const CartDrawer: React.FC = () => {
                         name="shipping"
                         checked={selectedShipping?.service === quote.service}
                         onChange={() => setSelectedShipping(quote)}
-                        className="h-4 w-4 accent-gold"
+                        className="h-4 w-4 accent-rubrica"
                       />
                       <div>
-                        <span className="font-medium text-white">{quote.service}</span>
-                        <span className="ml-1.5 text-[10px] text-stone-400">
+                        <span className="font-medium text-ink">{quote.service}</span>
+                        <span className="ml-1.5 text-[10px] text-ink-soft">
                           ({quote.deadlineDays} {quote.deadlineDays === 1 ? 'dia útil' : 'dias úteis'})
                         </span>
                       </div>
                     </div>
-                    <span className="font-semibold tabular-nums text-gold">
+                    <span className="font-semibold tabular-nums text-rubrica">
                       R$ {quote.price.toFixed(2)}
                     </span>
                   </label>
@@ -291,7 +291,7 @@ export const CartDrawer: React.FC = () => {
               </fieldset>
             )}
 
-            <p className="text-[10px] leading-relaxed text-dust">
+            <p className="text-[10px] leading-relaxed text-ink-faint">
               Simulação de demonstração: os valores seguem a tabela por região, sem consulta aos
               Correios.
             </p>
@@ -300,10 +300,10 @@ export const CartDrawer: React.FC = () => {
 
         {/* Coupons Section */}
         {cart.length > 0 && (
-          <div className="space-y-2 rounded-lg border border-line-mid bg-ink-600 p-4">
+          <div className="space-y-2 rounded-lg border border-rule bg-paper-600 p-4">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1.5 font-semibold text-stone-200">
-                <Tag size={15} className="text-gold" aria-hidden="true" /> Cupom de desconto
+              <span className="flex items-center gap-1.5 font-semibold text-ink">
+                <Tag size={15} className="text-rubrica" aria-hidden="true" /> Cupom de desconto
               </span>
               {appliedCoupon && (
                 <button
@@ -313,7 +313,7 @@ export const CartDrawer: React.FC = () => {
                     setCouponFeedback(null);
                     setCouponInput('');
                   }}
-                  className="min-h-[36px] text-[11px] text-red-400 underline transition hover:text-red-300"
+                  className="min-h-[36px] text-[11px] text-rubrica underline transition hover:text-rubrica-deep"
                 >
                   Remover cupom
                 </button>
@@ -334,18 +334,18 @@ export const CartDrawer: React.FC = () => {
                     aria-describedby={couponFeedback && !couponFeedback.success ? 'cart-coupon-erro' : undefined}
                     value={couponInput}
                     onChange={e => setCouponInput(e.target.value.toUpperCase())}
-                    className="min-h-[44px] w-full rounded-lg border border-line-strong bg-ink-750 px-3 py-2 font-mono text-xs uppercase text-white placeholder-dust focus:border-gold focus:outline-none"
+                    className="min-h-[44px] w-full rounded-lg border border-rule-strong bg-paper-400 px-3 py-2 font-mono text-xs uppercase text-ink placeholder-ink-faint focus:border-rubrica focus:outline-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="min-h-[44px] shrink-0 rounded-lg border border-line-bright bg-ink-400 px-4 py-2 text-xs text-stone-200 transition hover:bg-ink-350"
+                  className="min-h-[44px] shrink-0 rounded-lg border border-rule-strong bg-paper-300 px-4 py-2 text-xs text-ink transition hover:bg-paper-300"
                 >
                   Aplicar
                 </button>
               </form>
             ) : (
-              <div className="flex items-center justify-between rounded-lg border border-emerald-800/40 bg-ink-500 p-2.5 text-xs text-emerald-300">
+              <div className="flex items-center justify-between rounded-lg border border-verdete/35 bg-paper-400 p-2.5 text-xs text-verdete">
                 <span className="font-mono font-bold">{appliedCoupon.code}</span>
                 <span className="tabular-nums">−{appliedCoupon.discountPercentage}%</span>
               </div>
@@ -355,7 +355,7 @@ export const CartDrawer: React.FC = () => {
               <p
                 id="cart-coupon-erro"
                 role="alert"
-                className="flex items-start gap-1.5 text-[11px] text-red-300"
+                className="flex items-start gap-1.5 text-[11px] text-rubrica-deep"
               >
                 <AlertCircle size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
                 <span>{couponFeedback.message}</span>
@@ -367,28 +367,28 @@ export const CartDrawer: React.FC = () => {
 
       {/* Footer / Summary & Checkout */}
       {cart.length > 0 && (
-        <div className="shrink-0 space-y-3 border-t border-line-soft bg-ink-750 p-4 sm:p-6">
+        <div className="shrink-0 space-y-3 border-t border-rule-faint bg-paper-400 p-4 sm:p-6">
           <div className="space-y-1.5 text-xs tabular-nums">
-            <div className="flex justify-between text-stone-400">
+            <div className="flex justify-between text-ink-soft">
               <span>Subtotal das obras</span>
               <span>R$ {cartSubtotal.toFixed(2)}</span>
             </div>
 
             {subscriberDiscount > 0 && (
-              <div className="flex justify-between text-emerald-400">
+              <div className="flex justify-between text-verdete">
                 <span>Desconto do plano ({currentUser.activePlan})</span>
                 <span>−R$ {subscriberDiscount.toFixed(2)}</span>
               </div>
             )}
 
             {appliedCoupon && (
-              <div className="flex justify-between text-emerald-400">
+              <div className="flex justify-between text-verdete">
                 <span>Cupom {appliedCoupon.code}</span>
                 <span>−R$ {couponDiscount.toFixed(2)}</span>
               </div>
             )}
 
-            <div className="flex justify-between text-stone-400">
+            <div className="flex justify-between text-ink-soft">
               <span>Frete (Correios)</span>
               <span>
                 {isFreeShipping
@@ -399,9 +399,9 @@ export const CartDrawer: React.FC = () => {
               </span>
             </div>
 
-            <div className="flex justify-between border-t border-line-soft pt-2 text-sm font-bold text-white">
+            <div className="flex justify-between border-t border-rule-faint pt-2 text-sm font-bold text-ink">
               <span>Total do pedido</span>
-              <span className="font-cinzel text-base text-gold">R$ {cartTotal.toFixed(2)}</span>
+              <span className="font-cinzel text-base text-rubrica">R$ {cartTotal.toFixed(2)}</span>
             </div>
           </div>
 
@@ -411,20 +411,20 @@ export const CartDrawer: React.FC = () => {
               close();
               startCartCheckout();
             }}
-            className="group flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-gold to-gold-deep px-4 py-3 text-sm font-semibold text-black shadow-lg shadow-gold/20 transition hover:from-gold-light hover:to-gold-deep"
+            className="group flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-rubrica px-4 py-3 text-sm font-semibold text-paper-800 shadow-lg shadow-rubrica/20 transition hover:bg-rubrica-deep"
           >
             <span>Ir para o checkout</span>
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </button>
 
-          <div className="flex items-center justify-center gap-3 pt-1 text-[11px] text-stone-400">
+          <div className="flex items-center justify-center gap-3 pt-1 text-[11px] text-ink-soft">
             <span className="flex items-center gap-1">
-              <ShieldCheck size={13} className="text-emerald-500" aria-hidden="true" /> Peças únicas
+              <ShieldCheck size={13} className="text-verdete" aria-hidden="true" /> Peças únicas
               reservadas na sacola
             </span>
             <span aria-hidden="true">•</span>
             <span className="flex items-center gap-1">
-              <CreditCard size={13} className="text-gold" aria-hidden="true" /> Pix e cartão
+              <CreditCard size={13} className="text-rubrica" aria-hidden="true" /> Pix e cartão
             </span>
           </div>
         </div>

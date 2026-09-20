@@ -34,12 +34,12 @@ export const HomePage: React.FC = () => {
       <div className="frontis-curtain space-y-20">
         {/* Section 1: Rare Physical Books */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
             <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
                 Raridades do Acervo Físico
               </h2>
-              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
+              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
                 Primeiras edições comemorativas, encadernações em meio-couro e volumes com anotações marginais de época.
               </p>
             </div>
@@ -50,7 +50,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('fisico');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todo o catálogo físico</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -61,40 +61,40 @@ export const HomePage: React.FC = () => {
             {featuredPhysical.map(item => (
               <div
                 key={item.id}
-                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group codex-card"
+                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group codex-card"
               >
                 <div>
-                  <div className="relative h-64 bg-ink-950 p-4 flex items-center justify-center overflow-hidden border-b border-line-faint">
+                  <div className="relative h-64 bg-paper-300 p-4 flex items-center justify-center overflow-hidden border-b border-rule-faint">
                     <img
                       src={item.coverImage}
                       alt={`Capa do exemplar ${item.title}`}
                       loading="lazy"
                       decoding="async"
-                      className="max-h-full max-w-[80%] object-cover rounded shadow-2xl border border-line-mid"
+                      className="max-h-full max-w-[80%] object-cover rounded shadow-2xl border border-rule"
                     />
                     {item.condition && (
-                      <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded bg-black/85 text-gold border border-amber-800/50 text-[10px] font-mono">
+                      <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded bg-paper-800/92 text-rubrica border border-ocre/35 text-[10px] font-mono">
                         {item.condition}
                       </span>
                     )}
                   </div>
 
                   <div className="p-5 space-y-2">
-                    <div className="text-[11px] text-stone-400 font-mono">
+                    <div className="text-[11px] text-ink-soft font-mono">
                       {item.politicalMovement} • {item.year}
                     </div>
-                    <h3 className="text-base font-cinzel font-bold text-white group-hover:text-gold transition line-clamp-2">
+                    <h3 className="text-base font-cinzel font-bold text-ink group-hover:text-rubrica transition line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-gold font-serif italic">{item.author}</p>
-                    <p className="text-xs text-stone-400 line-clamp-2 font-serif">{item.description}</p>
+                    <p className="text-xs text-rubrica font-serif italic">{item.author}</p>
+                    <p className="text-xs text-ink-soft line-clamp-2 font-serif">{item.description}</p>
                   </div>
                 </div>
 
-                <div className="p-5 pt-3 border-t border-line-faint bg-ink-750 flex items-center justify-between">
+                <div className="p-5 pt-3 border-t border-rule-faint bg-paper-400 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] uppercase text-dust block">Preço</span>
-                    <div className="text-base font-cinzel font-bold text-white">
+                    <span className="text-[10px] uppercase text-ink-faint block">Preço</span>
+                    <div className="text-base font-cinzel font-bold text-ink">
                       R$ {item.price.toFixed(2)}
                     </div>
                   </div>
@@ -102,7 +102,7 @@ export const HomePage: React.FC = () => {
                     type="button"
                     onClick={() => addToCart(item)}
                     aria-label={`Adicionar ${item.title} à sacola`}
-                    className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition min-h-[44px]"
+                    className="px-4 py-2.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold text-xs transition min-h-[44px]"
                   >
                     Adicionar à Sacola
                   </button>
@@ -114,12 +114,12 @@ export const HomePage: React.FC = () => {
 
         {/* Section 2: Protected Online Documents */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
             <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
                 Documentos & Fac-símiles Digitais
               </h2>
-              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
+              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
                 Manifestos e cartas históricas digitalizados, abertos ao público ou reservados a assinantes no leitor protegido.
               </p>
             </div>
@@ -130,7 +130,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('digital');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todo o acervo digital</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -141,7 +141,7 @@ export const HomePage: React.FC = () => {
             {featuredDigital.map(item => (
               <div
                 key={item.id}
-                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4 codex-card"
+                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4 codex-card"
               >
                 <div className="flex items-start gap-4">
                   <img
@@ -150,16 +150,16 @@ export const HomePage: React.FC = () => {
                     loading="lazy"
                     decoding="async"
                     style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
-                    className="w-16 h-22 object-cover rounded border border-line-mid shrink-0"
+                    className="w-16 h-22 object-cover rounded border border-rule shrink-0"
                   />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
                       {item.access === 'exclusive' ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-gold border border-amber-800/40 flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-ocre-tint text-rubrica border border-ocre/35 flex items-center gap-1">
                           <Lock size={10} aria-hidden="true" /> Assinante
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-800/40">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-verdete-tint text-verdete border border-verdete/35">
                           PDF Livre
                         </span>
                       )}
@@ -168,16 +168,16 @@ export const HomePage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => openReader(item)}
-                        className="line-clamp-2 py-1 text-left text-white transition group-hover:text-gold"
+                        className="line-clamp-2 py-1 text-left text-ink transition group-hover:text-rubrica"
                       >
                         {item.title}
                       </button>
                     </h3>
-                    <p className="text-xs text-stone-400 font-serif italic truncate">{item.author}</p>
+                    <p className="text-xs text-ink-soft font-serif italic truncate">{item.author}</p>
                   </div>
                 </div>
 
-                <p className="text-xs text-stone-300 font-serif line-clamp-3 leading-relaxed">
+                <p className="text-xs text-ink-soft font-serif line-clamp-3 leading-relaxed">
                   {item.description}
                 </p>
 
@@ -185,7 +185,7 @@ export const HomePage: React.FC = () => {
                   type="button"
                   onClick={() => openReader(item)}
                   aria-label={`Abrir ${item.title} no leitor seguro`}
-                  className="w-full py-2.5 px-3 rounded-lg bg-ink-550 hover:bg-ink-400 text-stone-200 hover:text-white border border-line-strong text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
+                  className="w-full py-2.5 px-3 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink hover:text-ink border border-rule-strong text-xs font-semibold transition flex items-center justify-center gap-1.5 min-h-[44px]"
                 >
                   <span>Abrir no Leitor Seguro</span>
                   <ArrowRight size={13} aria-hidden="true" />
@@ -197,12 +197,12 @@ export const HomePage: React.FC = () => {
 
         {/* Section 3: Authors Spotlight */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
             <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
                 Pensadores e Teóricos em Destaque
               </h2>
-              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
+              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
                 Páginas autorais dedicadas com catálogo biográfico e bibliográfico de cada pensador.
               </p>
             </div>
@@ -213,7 +213,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('autores');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ver todos os autores</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -237,26 +237,26 @@ export const HomePage: React.FC = () => {
                     window.scrollTo(0, 0);
                   }
                 }}
-                className="p-5 rounded-xl bg-ink-700 border border-line hover:border-gold/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg codex-card"
+                className="p-5 rounded-xl bg-paper-700 border border-rule hover:border-rubrica/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg codex-card"
               >
                 <img
                   src={author.avatar}
                   alt={`Foto de ${author.name}`}
                   loading="lazy"
                   decoding="async"
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-line-strong group-hover:border-gold transition shadow-md"
+                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-rule-strong group-hover:border-rubrica transition shadow-md"
                 />
                 <div className="space-y-0.5">
-                  <span className="text-[10px] font-sans font-medium text-gold uppercase tracking-wider block">
+                  <span className="text-[10px] font-sans font-medium text-rubrica uppercase tracking-wider block">
                     {author.politicalMovement}
                   </span>
-                  <h3 className="text-base font-cinzel font-bold text-white group-hover:text-gold transition">
+                  <h3 className="text-base font-cinzel font-bold text-ink group-hover:text-rubrica transition">
                     {author.name}
                   </h3>
-                  <p className="text-xs text-stone-400 font-serif italic">{author.period}</p>
+                  <p className="text-xs text-ink-soft font-serif italic">{author.period}</p>
                 </div>
 
-                <p className="text-xs text-stone-400 font-serif line-clamp-2 leading-relaxed">
+                <p className="text-xs text-ink-soft font-serif line-clamp-2 leading-relaxed">
                   {author.bio}
                 </p>
               </div>
@@ -266,12 +266,12 @@ export const HomePage: React.FC = () => {
 
         {/* Section 4: Latest Articles from Editorial Blog */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-line-soft pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-rule-faint pb-4">
             <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white tracking-wide">
+              <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-ink tracking-wide">
                 Últimos Artigos Publicados
               </h2>
-              <p className="text-xs sm:text-sm text-stone-400 font-serif italic max-w-2xl">
+              <p className="text-xs sm:text-sm text-ink-soft font-serif italic max-w-2xl">
                 Análises sobre a recepção da literatura política e notas de pesquisa arquivística.
               </p>
             </div>
@@ -282,7 +282,7 @@ export const HomePage: React.FC = () => {
                 setActiveTab('artigos');
                 window.scrollTo(0, 0);
               }}
-              className="text-xs text-gold hover:text-gold-light font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
+              className="text-xs text-rubrica hover:text-rubrica-deep font-semibold flex items-center gap-1.5 shrink-0 min-h-[44px] transition-colors group"
             >
               <span>Ler todos os artigos</span>
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
@@ -308,7 +308,7 @@ export const HomePage: React.FC = () => {
                     window.scrollTo(0, 0);
                   }
                 }}
-                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between codex-card"
+                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between codex-card"
               >
                 <div>
                   <img
@@ -319,19 +319,19 @@ export const HomePage: React.FC = () => {
                     className="w-full h-44 object-cover"
                   />
                   <div className="p-5 space-y-2">
-                    <div className="flex items-center gap-2 text-[11px] text-stone-400">
-                      <span className="text-gold font-medium">{art.category}</span>
+                    <div className="flex items-center gap-2 text-[11px] text-ink-soft">
+                      <span className="text-rubrica font-medium">{art.category}</span>
                       <span>•</span>
                       <span>{art.readTime}</span>
                     </div>
-                    <h3 className="text-base font-serif font-bold text-white group-hover:text-gold transition line-clamp-2">
+                    <h3 className="text-base font-serif font-bold text-ink group-hover:text-rubrica transition line-clamp-2">
                       {art.title}
                     </h3>
-                    <p className="text-xs text-stone-400 font-serif line-clamp-2">{art.subtitle}</p>
+                    <p className="text-xs text-ink-soft font-serif line-clamp-2">{art.subtitle}</p>
                   </div>
                 </div>
 
-                <div className="p-5 pt-0 text-[11px] text-stone-400 font-mono border-t border-line-faint mt-2 pt-2">
+                <div className="p-5 pt-0 text-[11px] text-ink-soft font-mono border-t border-rule-faint mt-2 pt-2">
                   Por {art.authorName}
                 </div>
               </div>

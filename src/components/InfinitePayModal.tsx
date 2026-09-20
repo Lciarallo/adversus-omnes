@@ -59,7 +59,7 @@ export const InfinitePayModal: React.FC = () => {
 
   const demoPixPayload = `00020126580014br.gov.bcb.pix0136${infinitePayConfig.walletId}520400005303986540${totalToPay.toFixed(
     2
-  )}5802BR5914CONTRA HOMINES6009SAO PAULO62070503***6304DEMO`;
+  )}5802BR5914ADVERSUS OMNES6009SAO PAULO62070503***6304DEMO`;
 
   const handleCopyPix = async () => {
     try {
@@ -109,7 +109,7 @@ export const InfinitePayModal: React.FC = () => {
   };
 
   const fieldClass =
-    'min-h-[44px] w-full rounded-lg border border-line-mid bg-ink-800 p-2.5 text-white focus:border-gold focus:outline-none';
+    'min-h-[44px] w-full rounded-lg border border-rule bg-paper-600 p-2.5 text-ink focus:border-rubrica focus:outline-none';
 
   return (
     <Dialog
@@ -117,25 +117,25 @@ export const InfinitePayModal: React.FC = () => {
       onClose={handleClose}
       labelledBy="infinitepay-modal-title"
       describedBy="infinitepay-modal-nature"
-      panelClassName="my-auto flex max-h-[92svh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-line-mid bg-ink-700 shadow-2xl"
+      panelClassName="my-auto flex max-h-[92svh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-rule bg-paper-700 shadow-2xl"
     >
       {/* Cabeçalho */}
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line-soft bg-ink-800 px-4 py-3.5 sm:px-6">
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-rule-faint bg-paper-600 px-4 py-3.5 sm:px-6">
         <div className="flex min-w-0 items-center gap-2.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded border border-line-strong bg-ink-550 text-gold">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded border border-rule-strong bg-paper-600 text-rubrica">
             <Lock size={16} aria-hidden="true" />
           </div>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 id="infinitepay-modal-title" className="font-cinzel text-sm font-bold tracking-wide text-white">
+              <h2 id="infinitepay-modal-title" className="font-cinzel text-sm font-bold tracking-wide text-ink">
                 Checkout
               </h2>
-              <span className="flex items-center gap-1 rounded-full border border-amber-800/50 bg-amber-950 px-2 py-0.5 font-mono text-[10px] font-medium text-amber-300">
+              <span className="flex items-center gap-1 rounded-full border border-ocre/35 bg-ocre-tint px-2 py-0.5 font-mono text-[10px] font-medium text-ocre">
                 <FlaskConical size={10} aria-hidden="true" />
                 Demonstração
               </span>
             </div>
-            <p id="infinitepay-modal-nature" className="text-[11px] leading-relaxed text-stone-400">
+            <p id="infinitepay-modal-nature" className="text-[11px] leading-relaxed text-ink-soft">
               Fluxo simulado do InfinitePay. Nenhum pagamento é processado e nenhum dado é enviado.
             </p>
           </div>
@@ -144,7 +144,7 @@ export const InfinitePayModal: React.FC = () => {
           type="button"
           onClick={handleClose}
           aria-label="Fechar janela de pagamento"
-          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg p-2 text-stone-400 transition hover:bg-ink-450 hover:text-white"
+          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg p-2 text-ink-soft transition hover:bg-paper-300 hover:text-ink"
         >
           <X size={18} aria-hidden="true" />
         </button>
@@ -154,17 +154,17 @@ export const InfinitePayModal: React.FC = () => {
       <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6">
         {isSuccess ? (
           <div className="space-y-4 py-6 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-500/50 bg-emerald-950/80 text-emerald-400 shadow-lg">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-verdete/50 bg-verdete-tint/80 text-verdete shadow-lg">
               <CheckCircle2 size={36} aria-hidden="true" />
             </div>
 
             <div>
-              <h3 className="font-cinzel text-xl font-bold text-white">
+              <h3 className="font-cinzel text-xl font-bold text-ink">
                 {checkoutType === 'subscription'
                   ? 'Assinatura ativada na demonstração'
                   : 'Pedido registrado na demonstração'}
               </h3>
-              <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-stone-300">
+              <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-ink-soft">
                 {checkoutType === 'subscription'
                   ? `O plano "${checkoutPlan?.name}" está ativo neste protótipo: o acervo digital e o leitor protegido já aparecem liberados para o seu perfil.`
                   : 'O pedido foi criado neste protótipo, com código de rastreio simulado e baixa no estoque das peças escolhidas.'}
@@ -172,8 +172,8 @@ export const InfinitePayModal: React.FC = () => {
             </div>
 
             {confirmedOrderId && (
-              <div className="inline-block rounded-lg border border-line-mid bg-ink-550 p-3 font-mono text-xs text-amber-300">
-                Código do pedido: <strong className="text-white">{confirmedOrderId}</strong>
+              <div className="inline-block rounded-lg border border-rule bg-paper-600 p-3 font-mono text-xs text-ocre">
+                Código do pedido: <strong className="text-ink">{confirmedOrderId}</strong>
               </div>
             )}
 
@@ -185,7 +185,7 @@ export const InfinitePayModal: React.FC = () => {
                   handleClose();
                   setActiveTab(checkoutType === 'subscription' ? 'digital' : 'minha-conta');
                 }}
-                className="min-h-[44px] rounded-lg bg-gold px-5 py-3 text-xs font-semibold text-black transition hover:bg-gold-light"
+                className="min-h-[44px] rounded-lg bg-rubrica px-5 py-3 text-xs font-semibold text-paper-800 transition hover:bg-rubrica-deep"
               >
                 {checkoutType === 'subscription'
                   ? 'Abrir o acervo digital'
@@ -194,7 +194,7 @@ export const InfinitePayModal: React.FC = () => {
               <button
                 type="button"
                 onClick={handleClose}
-                className="min-h-[44px] rounded-lg bg-ink-450 px-4 py-3 text-xs text-stone-300 transition hover:bg-ink-350"
+                className="min-h-[44px] rounded-lg bg-paper-300 px-4 py-3 text-xs text-ink-soft transition hover:bg-paper-300"
               >
                 Voltar ao acervo
               </button>
@@ -203,18 +203,18 @@ export const InfinitePayModal: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {/* Resumo */}
-            <div className="flex items-center justify-between gap-4 rounded-xl border border-line bg-ink-600 p-4">
+            <div className="flex items-center justify-between gap-4 rounded-xl border border-rule bg-paper-600 p-4">
               <div className="min-w-0">
-                <span className="block text-xs text-stone-400">
+                <span className="block text-xs text-ink-soft">
                   {checkoutType === 'subscription' ? 'Plano selecionado' : 'Itens do acervo'}
                 </span>
-                <span className="block truncate text-sm font-semibold text-white">
+                <span className="block truncate text-sm font-semibold text-ink">
                   {checkoutType === 'subscription' ? checkoutPlan?.name : 'Livros e documentos físicos'}
                 </span>
               </div>
               <div className="shrink-0 text-right">
-                <span className="block text-xs text-stone-400">Total</span>
-                <span className="font-cinzel text-lg font-bold tabular-nums text-gold">
+                <span className="block text-xs text-ink-soft">Total</span>
+                <span className="font-cinzel text-lg font-bold tabular-nums text-rubrica">
                   R$ {totalToPay.toFixed(2)}
                 </span>
               </div>
@@ -223,7 +223,7 @@ export const InfinitePayModal: React.FC = () => {
             {/* Endereço de entrega */}
             {checkoutType === 'cart' && (
               <fieldset className="space-y-2">
-                <legend className="mb-1 block text-xs font-semibold text-stone-300">
+                <legend className="mb-1 block text-xs font-semibold text-ink-soft">
                   Endereço de entrega
                 </legend>
                 <div className="grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
@@ -301,7 +301,7 @@ export const InfinitePayModal: React.FC = () => {
 
             {/* Forma de pagamento */}
             <div>
-              <span className="mb-2 block text-xs font-semibold text-stone-300">Forma de pagamento</span>
+              <span className="mb-2 block text-xs font-semibold text-ink-soft">Forma de pagamento</span>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <button
                   type="button"
@@ -309,11 +309,11 @@ export const InfinitePayModal: React.FC = () => {
                   aria-pressed={paymentMethod === 'pix'}
                   className={`flex min-h-[44px] items-center justify-center gap-2 rounded-lg border p-3 text-xs font-semibold transition ${
                     paymentMethod === 'pix'
-                      ? 'border-gold bg-ink-500 text-white shadow-md'
-                      : 'border-line-mid bg-ink-650 text-stone-400 hover:border-line-bright'
+                      ? 'border-rubrica bg-paper-400 text-ink shadow-md'
+                      : 'border-rule bg-paper-700 text-ink-soft hover:border-rule-strong'
                   }`}
                 >
-                  <QrCode size={16} className="text-gold" aria-hidden="true" />
+                  <QrCode size={16} className="text-rubrica" aria-hidden="true" />
                   <span>Pix</span>
                 </button>
 
@@ -323,11 +323,11 @@ export const InfinitePayModal: React.FC = () => {
                   aria-pressed={paymentMethod === 'credit_card'}
                   className={`flex min-h-[44px] items-center justify-center gap-2 rounded-lg border p-3 text-xs font-semibold transition ${
                     paymentMethod === 'credit_card'
-                      ? 'border-gold bg-ink-500 text-white shadow-md'
-                      : 'border-line-mid bg-ink-650 text-stone-400 hover:border-line-bright'
+                      ? 'border-rubrica bg-paper-400 text-ink shadow-md'
+                      : 'border-rule bg-paper-700 text-ink-soft hover:border-rule-strong'
                   }`}
                 >
-                  <CreditCard size={16} className="text-gold" aria-hidden="true" />
+                  <CreditCard size={16} className="text-rubrica" aria-hidden="true" />
                   <span>Cartão de crédito</span>
                 </button>
               </div>
@@ -335,28 +335,28 @@ export const InfinitePayModal: React.FC = () => {
 
             {/* Detalhe do método */}
             {paymentMethod === 'pix' ? (
-              <div className="space-y-3 rounded-xl border border-line bg-ink-800 p-4">
+              <div className="space-y-3 rounded-xl border border-rule bg-paper-600 p-4">
                 <div className="flex flex-col items-center gap-4 sm:flex-row">
                   {/* Selo de demonstração no lugar do QR: não existe cobrança
                       real para codificar, e um quadrado que não escaneia seria
                       um objeto falso na tela. */}
                   <div
-                    className="relative flex h-28 w-28 shrink-0 items-center justify-center rounded-lg border border-line-bright bg-ink-700"
+                    className="relative flex h-28 w-28 shrink-0 items-center justify-center rounded-lg border border-rule-strong bg-paper-700"
                     aria-hidden="true"
                   >
-                    <span className="absolute inset-1.5 rounded border border-gold/25" />
-                    <span className="absolute inset-[0.4rem] rounded border border-gold/10" />
+                    <span className="absolute inset-1.5 rounded border border-rubrica/25" />
+                    <span className="absolute inset-[0.4rem] rounded border border-rubrica/10" />
                     <div className="flex flex-col items-center gap-1.5 text-center">
-                      <QrCode size={26} className="text-gold/70" />
-                      <span className="font-cinzel text-[8px] font-semibold uppercase leading-none tracking-[0.18em] text-gold/80">
+                      <QrCode size={26} className="text-rubrica/70" />
+                      <span className="font-cinzel text-[8px] font-semibold uppercase leading-none tracking-[0.18em] text-rubrica/80">
                         Demonstração
                       </span>
                     </div>
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-2 text-center sm:text-left">
-                    <p className="flex items-start gap-1.5 text-xs leading-relaxed text-stone-300">
-                      <Info size={13} className="mt-0.5 shrink-0 text-gold" aria-hidden="true" />
+                    <p className="flex items-start gap-1.5 text-xs leading-relaxed text-ink-soft">
+                      <Info size={13} className="mt-0.5 shrink-0 text-rubrica" aria-hidden="true" />
                       <span>
                         O QR Code aparece aqui quando a conta InfinitePay do acervo estiver
                         configurada. Nesta demonstração, o código abaixo é fictício.
@@ -365,16 +365,16 @@ export const InfinitePayModal: React.FC = () => {
                     <button
                       type="button"
                       onClick={handleCopyPix}
-                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-line-bright bg-ink-450 px-3.5 py-2 text-xs font-medium text-stone-200 transition hover:bg-ink-350"
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-rule-strong bg-paper-300 px-3.5 py-2 text-xs font-medium text-ink transition hover:bg-paper-300"
                     >
                       {pixCopied ? (
                         <>
-                          <CheckCircle2 size={15} className="text-emerald-400" aria-hidden="true" />
-                          <span className="font-semibold text-emerald-300">Código copiado</span>
+                          <CheckCircle2 size={15} className="text-verdete" aria-hidden="true" />
+                          <span className="font-semibold text-verdete">Código copiado</span>
                         </>
                       ) : (
                         <>
-                          <Copy size={15} className="text-gold" aria-hidden="true" />
+                          <Copy size={15} className="text-rubrica" aria-hidden="true" />
                           <span>Copiar o código de exemplo</span>
                         </>
                       )}
@@ -382,19 +382,19 @@ export const InfinitePayModal: React.FC = () => {
                   </div>
                 </div>
 
-                <p className="truncate rounded-lg border border-line-faint bg-ink-900 p-2.5 font-mono text-[10px] text-stone-400">
+                <p className="truncate rounded-lg border border-rule-faint bg-paper-400 p-2.5 font-mono text-[10px] text-ink-soft">
                   {demoPixPayload}
                 </p>
               </div>
             ) : (
-              <div className="space-y-3 rounded-xl border border-line bg-ink-800 p-4 text-xs">
-                <p className="flex items-start gap-1.5 leading-relaxed text-stone-400">
-                  <Info size={13} className="mt-0.5 shrink-0 text-gold" aria-hidden="true" />
+              <div className="space-y-3 rounded-xl border border-rule bg-paper-600 p-4 text-xs">
+                <p className="flex items-start gap-1.5 leading-relaxed text-ink-soft">
+                  <Info size={13} className="mt-0.5 shrink-0 text-rubrica" aria-hidden="true" />
                   <span>Campos preenchidos com dados de teste. Não informe um cartão real.</span>
                 </p>
 
                 <div>
-                  <label htmlFor="card-num" className="mb-1 block text-stone-300">
+                  <label htmlFor="card-num" className="mb-1 block text-ink-soft">
                     Número do cartão
                   </label>
                   <input
@@ -410,7 +410,7 @@ export const InfinitePayModal: React.FC = () => {
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
-                    <label htmlFor="card-holder" className="mb-1 block text-stone-300">
+                    <label htmlFor="card-holder" className="mb-1 block text-ink-soft">
                       Nome impresso
                     </label>
                     <input
@@ -424,7 +424,7 @@ export const InfinitePayModal: React.FC = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label htmlFor="card-exp" className="mb-1 block text-stone-300">
+                      <label htmlFor="card-exp" className="mb-1 block text-ink-soft">
                         Validade
                       </label>
                       <input
@@ -438,7 +438,7 @@ export const InfinitePayModal: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="card-cvv" className="mb-1 block text-stone-300">
+                      <label htmlFor="card-cvv" className="mb-1 block text-ink-soft">
                         CVV
                       </label>
                       <input
@@ -455,7 +455,7 @@ export const InfinitePayModal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="card-installments" className="mb-1 block text-stone-300">
+                  <label htmlFor="card-installments" className="mb-1 block text-ink-soft">
                     Parcelamento
                   </label>
                   <select
@@ -477,12 +477,12 @@ export const InfinitePayModal: React.FC = () => {
               type="button"
               disabled={isProcessing}
               onClick={handleConfirmPayment}
-              className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-gold to-gold-deep px-4 py-3.5 text-sm font-semibold text-black shadow-lg shadow-gold/20 transition hover:from-gold-light hover:to-gold-deep disabled:opacity-50"
+              className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-rubrica px-4 py-3.5 text-sm font-semibold text-paper-800 shadow-lg shadow-rubrica/20 transition hover:bg-rubrica-deep disabled:opacity-50"
             >
               {isProcessing ? (
                 <>
                   <span
-                    className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent"
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-paper-800 border-t-transparent"
                     aria-hidden="true"
                   />
                   <span>Processando a simulação...</span>
@@ -495,7 +495,7 @@ export const InfinitePayModal: React.FC = () => {
               )}
             </button>
 
-            <p className="text-center text-[11px] leading-relaxed text-stone-400">
+            <p className="text-center text-[11px] leading-relaxed text-ink-soft">
               Protótipo de apresentação: o pedido entra no histórico e o estoque baixa, mas nenhuma
               cobrança é feita.
             </p>

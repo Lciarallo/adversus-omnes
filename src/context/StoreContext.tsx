@@ -197,7 +197,7 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 const VISITOR: User = {
   id: 'user-visitor',
   name: 'Visitante da Biblioteca',
-  email: 'leitor@contrahomines.com.br',
+  email: 'leitor@adversusomnes.com.br',
   role: 'visitor',
   purchasedItems: []
 };
@@ -265,8 +265,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (role === 'admin') {
         setCurrentUser({
           id: 'admin-master',
-          name: 'Administrador Contra Homines',
-          email: 'diretoria@contrahomines.com.br',
+          name: 'Administrador Adversus Omnes',
+          email: 'diretoria@adversusomnes.com.br',
           role: 'admin',
           activePlan: 'Membro do Círculo',
           purchasedItems: ['cat-1', 'cat-2', 'cat-3', 'cat-4', 'cat-5']

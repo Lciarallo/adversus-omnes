@@ -1,4 +1,4 @@
-# 🏛️ CONTRA HOMINES — Bibliotheca et Archivum
+# 🏛️ ADVERSUS OMNES — Bibliotheca et Archivum
 
 > **"Livros, documentos e ideias em perspectiva."**
 
@@ -8,8 +8,8 @@ Plataforma cultural integrando preservação de acervo histórico, acervo digita
 
 ## 🌐 Links Oficiais do Projeto
 
-* **Link de Produção & Testes (Cloudflare Workers):** [https://contra-homines.luizeduardociarallo.workers.dev](https://contra-homines.luizeduardociarallo.workers.dev)
-* **Repositório GitHub Oficial:** [https://github.com/Lciarallo/contra-homines](https://github.com/Lciarallo/contra-homines)
+* **Link de Produção & Testes (Cloudflare Workers):** [https://adversus-omnes.luizeduardociarallo.workers.dev](https://adversus-omnes.luizeduardociarallo.workers.dev)
+* **Repositório GitHub Oficial:** [https://github.com/Lciarallo/adversus-omnes](https://github.com/Lciarallo/adversus-omnes)
 
 ---
 
@@ -62,10 +62,10 @@ Plataforma cultural integrando preservação de acervo histórico, acervo digita
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/Lciarallo/contra-homines.git
+git clone https://github.com/Lciarallo/adversus-omnes.git
 
 # Acessar a pasta
-cd contra-homines
+cd adversus-omnes
 
 # Instalar dependências
 npm install

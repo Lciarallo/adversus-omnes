@@ -22,7 +22,7 @@ O código modela três papéis: `visitor`, `subscriber` e `admin`.
 
 ## Product Purpose
 
-Contra Homines — Bibliotheca et Archivum é uma plataforma cultural que reúne, no mesmo lugar, quatro coisas que normalmente vivem separadas: o acervo digital de livros e documentos históricos, a venda de acervo físico raro e usado, o clube de assinaturas com material exclusivo, e o ensaio crítico autoral. O fio que as une é uma taxonomia cruzada — autor, movimento político, período histórico, tema e evento — que permite atravessar o acervo como uma rede de ideias em vez de uma prateleira.
+Adversus Omnes — Bibliotheca et Archivum é uma plataforma cultural que reúne, no mesmo lugar, quatro coisas que normalmente vivem separadas: o acervo digital de livros e documentos históricos, a venda de acervo físico raro e usado, o clube de assinaturas com material exclusivo, e o ensaio crítico autoral. O fio que as une é uma taxonomia cruzada — autor, movimento político, período histórico, tema e evento — que permite atravessar o acervo como uma rede de ideias em vez de uma prateleira.
 
 Existe para que livros, documentos e ideias sejam lidos **em perspectiva**: cada peça acompanhada do seu contexto histórico e da sua linhagem intelectual.
 
@@ -71,13 +71,13 @@ Um sebo online tem (3). Um blog de história tem (4). Um repositório acadêmico
 - **A conta InfinitePay ainda não foi definida.** Está explicitamente em aberto; não inventar credenciais, taxas ou contrato.
 - O leitor protegido é **dissuasão, não criptografia**: reduz extração casual e marca o material com identidade do assinante, mas não impede captura de tela. Nunca prometer proteção absoluta na interface ou na comunicação.
 - Stack: React 19, TypeScript, Vite, Tailwind CSS v4, lucide-react, canvas-confetti. SPA sem router — a navegação é um `activeTab` no contexto, com views carregadas por `React.lazy`.
-- Deploy em Cloudflare Workers/Pages com `not_found_handling: single-page-application`. Publicado em `https://contra-homines.luizeduardociarallo.workers.dev`.
+- Deploy em Cloudflare Workers/Pages com `not_found_handling: single-page-application`. Publicado em `https://adversus-omnes.luizeduardociarallo.workers.dev`.
 
 **Explicitamente indecidido (registrar, não inventar):** conta e credenciais do gateway InfinitePay; se e quando entra backend real, banco e autenticação; contrato com os Correios; domínio próprio; preços definitivos dos planos.
 
 ## Brand Commitments
 
-- Nome: **Contra Homines — Bibliotheca et Archivum**. Já aplicado em toda a interface, no título do documento e no repositório.
+- Nome: **Adversus Omnes — Bibliotheca et Archivum**. Já aplicado em toda a interface, no título do documento e no repositório.
 - Tagline: *"Livros, documentos e ideias em perspectiva."*
 - Logotipo oficial fornecido pelo usuário em `public/logo.jpg` — também usado como favicon.
 - Idioma: português do Brasil, com latinismos de marca deliberados.

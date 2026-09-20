@@ -64,7 +64,7 @@ export const ArticleCMS: React.FC = () => {
     setFormData({
       title: '',
       subtitle: '',
-      authorName: currentUser.name || 'Redação Contra Homines',
+      authorName: currentUser.name || 'Redação Adversus Omnes',
       category: 'Filosofia Política',
       readTime: '7 min',
       tags: 'Ensaio, História, Política',
@@ -152,34 +152,34 @@ export const ArticleCMS: React.FC = () => {
           <button
             type="button"
             onClick={() => setSelectedArticle(null)}
-            className="flex items-center gap-2 text-stone-400 hover:text-white transition text-xs font-medium min-h-[44px]"
+            className="flex items-center gap-2 text-ink-soft hover:text-ink transition text-xs font-medium min-h-[44px]"
           >
             <ArrowLeft size={16} aria-hidden="true" />
             <span>Voltar a todos os Artigos</span>
           </button>
 
-          <div className="space-y-3 border-b border-line pb-6">
+          <div className="space-y-3 border-b border-rule pb-6">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-ink-500 text-gold border border-line-strong">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-paper-400 text-rubrica border border-rule-strong">
                 {selectedArticle.category}
               </span>
-              <span className="text-dust text-xs">•</span>
-              <span className="text-xs text-stone-400 flex items-center gap-1">
+              <span className="text-ink-faint text-xs">•</span>
+              <span className="text-xs text-ink-soft flex items-center gap-1">
                 <Clock size={13} aria-hidden="true" /> {selectedArticle.readTime} de leitura
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-serif font-bold text-white leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-serif font-bold text-ink leading-tight">
               {selectedArticle.title}
             </h1>
 
-            <p className="text-stone-300 font-serif italic text-base sm:text-lg leading-relaxed">
+            <p className="text-ink-soft font-serif italic text-base sm:text-lg leading-relaxed">
               {selectedArticle.subtitle}
             </p>
 
-            <div className="flex items-center justify-between text-xs text-stone-400 pt-2">
+            <div className="flex items-center justify-between text-xs text-ink-soft pt-2">
               <div>
-                Por <strong className="text-white">{selectedArticle.authorName}</strong> em{' '}
+                Por <strong className="text-ink">{selectedArticle.authorName}</strong> em{' '}
                 {new Date(selectedArticle.publishedAt).toLocaleDateString('pt-BR')}
               </div>
 
@@ -200,7 +200,7 @@ export const ArticleCMS: React.FC = () => {
                     }
                   }}
                   aria-label={`Compartilhar o ensaio ${selectedArticle.title}`}
-                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-ink-550 p-2 text-stone-300 transition hover:bg-ink-400 hover:text-white"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-paper-600 p-2 text-ink-soft transition hover:bg-paper-300 hover:text-ink"
                 >
                   <Share2 size={16} aria-hidden="true" />
                 </button>
@@ -209,7 +209,7 @@ export const ArticleCMS: React.FC = () => {
           </div>
 
           {/* Cover image */}
-          <div className="rounded-xl overflow-hidden shadow-2xl border border-line-mid">
+          <div className="rounded-xl overflow-hidden shadow-2xl border border-rule">
             <img
               src={selectedArticle.coverImage}
               alt={`Imagem do artigo ${selectedArticle.title}`}
@@ -231,11 +231,11 @@ export const ArticleCMS: React.FC = () => {
           </div>
 
           {/* Tags */}
-          <div className="pt-6 border-t border-line-soft flex flex-wrap gap-2">
+          <div className="pt-6 border-t border-rule-faint flex flex-wrap gap-2">
             {selectedArticle.tags.map(t => (
               <span
                 key={t}
-                className="px-2.5 py-1 rounded-full bg-ink-600 text-stone-400 text-xs border border-line"
+                className="px-2.5 py-1 rounded-full bg-paper-600 text-ink-soft text-xs border border-rule"
               >
                 #{t}
               </span>
@@ -245,13 +245,13 @@ export const ArticleCMS: React.FC = () => {
       ) : (
         /* Articles List & Grid */
         <>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-line-soft pb-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-rule-faint pb-6">
             <div className="space-y-1.5">
-              <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
+              <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-ink tracking-wide">
                 Artigos Autorais e Ensaios
               </h1>
-              <p className="text-sm text-stone-400 font-serif italic max-w-2xl leading-relaxed">
-                Reflexões aprofundadas, resenhas críticas e pesquisas arquivísticas produzidas pelo corpo editorial e pesquisadores convidados de Contra Homines.
+              <p className="text-sm text-ink-soft font-serif italic max-w-2xl leading-relaxed">
+                Reflexões aprofundadas, resenhas críticas e pesquisas arquivísticas produzidas pelo corpo editorial e pesquisadores convidados de Adversus Omnes.
               </p>
             </div>
 
@@ -260,7 +260,7 @@ export const ArticleCMS: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleOpenNew}
-                  className="flex min-h-[44px] items-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-xs font-semibold text-black shadow-lg shadow-gold/20 transition hover:bg-gold-light"
+                  className="flex min-h-[44px] items-center gap-2 rounded-lg bg-rubrica px-4 py-2.5 text-xs font-semibold text-paper-800 shadow-lg shadow-rubrica/20 transition hover:bg-rubrica-deep"
                 >
                   <Plus size={16} aria-hidden="true" />
                   <span>Escrever ensaio</span>
@@ -272,9 +272,9 @@ export const ArticleCMS: React.FC = () => {
                     setRole('admin');
                     notify('Perfil de administrador ativado para a demonstração.', 'info');
                   }}
-                  className="flex min-h-[44px] items-center gap-1.5 rounded-lg border border-line-strong bg-ink-500 px-3.5 py-2 text-xs text-stone-300 transition hover:bg-ink-400 hover:text-white"
+                  className="flex min-h-[44px] items-center gap-1.5 rounded-lg border border-rule-strong bg-paper-400 px-3.5 py-2 text-xs text-ink-soft transition hover:bg-paper-300 hover:text-ink"
                 >
-                  <Edit3 size={14} className="text-gold" aria-hidden="true" />
+                  <Edit3 size={14} className="text-rubrica" aria-hidden="true" />
                   <span>Escrever como administrador</span>
                 </button>
               )}
@@ -288,8 +288,8 @@ export const ArticleCMS: React.FC = () => {
               onClick={() => setSelectedCategory('all')}
               className={`px-3.5 py-2 rounded-lg text-xs font-medium transition min-h-[44px] flex items-center ${
                 selectedCategory === 'all'
-                  ? 'bg-gold text-black font-semibold'
-                  : 'bg-ink-650 text-stone-400 hover:text-white border border-line'
+                  ? 'bg-rubrica text-paper-800 font-semibold'
+                  : 'bg-paper-700 text-ink-soft hover:text-ink border border-rule'
               }`}
             >
               Todas as Categorias
@@ -301,8 +301,8 @@ export const ArticleCMS: React.FC = () => {
                 onClick={() => setSelectedCategory(c)}
                 className={`px-3.5 py-2 rounded-lg text-xs font-medium transition min-h-[44px] flex items-center ${
                   selectedCategory === c
-                    ? 'bg-gold text-black font-semibold'
-                    : 'bg-ink-650 text-stone-400 hover:text-white border border-line'
+                    ? 'bg-rubrica text-paper-800 font-semibold'
+                    : 'bg-paper-700 text-ink-soft hover:text-ink border border-rule'
                 }`}
               >
                 {c}
@@ -315,7 +315,7 @@ export const ArticleCMS: React.FC = () => {
             {filteredArticles.map(art => (
               <div
                 key={art.id}
-                className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+                className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
               >
                 <div>
                   <div className="relative h-48 overflow-hidden">
@@ -327,11 +327,11 @@ export const ArticleCMS: React.FC = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-3 left-3 flex gap-2">
-                      <span className="px-2.5 py-0.5 rounded text-[10px] font-medium bg-black/85 backdrop-blur text-gold border border-amber-900/40">
+                      <span className="px-2.5 py-0.5 rounded text-[10px] font-medium bg-paper-800/92 backdrop-blur text-rubrica border border-ocre/35">
                         {art.category}
                       </span>
                       {art.status === 'draft' && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-yellow-950/90 text-yellow-300 border border-yellow-800">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-ocre-tint/90 text-ocre border border-ocre/35">
                           Rascunho
                         </span>
                       )}
@@ -339,7 +339,7 @@ export const ArticleCMS: React.FC = () => {
                   </div>
 
                   <div className="p-5 space-y-2.5">
-                    <div className="flex items-center gap-2 text-[11px] text-stone-400 font-mono">
+                    <div className="flex items-center gap-2 text-[11px] text-ink-soft font-mono">
                       <span>{new Date(art.publishedAt).toLocaleDateString('pt-BR')}</span>
                       <span>•</span>
                       <span>{art.readTime}</span>
@@ -349,20 +349,20 @@ export const ArticleCMS: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSelectedArticle(art)}
-                        className="line-clamp-2 py-1 text-left text-white transition hover:text-gold"
+                        className="line-clamp-2 py-1 text-left text-ink transition hover:text-rubrica"
                       >
                         {art.title}
                       </button>
                     </h2>
 
-                    <p className="text-xs text-stone-300 line-clamp-3 leading-relaxed font-serif">
+                    <p className="text-xs text-ink-soft line-clamp-3 leading-relaxed font-serif">
                       {art.subtitle}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-5 pt-0 border-t border-line-faint mt-3 flex items-center justify-between text-xs">
-                  <span className="text-[11px] text-stone-400 truncate">
+                <div className="p-5 pt-0 border-t border-rule-faint mt-3 flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-ink-soft truncate">
                     Por {art.authorName}
                   </span>
 
@@ -372,7 +372,7 @@ export const ArticleCMS: React.FC = () => {
                       type="button"
                       onClick={() => handleOpenEdit(art)}
                       aria-label={`Editar artigo ${art.title}`}
-                      className="p-2.5 rounded-lg text-stone-400 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center transition"
+                      className="p-2.5 rounded-lg text-ink-soft hover:text-ink min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                     >
                       <Edit3 size={15} aria-hidden="true" />
                     </button>
@@ -380,7 +380,7 @@ export const ArticleCMS: React.FC = () => {
                       type="button"
                       onClick={() => handleDelete(art.id, art.title)}
                       aria-label={`Excluir artigo ${art.title}`}
-                      className="p-2.5 rounded-lg text-dust hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition"
+                      className="p-2.5 rounded-lg text-ink-faint hover:text-rubrica min-h-[44px] min-w-[44px] flex items-center justify-center transition"
                     >
                       <Trash2 size={15} aria-hidden="true" />
                     </button>
@@ -407,17 +407,17 @@ export const ArticleCMS: React.FC = () => {
         open={isEditorOpen}
         onClose={() => setIsEditorOpen(false)}
         labelledBy="article-modal-heading"
-        panelClassName="max-h-[90svh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-xl border border-line-mid bg-ink-700 p-6 shadow-2xl"
+        panelClassName="max-h-[90svh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-xl border border-rule bg-paper-700 p-6 shadow-2xl"
       >
-            <div className="flex items-center justify-between border-b border-line pb-3">
-              <h2 id="article-modal-heading" className="text-base font-cinzel font-bold text-white">
+            <div className="flex items-center justify-between border-b border-rule pb-3">
+              <h2 id="article-modal-heading" className="text-base font-cinzel font-bold text-ink">
                 {editingArticle ? 'Editar Artigo no CMS' : 'Publicar Novo Artigo / Ensaio'}
               </h2>
               <button
                 type="button"
                 onClick={() => setIsEditorOpen(false)}
                 aria-label="Fechar editor de artigos"
-                className="p-2 rounded-lg text-stone-400 hover:text-white min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 rounded-lg text-ink-soft hover:text-ink min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <X size={18} aria-hidden="true" />
               </button>
@@ -425,7 +425,7 @@ export const ArticleCMS: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <div>
-                <label htmlFor="article-title" className="text-stone-300 block mb-1">
+                <label htmlFor="article-title" className="text-ink-soft block mb-1">
                   Título do Artigo *
                 </label>
                 <input
@@ -434,12 +434,12 @@ export const ArticleCMS: React.FC = () => {
                   required
                   value={formData.title}
                   onChange={e => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-serif text-sm min-h-[44px]"
+                  className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink font-serif text-sm min-h-[44px]"
                 />
               </div>
 
               <div>
-                <label htmlFor="article-subtitle" className="text-stone-300 block mb-1">
+                <label htmlFor="article-subtitle" className="text-ink-soft block mb-1">
                   Subtítulo / Chamada Crítica *
                 </label>
                 <input
@@ -447,13 +447,13 @@ export const ArticleCMS: React.FC = () => {
                   type="text"
                   value={formData.subtitle}
                   onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
-                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink min-h-[44px]"
                 />
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <div>
-                  <label htmlFor="article-author" className="text-stone-300 block mb-1">
+                  <label htmlFor="article-author" className="text-ink-soft block mb-1">
                     Autor do Artigo
                   </label>
                   <input
@@ -461,11 +461,11 @@ export const ArticleCMS: React.FC = () => {
                     type="text"
                     value={formData.authorName}
                     onChange={e => setFormData({ ...formData, authorName: e.target.value })}
-                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink min-h-[44px]"
                   />
                 </div>
                 <div>
-                  <label htmlFor="article-cat" className="text-stone-300 block mb-1">
+                  <label htmlFor="article-cat" className="text-ink-soft block mb-1">
                     Categoria
                   </label>
                   <input
@@ -473,18 +473,18 @@ export const ArticleCMS: React.FC = () => {
                     type="text"
                     value={formData.category}
                     onChange={e => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink min-h-[44px]"
                   />
                 </div>
                 <div>
-                  <label htmlFor="article-status" className="text-stone-300 block mb-1">
+                  <label htmlFor="article-status" className="text-ink-soft block mb-1">
                     Status
                   </label>
                   <select
                     id="article-status"
                     value={formData.status}
                     onChange={e => setFormData({ ...formData, status: e.target.value as any })}
-                    className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
+                    className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink min-h-[44px]"
                   >
                     <option value="published">Publicado</option>
                     <option value="draft">Rascunho</option>
@@ -493,7 +493,7 @@ export const ArticleCMS: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="article-cover" className="text-stone-300 block mb-1">
+                <label htmlFor="article-cover" className="text-ink-soft block mb-1">
                   URL da Imagem de Capa
                 </label>
                 <input
@@ -501,12 +501,12 @@ export const ArticleCMS: React.FC = () => {
                   type="url"
                   value={formData.coverImage}
                   onChange={e => setFormData({ ...formData, coverImage: e.target.value })}
-                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink min-h-[44px]"
                 />
               </div>
 
               <div>
-                <label htmlFor="article-content" className="text-stone-300 block mb-1">
+                <label htmlFor="article-content" className="text-ink-soft block mb-1">
                   Corpo do Artigo (Texto Completo / Formatação Editorial) *
                 </label>
                 <textarea
@@ -516,12 +516,12 @@ export const ArticleCMS: React.FC = () => {
                   value={formData.content}
                   onChange={e => setFormData({ ...formData, content: e.target.value })}
                   placeholder="Escreva seu ensaio crítico, anotações arquivísticas e referências..."
-                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white font-serif leading-relaxed"
+                  className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink font-serif leading-relaxed"
                 />
               </div>
 
               <div>
-                <label htmlFor="article-tags" className="text-stone-300 block mb-1">
+                <label htmlFor="article-tags" className="text-ink-soft block mb-1">
                   Tags (separadas por vírgula)
                 </label>
                 <input
@@ -530,12 +530,12 @@ export const ArticleCMS: React.FC = () => {
                   value={formData.tags}
                   onChange={e => setFormData({ ...formData, tags: e.target.value })}
                   placeholder="Ex: Filosofia Política, História, Canudos"
-                  className="w-full bg-ink-800 border border-line-mid rounded-lg p-2.5 text-white min-h-[44px]"
+                  className="w-full bg-paper-600 border border-rule rounded-lg p-2.5 text-ink min-h-[44px]"
                 />
               </div>
 
               {formError && (
-                <p role="alert" className="text-[11px] text-red-300">
+                <p role="alert" className="text-[11px] text-rubrica-deep">
                   {formError}
                 </p>
               )}
@@ -544,13 +544,13 @@ export const ArticleCMS: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsEditorOpen(false)}
-                  className="px-4 py-2.5 rounded-lg bg-ink-500 text-stone-300 hover:bg-ink-400 min-h-[44px]"
+                  className="px-4 py-2.5 rounded-lg bg-paper-400 text-ink-soft hover:bg-paper-300 min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold min-h-[44px]"
+                  className="px-5 py-2.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold min-h-[44px]"
                 >
                   {editingArticle ? 'Salvar Artigo' : 'Publicar Artigo'}
                 </button>

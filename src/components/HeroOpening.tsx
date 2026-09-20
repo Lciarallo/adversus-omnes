@@ -45,7 +45,7 @@ const ArchiveDust: React.FC = () => {
       r: 0.4 + Math.random() * 1.5,
       vx: (Math.random() - 0.5) * 0.12,
       vy: -(0.06 + Math.random() * 0.22),
-      alpha: 0.08 + Math.random() * 0.4,
+      alpha: 0.05 + Math.random() * 0.22,
       gold: Math.random() > 0.62
     });
 
@@ -86,7 +86,8 @@ const ArchiveDust: React.FC = () => {
         }
 
         ctx.globalAlpha = mote.alpha;
-        ctx.fillStyle = mote.gold ? '#c89b3c' : '#e8e6e3';
+        // Manchas de foxing e fibra de papel, não brilho.
+        ctx.fillStyle = mote.gold ? '#b8311a' : '#68573d';
         ctx.beginPath();
         ctx.arc(mote.x, mote.y, mote.r, 0, Math.PI * 2);
         ctx.fill();
@@ -238,7 +239,7 @@ export const HeroOpening: React.FC = () => {
     const movements = unique(catalog.map(item => item.politicalMovement));
     const periods = unique(catalog.map(item => item.period));
 
-    const fallback = ['Bibliotheca et Archivum', 'Contra Homines'];
+    const fallback = ['Bibliotheca et Archivum', 'Adversus Omnes'];
     const pick = (values: string[]) => (values.length ? values : fallback);
 
     return [
@@ -292,12 +293,12 @@ export const HeroOpening: React.FC = () => {
 
         <div className="frontis-core">
           <div className="frontis-emblem">
-            <img src="/logo.jpg" alt="Contra Homines — emblema oficial" width={96} height={96} />
+            <img src="/logo.jpg" alt="Adversus Omnes — emblema oficial" width={96} height={96} />
           </div>
 
           <h1 id="frontis-title" className="frontis-title">
-            <span>Contra</span>
-            <span className="frontis-title-gold">Homines</span>
+            <span>Adversus</span>
+            <span className="frontis-title-gold">Omnes</span>
           </h1>
 
           <div className="frontis-rule">

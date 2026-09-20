@@ -36,8 +36,8 @@ const CustomerPortal = lazy(() =>
 
 const ViewLoadingFallback: React.FC = () => (
   <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-3 py-20">
-    <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-    <span className="text-xs font-mono text-stone-400">Carregando acervo...</span>
+    <div className="w-8 h-8 border-2 border-rubrica border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+    <span className="text-xs font-mono text-ink-soft">Carregando acervo...</span>
   </div>
 );
 
@@ -105,7 +105,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ink-850 text-bone flex flex-col justify-between selection:bg-gold selection:text-black w-full max-w-full overflow-x-clip">
+    <div className="min-h-screen bg-paper-500 text-ink flex flex-col justify-between selection:bg-rubrica selection:text-paper-800 w-full max-w-full overflow-x-clip">
       <a href="#conteudo" className="ch-skip-link">
         Pular para o conteúdo
       </a>

@@ -13,20 +13,20 @@ interface EmptyStateProps {
 
 export const EmptyState: React.FC<EmptyStateProps> = ({ icon, title, body, action, className = '' }) => (
   <div
-    className={`rounded-2xl border border-dashed border-line bg-ink-750 px-6 py-14 text-center ${className}`}
+    className={`rounded-2xl border border-dashed border-rule bg-paper-400 px-6 py-14 text-center ${className}`}
   >
-    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-line-mid bg-ink-600 text-gold">
+    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-rule bg-paper-600 text-rubrica">
       {icon}
     </div>
-    <h3 className="font-cinzel text-base font-bold tracking-wide text-white">{title}</h3>
-    <p className="mx-auto mt-2 max-w-md font-serif text-sm italic leading-relaxed text-stone-400">
+    <h3 className="font-cinzel text-base font-bold tracking-wide text-ink">{title}</h3>
+    <p className="mx-auto mt-2 max-w-md font-serif text-sm italic leading-relaxed text-ink-soft">
       {body}
     </p>
     {action && (
       <button
         type="button"
         onClick={action.onClick}
-        className="mt-6 min-h-[44px] rounded-lg border border-line-bright bg-ink-550 px-5 py-2.5 text-xs font-semibold text-stone-200 transition hover:border-gold/60 hover:text-white"
+        className="mt-6 min-h-[44px] rounded-lg border border-rule-strong bg-paper-600 px-5 py-2.5 text-xs font-semibold text-ink transition hover:border-rubrica/60 hover:text-ink"
       >
         {action.label}
       </button>

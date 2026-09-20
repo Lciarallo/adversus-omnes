@@ -53,16 +53,16 @@ export const PhysicalCatalog: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Title & Editorial Intro */}
-      <div className="border-b border-line-soft pb-6 space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-white tracking-wide">
+      <div className="border-b border-rule-faint pb-6 space-y-2">
+        <h1 className="text-3xl sm:text-4xl font-cinzel font-bold text-ink tracking-wide">
           Acervo Físico: Livros Usados, Raros e Esgotados
         </h1>
-        <p className="text-stone-400 font-serif italic text-sm sm:text-base max-w-3xl leading-relaxed">
+        <p className="text-ink-soft font-serif italic text-sm sm:text-base max-w-3xl leading-relaxed">
           Exemplares históricos, primeiras tiragens, volumes encadernados em couro com marcas do tempo e edições esgotadas de profunda relevância política e intelectual.
         </p>
 
         {currentUser.activePlan && (
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/70 border border-emerald-800/40 text-xs text-emerald-300">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-verdete-tint/70 border border-verdete/35 text-xs text-verdete">
             <CheckCircle2 size={14} aria-hidden="true" />
             <span>
               Você possui <strong>{currentUser.activePlan}</strong> ativo: desconto automático de{' '}
@@ -73,18 +73,18 @@ export const PhysicalCatalog: React.FC = () => {
       </div>
 
       {/* Multi-faceted Filter Bar */}
-      <div className="bg-ink-700 p-4 sm:p-5 rounded-xl border border-line space-y-3">
+      <div className="bg-paper-700 p-4 sm:p-5 rounded-xl border border-rule space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <div className="relative">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dust pointer-events-none" aria-hidden="true" />
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none" aria-hidden="true" />
             <input
               type="text"
               aria-label="Buscar livros por título, autor ou assunto"
               placeholder="Buscar por título, autor ou assunto..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-ink-800 border border-line-mid rounded-lg text-xs text-white placeholder-dust focus:outline-none focus:border-gold min-h-[44px]"
+              className="w-full pl-10 pr-3 py-2.5 bg-paper-600 border border-rule rounded-lg text-xs text-ink placeholder-ink-faint focus:outline-none focus:border-rubrica min-h-[44px]"
             />
           </div>
 
@@ -94,7 +94,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Filtrar por movimento político ou filosófico"
               value={selectedMovement}
               onChange={e => setSelectedMovement(e.target.value)}
-              className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
+              className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
             >
               <option value="all">Todos os Movimentos Políticos</option>
               {movements.map(m => (
@@ -111,7 +111,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Filtrar por período histórico"
               value={selectedPeriod}
               onChange={e => setSelectedPeriod(e.target.value)}
-              className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
+              className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
             >
               <option value="all">Todos os Períodos Históricos</option>
               {periods.map(p => (
@@ -128,7 +128,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Filtrar por condição de conservação da obra"
               value={selectedCondition}
               onChange={e => setSelectedCondition(e.target.value)}
-              className="w-full bg-ink-800 border border-line-mid rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold min-h-[44px]"
+              className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
             >
               <option value="all">Todas as Condições</option>
               {conditions.map(c => (
@@ -141,10 +141,10 @@ export const PhysicalCatalog: React.FC = () => {
         </div>
 
         {/* Sorting options */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-line-soft text-xs text-stone-400">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-rule-faint text-xs text-ink-soft">
           <span>{filteredItems.length} exemplar(es) encontrado(s)</span>
           <div className="flex items-center gap-2">
-            <label htmlFor="sort-physical" className="text-stone-400">
+            <label htmlFor="sort-physical" className="text-ink-soft">
               Ordenar por:
             </label>
             <select
@@ -152,7 +152,7 @@ export const PhysicalCatalog: React.FC = () => {
               aria-label="Ordenar livros físicos por critério"
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="bg-ink-800 border border-line-mid rounded-lg px-3 py-1.5 text-xs text-stone-200 min-h-[40px]"
+              className="bg-paper-600 border border-rule rounded-lg px-3 py-1.5 text-xs text-ink min-h-[40px]"
             >
               <option value="featured">Destaques da Curadoria</option>
               <option value="priceAsc">Menor Preço</option>
@@ -189,28 +189,28 @@ export const PhysicalCatalog: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-ink-700 rounded-xl border border-line hover:border-gold/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
+              className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
             >
               <div>
                 {/* Book Cover Image */}
-                <div className="relative h-72 bg-ink-900 p-4 flex items-center justify-center overflow-hidden border-b border-line-faint">
+                <div className="relative h-72 bg-paper-400 p-4 flex items-center justify-center overflow-hidden border-b border-rule-faint">
                   <img
                     src={item.coverImage}
                     alt={`Capa original da obra ${item.title}`}
                     loading="lazy"
                     decoding="async"
-                    className="max-h-full max-w-[85%] object-cover rounded shadow-2xl border border-line-strong"
+                    className="max-h-full max-w-[85%] object-cover rounded shadow-2xl border border-rule-strong"
                   />
 
                   {/* Condition badge */}
                   <div className="absolute top-3 left-3 flex flex-col gap-1">
                     {item.condition && (
-                      <span className="px-2.5 py-1 rounded bg-black/85 backdrop-blur text-gold border border-amber-800/50 text-[10px] font-mono font-medium shadow">
+                      <span className="px-2.5 py-1 rounded bg-paper-800/92 backdrop-blur text-rubrica border border-ocre/35 text-[10px] font-mono font-medium shadow">
                         {item.condition}
                       </span>
                     )}
                     {item.stock === 1 && !isSoldOut && (
-                      <span className="px-2 py-0.5 rounded bg-red-950/90 text-red-300 border border-red-800/50 text-[10px] font-mono">
+                      <span className="px-2 py-0.5 rounded bg-rubrica-tint/90 text-rubrica-deep border border-rubrica/50 text-[10px] font-mono">
                         Único em Estoque
                       </span>
                     )}
@@ -219,7 +219,7 @@ export const PhysicalCatalog: React.FC = () => {
 
                 {/* Metadata */}
                 <div className="p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-[11px] text-stone-400 font-mono">
+                  <div className="flex items-center gap-2 text-[11px] text-ink-soft font-mono">
                     <span>{item.period}</span>
                     <span>•</span>
                     <span>Ano: {item.year}</span>
@@ -227,27 +227,27 @@ export const PhysicalCatalog: React.FC = () => {
                     <span>{item.pages} págs</span>
                   </div>
 
-                  <h2 className="text-base font-cinzel font-bold text-white group-hover:text-gold transition line-clamp-2">
+                  <h2 className="text-base font-cinzel font-bold text-ink group-hover:text-rubrica transition line-clamp-2">
                     {item.title}
                   </h2>
 
-                  <p className="text-xs text-gold font-medium font-serif italic">
+                  <p className="text-xs text-rubrica font-medium font-serif italic">
                     {item.author}
                   </p>
 
-                  <p className="text-xs text-stone-300 line-clamp-3 leading-relaxed font-serif">
+                  <p className="text-xs text-ink-soft line-clamp-3 leading-relaxed font-serif">
                     {item.description}
                   </p>
 
-                  <div className="text-[11px] text-stone-400 space-y-0.5 pt-1">
+                  <div className="text-[11px] text-ink-soft space-y-0.5 pt-1">
                     {item.publisher && (
                       <div>
-                        <span className="text-dust">Editora:</span> {item.publisher}
+                        <span className="text-ink-faint">Editora:</span> {item.publisher}
                       </div>
                     )}
                     {item.dimensions && (
                       <div>
-                        <span className="text-dust">Formato:</span> {item.dimensions}
+                        <span className="text-ink-faint">Formato:</span> {item.dimensions}
                       </div>
                     )}
                   </div>
@@ -255,12 +255,12 @@ export const PhysicalCatalog: React.FC = () => {
               </div>
 
               {/* Price & Action */}
-              <div className="p-5 pt-3 border-t border-line-faint bg-ink-750 flex items-center justify-between">
+              <div className="p-5 pt-3 border-t border-rule-faint bg-paper-400 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] uppercase tracking-wider text-dust block">
+                  <span className="text-[10px] uppercase tracking-wider text-ink-faint block">
                     Valor do Exemplar
                   </span>
-                  <div className="text-lg font-cinzel font-bold text-white">
+                  <div className="text-lg font-cinzel font-bold text-ink">
                     R$ {item.price.toFixed(2)}
                   </div>
                 </div>
@@ -270,7 +270,7 @@ export const PhysicalCatalog: React.FC = () => {
                     type="button"
                     disabled
                     aria-label="Exemplar esgotado"
-                    className="px-4 py-2.5 rounded-lg bg-stone-800 text-stone-400 text-xs font-semibold cursor-not-allowed min-h-[44px]"
+                    className="px-4 py-2.5 rounded-lg bg-paper-300 text-ink-soft text-xs font-semibold cursor-not-allowed min-h-[44px]"
                   >
                     Esgotado
                   </button>
@@ -279,7 +279,7 @@ export const PhysicalCatalog: React.FC = () => {
                     type="button"
                     onClick={() => addToCart(item)}
                     aria-label={`Comprar ${item.title}`}
-                    className="px-4 py-2.5 rounded-lg bg-gold hover:bg-gold-light text-black font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-gold/15 min-h-[44px]"
+                    className="px-4 py-2.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-rubrica/15 min-h-[44px]"
                   >
                     <ShoppingBag size={15} aria-hidden="true" />
                     <span>{inCart ? `Adicionado (${inCart.quantity})` : 'Comprar'}</span>

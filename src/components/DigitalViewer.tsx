@@ -24,7 +24,7 @@ interface DigitalViewerProps {
 }
 
 export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) => {
-  const { currentUser, plans, startSubscriptionCheckout } = useStore();
+  const { currentUser, plans, startSubscriptionCheckout, transitioningCoverId, setTransitioningCoverId } = useStore();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [zoom, setZoom] = useState(100);
@@ -259,7 +259,10 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <button
               type="button"
-              onClick={onBack}
+              onClick={() => {
+                onBack();
+                setTimeout(() => setTransitioningCoverId(null), 480);
+              }}
               aria-label="Voltar para a lista do acervo"
               className="px-3 py-2 rounded-lg bg-[#1e212b] hover:bg-[#2a2e3c] text-stone-300 hover:text-white transition flex items-center gap-1.5 text-xs font-medium min-h-[44px] shrink-0 whitespace-nowrap"
             >
@@ -429,7 +432,10 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                 isExclusive ? 'select-none pointer-events-auto' : ''
               }`}
             >
-              <div className="relative shadow-2xl border border-stone-800 rounded bg-[#fbf9f2] max-w-full overflow-hidden">
+              <div
+                style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
+                className="relative shadow-2xl border border-stone-800 rounded bg-[#fbf9f2] max-w-full overflow-hidden"
+              >
                 <canvas
                   ref={canvasRef}
                   aria-label={`Visualização gráfica da página ${currentPage} de ${item.title}`}

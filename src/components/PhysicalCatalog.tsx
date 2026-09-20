@@ -172,7 +172,7 @@ export const PhysicalCatalog: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
             >
               <div>
                 {/* Book Cover Image */}

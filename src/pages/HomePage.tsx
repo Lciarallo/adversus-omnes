@@ -18,7 +18,8 @@ export const HomePage: React.FC = () => {
     articles,
     addToCart,
     openReader,
-    setSelectedArticle
+    setSelectedArticle,
+    transitioningCoverId
   } = useStore();
 
   const featuredPhysical = catalog.filter(c => c.type === 'physical').slice(0, 3);
@@ -60,7 +61,7 @@ export const HomePage: React.FC = () => {
             {featuredPhysical.map(item => (
               <div
                 key={item.id}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group"
+                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group codex-card"
               >
                 <div>
                   <div className="relative h-64 bg-[#0b0c0e] p-4 flex items-center justify-center overflow-hidden border-b border-[#20232e]">
@@ -140,7 +141,7 @@ export const HomePage: React.FC = () => {
             {featuredDigital.map(item => (
               <div
                 key={item.id}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4"
+                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden shadow-lg group p-5 space-y-4 codex-card"
               >
                 <div className="flex items-start gap-4">
                   <img
@@ -148,6 +149,7 @@ export const HomePage: React.FC = () => {
                     alt={`Capa do documento ${item.title}`}
                     loading="lazy"
                     decoding="async"
+                    style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
                     className="w-16 h-22 object-cover rounded border border-[#323644] shrink-0"
                   />
                   <div className="min-w-0">
@@ -240,7 +242,7 @@ export const HomePage: React.FC = () => {
                     window.scrollTo(0, 0);
                   }
                 }}
-                className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] hover:border-[#c89b3c]/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg"
+                className="p-5 rounded-xl bg-[#15171f] border border-[#272b38] hover:border-[#c89b3c]/60 transition-all text-center space-y-3 cursor-pointer group shadow-lg codex-card"
               >
                 <img
                   src={author.avatar}
@@ -311,7 +313,7 @@ export const HomePage: React.FC = () => {
                     window.scrollTo(0, 0);
                   }
                 }}
-                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between"
+                className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all overflow-hidden cursor-pointer group shadow-lg flex flex-col justify-between codex-card"
               >
                 <div>
                   <img

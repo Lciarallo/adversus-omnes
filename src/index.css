@@ -727,3 +727,147 @@ h1, h2, h3, .font-serif-title {
     display: none;
   }
 }
+
+/* ================================================================== *
+ * Overdrive: Códice em Expansão — View Transitions & Motion Physics  *
+ * ================================================================== */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Page-to-page root view transitions */
+::view-transition-old(root) {
+  animation: 320ms cubic-bezier(0.16, 1, 0.3, 1) both codex-page-leave;
+}
+
+::view-transition-new(root) {
+  animation: 380ms cubic-bezier(0.16, 1, 0.3, 1) both codex-page-enter;
+}
+
+@keyframes codex-page-leave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(2px);
+  }
+}
+
+@keyframes codex-page-enter {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Shared element transition: Codex Cover to Reader Parchment Canvas */
+::view-transition-old(codex-cover) {
+  animation: 420ms cubic-bezier(0.2, 0.9, 0.2, 1) both codex-cover-morph-out;
+}
+
+::view-transition-new(codex-cover) {
+  animation: 460ms cubic-bezier(0.2, 0.9, 0.2, 1) both codex-cover-morph-in;
+}
+
+@keyframes codex-cover-morph-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes codex-cover-morph-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Physical Codex Card 3D Depth & Tactile Hover */
+.codex-card {
+  position: relative;
+  transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 300ms ease;
+  transform: perspective(1000px) translate3d(0, 0, 0);
+  will-change: transform, box-shadow;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .codex-card:hover {
+    transform: perspective(1000px) translate3d(0, -6px, 12px) rotateX(1.5deg);
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.75),
+                0 0 0 1px rgba(200, 155, 60, 0.35),
+                0 2px 8px rgba(200, 155, 60, 0.15);
+  }
+}
+
+/* Cart Drawer Folio Unfolding with @starting-style */
+.cart-drawer-panel {
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 360ms ease,
+              box-shadow 420ms ease;
+}
+
+@starting-style {
+  .cart-drawer-panel {
+    transform: translateX(100%) rotateY(-6deg);
+    opacity: 0.6;
+  }
+}
+
+/* Modal Stamp/Seal Entrance with @starting-style */
+.codex-modal-panel {
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 380ms ease,
+              filter 380ms ease;
+}
+
+@starting-style {
+  .codex-modal-panel {
+    transform: scale(0.93) translateY(18px);
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  .codex-card {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .cart-drawer-panel,
+  .codex-modal-panel {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+

@@ -117,7 +117,7 @@ export const InfinitePayModal: React.FC = () => {
         aria-hidden="true"
       />
 
-      <div className="relative my-auto w-full max-w-xl max-h-[92svh] bg-[#15171e] border border-[#2d313f] rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col">
+      <div className="relative my-auto w-full max-w-xl max-h-[92svh] bg-[#15171e] border border-[#2d313f] rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col codex-modal-panel">
         {/* Modal Header */}
         <div className="bg-[#101217] px-4 sm:px-6 py-3.5 border-b border-[#252834] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">

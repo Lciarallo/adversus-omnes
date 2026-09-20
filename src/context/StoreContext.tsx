@@ -29,6 +29,8 @@ interface StoreContextType {
   setActiveTab: (tab: string) => void;
   selectedReaderItem: CatalogItem | null;
   openReader: (item: CatalogItem) => void;
+  transitioningCoverId: string | null;
+  setTransitioningCoverId: (id: string | null) => void;
   selectedAuthor: Author | null;
   setSelectedAuthor: (author: Author | null) => void;
   selectedArticle: Article | null;
@@ -107,14 +109,48 @@ interface StoreContextType {
   startSubscriptionCheckout: (plan: SubscriptionPlan) => void;
 }
 
+export const transitionState = (fn: () => void) => {
+  if (
+    typeof document !== 'undefined' &&
+    'startViewTransition' in document &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    (document as any).startViewTransition(fn);
+  } else {
+    fn();
+  }
+};
+
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Navigation
-  const [activeTab, setActiveTab] = useState<string>('home');
+  // Navigation with View Transitions
+  const [activeTab, setActiveTabState] = useState<string>('home');
   const [selectedReaderItem, setSelectedReaderItem] = useState<CatalogItem | null>(null);
-  const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [selectedAuthor, setSelectedAuthorState] = useState<Author | null>(null);
+  const [selectedArticle, setSelectedArticleState] = useState<Article | null>(null);
+  const [transitioningCoverId, setTransitioningCoverId] = useState<string | null>(null);
+
+  const setActiveTab = (tab: string) => {
+    transitionState(() => {
+      setActiveTabState(tab);
+      window.scrollTo({ top: 0 });
+    });
+  };
+
+  const setSelectedAuthor = (author: Author | null) => {
+    transitionState(() => {
+      setSelectedAuthorState(author);
+      window.scrollTo({ top: 0 });
+    });
+  };
+
+  const setSelectedArticle = (article: Article | null) => {
+    transitionState(() => {
+      setSelectedArticleState(article);
+      window.scrollTo({ top: 0 });
+    });
+  };
 
   // User State
   const [currentUser, setCurrentUser] = useState<User>(() => {
@@ -269,11 +305,14 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }));
   };
 
-  // Open PDF Reader
+  // Open PDF Reader with shared element transition
   const openReader = (item: CatalogItem) => {
-    setSelectedReaderItem(item);
-    setActiveTab('leitor');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTransitioningCoverId(item.id);
+    transitionState(() => {
+      setSelectedReaderItem(item);
+      setActiveTabState('leitor');
+      window.scrollTo({ top: 0 });
+    });
   };
 
   // Authors CRUD
@@ -555,6 +594,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setActiveTab,
         selectedReaderItem,
         openReader,
+        transitioningCoverId,
+        setTransitioningCoverId,
         selectedAuthor,
         setSelectedAuthor,
         selectedArticle,

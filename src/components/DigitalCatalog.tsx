@@ -14,7 +14,7 @@ import { useStore } from '../context/StoreContext';
 import { CatalogItem } from '../types';
 
 export const DigitalCatalog: React.FC = () => {
-  const { catalog, openReader, currentUser, plans, startSubscriptionCheckout } = useStore();
+  const { catalog, openReader, currentUser, plans, startSubscriptionCheckout, transitioningCoverId } = useStore();
 
   const [search, setSearch] = useState('');
   const [accessFilter, setAccessFilter] = useState<'all' | 'free' | 'exclusive'>('all');
@@ -132,7 +132,7 @@ export const DigitalCatalog: React.FC = () => {
           return (
             <div
               key={item.id}
-              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg"
+              className="bg-[#15171f] rounded-xl border border-[#272b38] hover:border-[#c89b3c]/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
             >
               <div>
                 <div className="relative h-60 bg-[#0b0c0e] p-3 flex items-center justify-center overflow-hidden border-b border-[#20232e]">
@@ -141,6 +141,7 @@ export const DigitalCatalog: React.FC = () => {
                     alt={`Capa do documento ${item.title}`}
                     loading="lazy"
                     decoding="async"
+                    style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
                     className="max-h-full max-w-[80%] object-cover rounded shadow-xl border border-[#323644]"
                   />
 

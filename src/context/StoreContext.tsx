@@ -139,7 +139,7 @@ export const transitionState = (fn: () => void) => {
  * semente nova alcance quem já visitou o site antes.                  *
  * ------------------------------------------------------------------ */
 
-const STORAGE_VERSION = '3';
+const STORAGE_VERSION = '4';
 const storageKey = (name: string) => `contraste_${name}`;
 
 const resetStaleStorage = () => {

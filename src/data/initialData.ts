@@ -483,32 +483,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Integralismo / Tradicionalismo Histórico',
     period: 'Século XX',
     event: 'Panorama Civilizacional e Crítica Histórica',
+    googleDriveId: '1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j',
+    embedUrl: 'https://drive.google.com/file/d/1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Frontispício da 4ª Edição (José Olympio)',
+        title: 'Capa da 4ª Edição Histórica',
+        imageUrl: '/documents/cat-11/page_1.webp',
         content: 'GUSTAVO BARROSO, da Academia Brasileira de Letras — A RONDA DOS SÉCULOS (4ª Edição).\n\nLivraria José Olympio Editora — Rua do Ouvidor, 110, Rio de Janeiro.\n\nEvocação panorâmica do destino trágico e heroico das civilizações humanas através das eras históricas.'
       },
       {
         pageNumber: 2,
-        title: 'Idade Média: A Espada do Rei Dagoberto',
+        title: 'Catálogo dos 75 Livros de Gustavo Barroso',
+        imageUrl: '/documents/cat-11/page_2.webp',
         content: 'Na penumbra das velhas catedrais e sob o silêncio denso das florestas renanas, a cavalaria forjava a sua armadura espiritual. A espada do rei Dagoberto não era um mero instrumento de conquista territorial, mas o símbolo do dever supremo da autoridade: proteger os deserdados e submeter a força bruta à honra inabalável.'
       },
       {
         pageNumber: 3,
-        title: 'Reforma e Renascimento: A Espiã',
+        title: 'Frontispício Oficial (Livraria José Olympio)',
+        imageUrl: '/documents/cat-11/page_3.webp',
         content: 'Nas cortes de Florença e Ferrara, entre brocados e intrigas secretas, o Renascimento despontava sob a duplicidade do fausto e da traição palaciana. As palavras sussurradas em latim humanista valiam mais do que punhais de ferro, selando o destino de principados inteiros.'
       },
       {
         pageNumber: 4,
-        title: 'Na Era dos Descobrimentos: Antropófagos',
-        content: 'As caravelas portuguesas romperam as brumas do mar ignoto para plantar o padrão das quinas na praia bravia da Terra de Santa Cruz. Diante da voragem dos canibais da floresta virgem, a cruz de madeira erguida pelos missionários inaugurou a epopeia heroica da catequese e da penetração sertaneja.'
+        title: 'Dedicatória a Domício da Gama',
+        imageUrl: '/documents/cat-11/page_4.webp',
+        content: 'À memória do meu querido amigo DOMÍCIO DA GAMA, que tanto amou o Brasil e as suas tradições. As caravelas portuguesas romperam as brumas do mar ignoto para plantar o padrão das quinas na praia bravia da Terra de Santa Cruz.'
       },
       {
         pageNumber: 5,
-        title: 'A Grande Guerra: A Alma de Marko Kralievitch',
-        content: '1914. Nas trincheiras frias dos Balcãs, onde o ferro e a fumaça de artilharia dilaceravam as esperanças do século, a lenda guerreira de Marko Kralievitch ecoava no canto dos soldados. A técnica mecanizada podia aniquilar a carne, mas era impotente para dobrar o espírito eterno dos povos livres.'
+        title: 'Epígrafe Histórica e Abertura',
+        imageUrl: '/documents/cat-11/page_5.webp',
+        content: '«Pour l\'imagination guidée par l\'étude, il n\'y a point de passé mort.» 1914. Nas trincheiras frias dos Balcãs, onde o ferro e a fumaça de artilharia dilaceravam as esperanças do século, a lenda guerreira de Marko Kralievitch ecoava no canto dos soldados.'
       }
     ],
     isFeatured: true
@@ -530,27 +537,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Integralismo / Doutrina do Sigma (PRP)',
     period: 'Século XX',
     event: 'Atuação Parlamentar e Resistência Democrática Pós-1937',
+    googleDriveId: '1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8',
+    embedUrl: 'https://drive.google.com/file/d/1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Introdução: Do Integralismo à Atuação Parlamentar',
-        content: 'Em 1935 entrei para a Ação Integralista Brasileira, em Juiz de Fora. E nunca mais parei em minhas atividades políticas. No Integralismo fui Secretário de Propaganda Municipal e Secretário de Educação Física. Comandei cerca de 700 milicianos na célebre parada de 1º de novembro de 1937, no Rio de Janeiro. Durante o período das "catacumbas", isto é, das perseguições do Estado Novo, fui Chefe Municipal em Juiz de Fora.'
+        title: 'Capa Histórica Original',
+        imageUrl: '/documents/cat-12/page_1.webp',
+        content: 'AS "VESTAIS PARIDAS" — Abel Rafael Pinto, Ex-Deputado Federal. Relato autobiográfico e documentos das sessões parlamentares sobre a política brasileira no século XX.'
       },
       {
         pageNumber: 2,
-        title: 'A Fundação do PRP e a Trajetória Eleitoral',
-        content: 'Em 1945, quando fundamos o Partido de Representação Popular, fui Secretário do Diretório Municipal de Juiz de Fora; mais tarde membro do Diretório Estadual e seu Presidente e membro do Diretório Nacional. Fui vereador do PRP à Câmara Municipal de 1947 a 1950. Elegi-me deputado federal em 1958 e reeleito em 1962, ocupando também a Secretaria de Agricultura de Minas Gerais.'
+        title: 'Folha de Rosto e Edição',
+        imageUrl: '/documents/cat-12/page_2.webp',
+        content: 'Em 1945, quando fundamos o Partido de Representação Popular, fui Secretário do Diretório Municipal de Juiz de Fora; mais tarde membro do Diretório Estadual e seu Presidente e membro do Diretório Nacional.'
       },
       {
         pageNumber: 3,
-        title: 'O Enigma das "Vestais Paridas"',
-        content: 'Até mesmo as "vestais paridas" eram homens de grande valor pessoal, claudicando apenas nas questões partidárias, em que se incendiavam de paixão. Lutei muito na Câmara, mas não deixei inimigos. Sempre fiz questão de distinguir entre o homem e o político; o homem e suas ideias; a atuação pública e o respeito à dignidade individual.'
+        title: 'Epígrafe Bíblica',
+        imageUrl: '/documents/cat-12/page_3.webp',
+        content: '«Não vos iludais; de Deus não se zomba. O que o homem semear, isso mesmo colherá.» (Gálatas 6:7). Uma lição perene aos que buscam na política apenas vantagens efêmeras em prejuízo do bem comum.'
       },
       {
         pageNumber: 4,
-        title: 'Epílogo de 1984: Balanço de Meio Século',
-        content: 'Estamos em 1984. Os fatos estão aí e respondem, por si mesmos, o que afirmei nos discursos parlamentares transcritos. Revolução, como ensinava Alberto Torres, é a mudança de atitudes em face dos fatos. Uma Nação sem Deus, com a moral corroída e a família fragilizada, perde a sua substância histórica. Por isso continuo lutando: Deus, Pátria e Família!'
+        title: 'Introdução: Do Integralismo à Atuação Parlamentar',
+        imageUrl: '/documents/cat-12/page_4.webp',
+        content: 'INTRODUÇÃO: Em 1935 entrei para a Ação Integralista Brasileira, em Juiz de Fora. E nunca mais parei em minhas atividades políticas. No Integralismo fui Secretário de Propaganda Municipal e Secretário de Educação Física. Comandei cerca de 700 milicianos na célebre parada de 1º de novembro de 1937, no Rio de Janeiro.'
+      },
+      {
+        pageNumber: 5,
+        title: 'Homenagem aos Adversários e Reflexão',
+        imageUrl: '/documents/cat-12/page_5.webp',
+        content: 'Encerrando esta introdução, presto minha homenagem aos adversários que souberam dignificar a disputa parlamentar. Estamos em 1984. Os fatos respondem por si mesmos. Uma Nação sem Deus perde a sua substância histórica. Por isso continuo lutando: Deus, Pátria e Família!'
       }
     ],
     isFeatured: true
@@ -572,27 +591,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Modernismo Verde-Amarelo / Integralismo',
     period: 'Século XX',
     event: 'Tenentismo, Revolução de 1930 e Revolução Constitucionalista de 1932',
+    googleDriveId: '1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS',
+    embedUrl: 'https://drive.google.com/file/d/1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Prefácio Histórico por Gumercindo Rocha Dórea',
-        content: 'Esta nova edição de "O Cavaleiro de Itararé" vem a lume no ano que antecede o cinquentenário da Revolução de 1930, permitindo aos que hoje tomam assento nas assembleias representativas e a uma juventude ávida de verdade o conhecimento de uma época decisiva através de uma das penas mais vigorosas e líricas das letras brasileiras.'
+        title: 'Capa Oficial da 5ª Edição',
+        imageUrl: '/documents/cat-13/page_1.webp',
+        content: 'PLÍNIO SALGADO — O CAVALEIRO DE ITARARÉ (5ª Edição). Romance épico da mocidade brasileira nos levantes revolucionários de 1922 a 1932.'
       },
       {
         pageNumber: 2,
-        title: 'Capítulo I: Os 18 de Copacabana e o Despertar da Mocidade',
-        content: 'Julho de 1922. A praia de Copacabana tremia sob as salvas do forte amotinado. Um punhado de tenentes marchava a peito aberto contra as forças legalistas da República Velha. Não era apenas um levante de quartel, mas o grito de revolta de uma geração inteira que não suportava mais ver o Brasil negociado no balcão das oligarquias cafeeiras.'
+        title: 'O Cavaleiro de Itararé: Desafio aos Jovens',
+        imageUrl: '/documents/cat-13/page_2.webp',
+        content: 'O CAVALEIRO DE ITARARÉ, um desafio aos jovens civis e militares de hoje. Esta nova edição vem a lume no cinquentenário de 1930, permitindo às novas gerações compreender o fervor cívico e a alma daquela época.'
       },
       {
         pageNumber: 3,
-        title: 'Capítulo II: A Marcha Épica da Coluna pelos Chapadões',
-        content: 'Pelos sertões sem fim do Centro-Oeste, cavaleiros empoeirados rasgavam as distâncias do abandono nacional. A Coluna marchava sem abastecimento regular, sustentada pelo entusiasmo e pela mística cívica de que a soberania do povo brasileiro precisava ser resgatada do esquecimento das capitanias eleitorais.'
+        title: 'Folha de Guarda (Editora Voz do Oeste)',
+        imageUrl: '/documents/cat-13/page_3.webp',
+        content: 'Voz do Oeste — Coleção de Obras Clássicas do Pensamento Brasileiro, editada em convênio com o Instituto Nacional do Livro (MEC).'
       },
       {
         pageNumber: 4,
-        title: 'Capítulo III: A Névoa de Itararé e o Destino da Pátria',
-        content: 'Outubro de 1930. Na estação ferroviária de Itararé, o frio paranaense envolvia os destacamentos armados sob um suspense que paralisava a República. O Cavaleiro de Itararé surge das sombras como a sentinela atenta de um país que teimava em renascer das cinzas do passado oligárquico.'
+        title: 'Frontispício Oficial',
+        imageUrl: '/documents/cat-13/page_4.webp',
+        content: 'Plínio Salgado — O CAVALEIRO DE ITARARÉ, 5ª edição. Com notas explicativas e contextualização histórica dos combates de Itararé, da marcha da Coluna e da epopeia de 1932.'
+      },
+      {
+        pageNumber: 5,
+        title: 'Sumário Biobibliográfico',
+        imageUrl: '/documents/cat-13/page_5.webp',
+        content: 'SUMÁRIO: Biobibliografia de Plínio Salgado (organizada por G. Rocha Dórea); Prefácio; Capítulo I — Os 18 do Forte; Capítulo II — Pelo sertão em marcha; Capítulo III — A névoa de Itararé.'
       }
     ],
     isFeatured: true
@@ -614,27 +645,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Pensamento Político Nacionalista / Representação Parlamentar',
     period: 'Século XX',
     event: 'Construção de Brasília e Interiorização da República',
+    googleDriveId: '1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P',
+    embedUrl: 'https://drive.google.com/file/d/1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Frontispício e Dedicatória Manuscrita de 1920/2020',
-        content: 'Exemplar com dedicatória histórica manuscrita na guarda: "Dedico este singelo presente ao ilustre amigo Auriberto, que possa compreender através dessas páginas o resultado da epopeia dos bandeirantes."\n\n13 ANOS EM BRASÍLIA (1959–1972) — Intervenções parlamentares, debates orçamentários e projetos de lei apresentados pelo deputado Plínio Salgado.'
+        title: 'Capa Histórica Oficial',
+        imageUrl: '/documents/cat-14/page_1.webp',
+        content: 'PLÍNIO SALGADO — 13 ANOS EM BRASÍLIA. Pronunciamentos, conferências e projetos de lei apresentados no Congresso Nacional (1959–1972).'
       },
       {
         pageNumber: 2,
-        title: 'O Sonho dos Bandeirantes: A Convocação dos Pioneiros',
-        content: 'Vou fazer a chamada dos heróis para que venham ver Brasília. Para verem a consequência gloriosa do que fizeram conquistando o Oeste e a Amazônia e integrando o vastíssimo território na Pátria Brasileira.\n\nComeço a chamar pelos que desbravaram sertões no século XVI: Jorge Dias e Sebastião Tourinho, exploradores do rio São Francisco e do rio Doce; Paulo Afonso, Gabriel Soares, Antônio Dias Adorno...'
+        title: 'Folha de Guarda',
+        imageUrl: '/documents/cat-14/page_2.webp',
+        content: 'Exemplar de arquivo preservado com papel original de época e folha de guarda em tom natural.'
       },
       {
         pageNumber: 3,
-        title: 'A Epopeia no Século XVII e XVIII',
-        content: 'Passo ao século XVII, com o gigante de botas de sete-léguas, Raposo Tavares, que andou do Sul ao Norte e do Leste ao Oeste, indo até a Bolívia e volvendo pelo rio Madeira ao curso do Amazonas. Chamo Fernão Dias, o caçador de esmeraldas; Borba Gato; Garcia Rodrigues; e Bartolomeu Bueno da Silva, o Anhanguera, que incendiou as águas e desvendou Goiás.'
+        title: 'Dedicatória Manuscrita Original',
+        imageUrl: '/documents/cat-14/page_3.webp',
+        content: 'Dedicatória histórica manuscrita na guarda: "Dedico este singelo presente ao ilustre amigo Auriberto, que possa compreender através dessas páginas o resultado da epopeia dos bandeirantes."'
       },
       {
         pageNumber: 4,
-        title: 'Vêde Brasília: O Testamento Continental',
-        content: 'Vêde Brasília, erguendo-se imponente nos sertões que perlustrastes. Orgulhai-vos da nossa geração como nós nos orgulhamos de vós. Fostes capazes de idealizar, nós fomos capazes de continuar e, finalmente, de realizar. Como o amplíssimo território que nos legastes, no espaço continental, com unidade de idioma e de sentido político, nós nos integramos na certeza da permanência histórica da Grande Pátria!'
+        title: 'Registro da Biblioteca Nacionalista',
+        imageUrl: '/documents/cat-14/page_4.webp',
+        content: 'DIGITALIZADO PELA BIBLIOTECA NACIONALISTA. Exemplar histórico de consulta e preservação de documentos parlamentares.'
+      },
+      {
+        pageNumber: 5,
+        title: 'Frontispício Oficial',
+        imageUrl: '/documents/cat-14/page_5.webp',
+        content: 'Plínio Salgado — 13 ANOS EM BRASÍLIA. Intervenções parlamentares, debates orçamentários e discursos sobre a consolidação da nova capital e o papel civilizatório do Planalto Central.'
       }
     ],
     isFeatured: true
@@ -656,27 +699,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Espiritualismo / Filosofia Política Integralista',
     period: 'Século XX',
     event: 'Debates do Pós-Guerra e Doutrina Social do Homem Integral',
+    googleDriveId: '1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09',
+    embedUrl: 'https://drive.google.com/file/d/1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Frontispício da Edição de Lisboa (1946)',
-        content: 'COLEÇÃO CULTURA POLÍTICA, Nº 11. Composto e impresso na Gráfica Santelmo, Rua de S. Bernardo, 84 — Lisboa.\n\n"Madrugada do Espírito" reúne os ensaios de reflexão filosófica redigidos entre 1931 e 1936 sobre o ocaso do racionalismo mecanicista e a aurora da dignidade espiritual do homem.'
+        title: 'Capa Histórica (Pro Domo Lisboa)',
+        imageUrl: '/documents/cat-15/page_1.webp',
+        content: 'MADRUGADA DO ESPÍRITO por Plínio Salgado — Coleção Cultura Política nº 11. Lisboa, 1946. Edição comemorativa portuguesa.'
       },
       {
         pageNumber: 2,
-        title: 'Gigantes da Montanha e Anões de Nibelungos',
-        content: 'Depois de Hegel, o pensamento europeu desceu a ladeira do mecanicismo. Marx tentou inverter a dialética hegeliana colocando-a de cabeça para baixo, mas não fez mais do que reduzir todo o mistério da alma humana a uma equação de estômago e ferramentas de produção. O panorama burguês gerou um conformismo materialista tão estéril quanto a utopia burocrática.'
+        title: 'A Crítica a Propósito da «Vida de Jesus»',
+        imageUrl: '/documents/cat-15/page_2.webp',
+        content: 'PLÍNIO SALGADO E A CRÍTICA: Juízos críticos sobre a obra espiritualista do autor na Europa e na América Latina. Reflexão sobre a dignidade do espírito humano contra o desespero mecânico.'
       },
       {
         pageNumber: 3,
-        title: 'Capitalismo e Comunismo: Identidade de Origens',
-        content: 'Capitalismo financeiro e comunismo coletivista partilham a mesmíssima matriz ontológica: a submissão total da pessoa à matéria. Um atomiza o homem no isolamento egoísta do lucro; outro dissolve a individualidade na máquina estatal. Ambos ignoram que o homem é um ser com aspirações transcendentais que transcendem os limites econômicos.'
+        title: 'Coleção Cultura Política Nº 11',
+        imageUrl: '/documents/cat-15/page_3.webp',
+        content: 'Composto e impresso na Gráfica Santelmo, Rua de S. Bernardo, 84 — Lisboa, para a Livraria Ática e Editora Pro Domo.'
       },
       {
         pageNumber: 4,
-        title: 'A Revolução da Família e a Concepção Integral do Trabalho',
-        content: 'A família é a primeira e mais sólida trincheira da liberdade contra o despotismo. O trabalho humano não é mera mercadoria a ser negociada, mas o ato sagrado de colaboração do homem na ordem divina da Criação. A alvorada do espírito principia no momento em que a sociedade reconhece o primado da alma sobre as engrenagens da técnica.'
+        title: 'Frontispício Oficial',
+        imageUrl: '/documents/cat-15/page_4.webp',
+        content: 'MADRUGADA DO ESPÍRITO — Súmula da concepção espiritualista do Estado, do trabalho e da pessoa humana perante a crise do mundo contemporâneo.'
+      },
+      {
+        pageNumber: 5,
+        title: 'Catálogo de Obras do Autor',
+        imageUrl: '/documents/cat-15/page_5.webp',
+        content: 'OBRAS DO AUTOR: O Estrangeiro, O Esperado, O Cavaleiro de Itararé, A Quarta Humanidade, Psicologia da Revolução, Vida de Jesus, A Aliança do Sim e do Não.'
       }
     ],
     isFeatured: true
@@ -698,27 +753,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Pedagogia Cívica / Nacionalismo Cultural',
     period: 'Século XX',
     event: 'Formação Cívica da Juventude e Literatura de Brasilidade',
+    googleDriveId: '1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3',
+    embedUrl: 'https://drive.google.com/file/d/1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Palavras aos Pais e Educadores',
-        content: '«Toda a minha preocupação aqui é formar brasileiros pelo coração, pelo estímulo às virtudes, sem o que jamais teremos nem soldados, nem intelectuais e muito menos estadistas.»\n\nNosso Brasil revive aspectos e tradições de nossa Pátria em linguagem límpida e acessível, para incutir no espírito dos jovens o amor filial à terra onde nascemos.'
+        title: 'Capa Ilustrada (A Primeira Missa)',
+        imageUrl: '/documents/cat-16/page_1.webp',
+        content: 'PLÍNIO SALGADO — NOSSO BRASIL (4ª Edição, Voz do Oeste). Capa com a reprodução da tela histórica de Victor Meirelles, "A Primeira Missa no Brasil" (1861).'
       },
       {
         pageNumber: 2,
-        title: 'Capítulo I: A Terra Abençoada e a Cruz de Cabral',
-        content: 'No dia 26 de abril de 1500, Frei Henrique de Coimbra celebrou no ilhéu da Coroa Vermelha a primeira missa. O altar de madeira tosca, erguido sob o dossel das árvores nativas diante dos marinheiros de joelhos e dos índios perplexos, selou a aliança eterna entre a fé cristã e a terra americana. Nascia o Brasil sob o signo da fraternidade e da esperança.'
+        title: 'Palavras aos Pais e Educadores',
+        imageUrl: '/documents/cat-16/page_2.webp',
+        content: 'NOSSO BRASIL: «São às centenas os livros voltados para a formação da nossa juventude... Toda a minha preocupação aqui é formar brasileiros pelo coração, pelo estímulo às virtudes.»'
       },
       {
         pageNumber: 3,
-        title: 'Capítulo II: A Marcha dos Rios e das Montanhas',
-        content: 'Nenhum outro país possui bacias hidrográficas que abracem o continente com tanta generosidade. O Amazonas, o São Francisco — o rio da unidade nacional —, o Paraná e o Paraguai não são barreiras que dividem, mas estradas líquidas que os pioneiros navegaram para costurar um país unido de norte a sul, falando uma só língua e venerando um só pavilhão.'
+        title: 'Frontispício da 4ª Edição',
+        imageUrl: '/documents/cat-16/page_3.webp',
+        content: 'PLÍNIO SALGADO — NOSSO BRASIL, 1.ª série: HISTÓRIA. Prefácio do Deputado Arruda Camargo. Editora Voz do Oeste, São Paulo, 1981.'
       },
       {
         pageNumber: 4,
-        title: 'Capítulo III: O Culto aos Antepassados',
-        content: 'Não se ama aquilo que não se conhece. Conhecer a história do Brasil é reverenciar os sacrifícios dos jesuítas, o sangue derramado pelos bandeirantes, a tenacidade dos caboclos e a bravura dos soldados de Guararapes e do Riachuelo. Cada geração tem a sagrada missão de transmitir aos filhos a tocha acesa do patriotismo sem mancha.'
+        title: 'Ficha Técnica e Créditos da Obra de Arte',
+        imageUrl: '/documents/cat-16/page_4.webp',
+        content: 'CAPA: Regina Helena Garcia Dórea utilizando reprodução da "Primeira Missa no Brasil" de Victor Meirelles. Edição subsidiada pela Secretaria de Cultura de São Paulo.'
+      },
+      {
+        pageNumber: 5,
+        title: 'Sumário da 1ª Série: História',
+        imageUrl: '/documents/cat-16/page_5.webp',
+        content: 'SUMÁRIO: Apresentação; Prefácio de Arruda Camargo; Aos pais e educadores; Capítulo I — A Terra Abençoada; Capítulo II — A marcha dos rios; Capítulo III — O culto aos antepassados.'
       }
     ],
     isFeatured: true
@@ -740,27 +807,39 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     politicalMovement: 'Modernismo / Literatura de Viagem',
     period: 'Século XX',
     event: 'Viagem ao Mediterrâneo e Meditações Históricas',
+    googleDriveId: '1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy',
+    embedUrl: 'https://drive.google.com/file/d/1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy/preview',
     downloadUrl: 'https://drive.google.com/uc?id=1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy&export=download',
     pdfPages: [
       {
         pageNumber: 1,
-        title: 'Partida: O Vapor «Brasile» no Azul do Mediterrâneo',
-        content: 'Nosso vapor (o "Brasile") levantou ferros numa tarde esplêndida, de lindo firmamento azul. Era bem o céu da Grécia. Da Grécia das nossas primeiras poesias, naturalmente parnasianas. Era bem o porto do Pireu, onde as nossas estrofes de outrora punham as trirremes decorativas.'
+        title: 'Capa Histórica Oficial',
+        imageUrl: '/documents/cat-17/page_1.webp',
+        content: 'PLÍNIO SALGADO — ORIENTE: Diário de viagem pelo Mediterrâneo, Grécia, Egito e Terra Santa.'
       },
       {
         pageNumber: 2,
-        title: 'Capítulo II: A Acrópole de Atenas e o Papiro Seco',
-        content: 'Ao subir as pedras gastas do Partenon sob o sol brilhante da Ática, compreende-se por que a harmonia das formas gregas resistiu aos milênios. Não há ali nada de colossal ou opressor; tudo é medida, simetria e ritmo do espírito. No entanto, faltava àquela civilização sublime o calor da caridade que mais tarde desceria das colinas da Judeia para abraçar a humanidade.'
+        title: 'Folha de Guarda',
+        imageUrl: '/documents/cat-17/page_2.webp',
+        content: 'ORIENTE: Digitalizado a partir do exemplar original preservado de 1946 pelo Núcleo de Preservação Histórica.'
       },
       {
         pageNumber: 3,
-        title: 'Capítulo III: As Areias do Egito e as Pirâmides',
-        content: 'O Nilo serpenteia pelo deserto como uma artéria de vida pulsando através do mar de areia. As pirâmides de Gizé erguem-se contra o crepúsculo como sentinelas do silêncio eterno. O cavaleiro no dorso do dromedário contempla o horizonte onde a história dos homens parece tão efêmera quanto a poeira que o vento do deserto dispersa ao entardecer.'
+        title: 'Frontispício da Edição de 1946',
+        imageUrl: '/documents/cat-17/page_3.webp',
+        content: 'PLÍNIO SALGADO — ORIENTE: Impressões de viagens. Rio de Janeiro, 1946. Relato das impressões filosóficas do Mediterrâneo Oriental.'
       },
       {
         pageNumber: 4,
-        title: 'Capítulo IV: O Encontro com a Terra Santa',
-        content: 'Jerusalém é a cidade onde a terra toca o infinito. Pelas vielas de pedra calcária desgastadas por passos de peregrinos de todas as línguas e raças, o viajante sente a palpitação viva da promessa bíblica. O Oriente não é um museu do passado, mas a nascente viva da qual a alma ocidental bebeu a sua sede de eternidade.'
+        title: 'Abertura da Seção: Palestina',
+        imageUrl: '/documents/cat-17/page_4.webp',
+        content: 'SEÇÃO PALESTINA: A chegada à Terra Santa, o contraste entre a paisagem bíblica e a modernidade incipiente do Levante.'
+      },
+      {
+        pageNumber: 5,
+        title: 'Início do Relato: A Tarde em Haifa',
+        imageUrl: '/documents/cat-17/page_5.webp',
+        content: 'A TARDE empalidecia do lado de Haifa. Pela estrada que vem do Carmelo, o vento salgado soprava entre os olivais, agitando o pó dos séculos onde os profetas e os reis caminharam.'
       }
     ],
     isFeatured: true

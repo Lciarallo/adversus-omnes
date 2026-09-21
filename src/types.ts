@@ -36,6 +36,13 @@ export interface Article {
 export type CatalogType = 'physical' | 'digital' | 'historical_doc';
 export type AccessType = 'free' | 'exclusive' | 'sale';
 
+export interface PdfPage {
+  pageNumber: number;
+  title: string;
+  content: string;
+  imageUrl?: string;
+}
+
 export interface CatalogItem {
   id: string;
   title: string;
@@ -55,8 +62,10 @@ export interface CatalogItem {
   politicalMovement: string;
   period: string;
   event?: string;
-  pdfPages?: { pageNumber: number; title: string; content: string }[];
+  pdfPages?: PdfPage[];
   downloadUrl?: string;
+  googleDriveId?: string;
+  embedUrl?: string;
   isFeatured?: boolean;
 }
 

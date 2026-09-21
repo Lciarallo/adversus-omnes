@@ -14,7 +14,9 @@ import {
   Image as ImageIcon,
   FileText,
   BookOpen,
-  ExternalLink
+  ExternalLink,
+  List,
+  X
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { CatalogItem } from '../types';
@@ -34,16 +36,30 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
   const googleDriveId = item.googleDriveId || item.downloadUrl?.match(/id=([a-zA-Z0-9_-]+)/)?.[1];
   const documentEmbedUrl = item.embedUrl || (googleDriveId ? `https://drive.google.com/file/d/${googleDriveId}/preview` : null);
 
+  const isMobileClient = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const [viewMode, setViewMode] = useState<ReaderViewMode>(() =>
-    documentEmbedUrl ? 'document' : 'facsimile'
+    isMobileClient ? 'facsimile' : (documentEmbedUrl ? 'document' : 'facsimile')
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [zoom, setZoom] = useState(100);
   const [copiedAlert, setCopiedAlert] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isIndexOpen, setIsIndexOpen] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const viewerContainerRef = useRef<HTMLDivElement | null>(null);
   const pageFrameRef = useRef<HTMLDivElement | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  // Fecha o drawer com tecla Esc
+  useEffect(() => {
+    if (!isIndexOpen) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsIndexOpen(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isIndexOpen]);
 
   // A largura define a composição da folha, preservando o tamanho das letras.
   const [frameWidth, setFrameWidth] = useState(() =>
@@ -93,7 +109,8 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
   useEffect(() => {
     setCurrentPage(1);
     setZoom(100);
-    setViewMode(documentEmbedUrl ? 'document' : 'facsimile');
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    setViewMode(isMobile ? 'facsimile' : (documentEmbedUrl ? 'document' : 'facsimile'));
   }, [item.id, documentEmbedUrl]);
 
   const handleBack = () => {
@@ -296,6 +313,27 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     pageFrameRef.current?.scrollTo({ top: 0, left: 0 });
   }, [currentPage, viewMode]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX.current;
+    touchStartX.current = null;
+
+    if (Math.abs(deltaX) > 48) {
+      if (deltaX < 0) {
+        // Deslizar para esquerda -> próxima folha
+        setCurrentPage(p => Math.min(totalPages, p + 1));
+      } else {
+        // Deslizar para direita -> folha anterior
+        setCurrentPage(p => Math.max(1, p - 1));
+      }
+    }
+  };
+
   return (
     <div className="archive-reader archive-reader--focused">
       {copiedAlert && (
@@ -404,7 +442,105 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
             className={`archive-reader__workspace ${isFullscreen ? 'archive-reader__workspace--fullscreen' : ''}`}
             aria-label={`Leitor de ${item.title}`}
           >
-            <aside className="archive-reader__catalogue" aria-label="Ficha catalográfica e páginas">
+            {/* Drawer móvel de Índice e Ficha Catalográfica */}
+            {isIndexOpen && (
+              <div
+                className="archive-reader__drawer-backdrop"
+                onClick={() => setIsIndexOpen(false)}
+                role="presentation"
+              >
+                <div
+                  className="archive-reader__drawer"
+                  onClick={e => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Índice da Obra e Ficha Catalográfica"
+                >
+                  <div className="archive-reader__drawer-head">
+                    <div className="archive-reader__drawer-title">
+                      <BookOpen size={18} className="text-rubrica" aria-hidden="true" />
+                      <div>
+                        <h3>Índice da Obra</h3>
+                        <span>{totalPages} folhas catalogadas</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsIndexOpen(false)}
+                      className="archive-reader__drawer-close"
+                      aria-label="Fechar índice"
+                    >
+                      <X size={20} aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  <div className="archive-reader__drawer-body">
+                    {/* Folhas de Destaque */}
+                    <section className="archive-reader__drawer-section" aria-labelledby="drawer-leaves-heading">
+                      <h4 id="drawer-leaves-heading" className="archive-reader__drawer-section-title">
+                        Folhas Restauradas
+                      </h4>
+                      <nav className="archive-reader__drawer-nav" aria-label="Folhas da obra">
+                        <ol>
+                          {pages.map((page, index) => {
+                            const isActive = currentPage === index + 1 && viewMode !== 'document';
+                            return (
+                              <li key={`drawer-${page.pageNumber}-${page.title}`}>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setCurrentPage(index + 1);
+                                    if (viewMode === 'document') setViewMode('facsimile');
+                                    setIsIndexOpen(false);
+                                  }}
+                                  className={`archive-reader__drawer-leaf ${isActive ? 'archive-reader__drawer-leaf--active' : ''}`}
+                                  aria-current={isActive ? 'page' : undefined}
+                                >
+                                  <span className="archive-reader__drawer-leaf-num">
+                                    {String(page.pageNumber).padStart(2, '0')}
+                                  </span>
+                                  <strong className="archive-reader__drawer-leaf-title">
+                                    {page.title}
+                                  </strong>
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      </nav>
+                    </section>
+
+                    {/* Ficha catalográfica */}
+                    <section className="archive-reader__drawer-section" aria-labelledby="drawer-meta-heading">
+                      <h4 id="drawer-meta-heading" className="archive-reader__drawer-section-title">
+                        Ficha Catalográfica
+                      </h4>
+                      <dl className="archive-reader__drawer-meta">
+                        <div><dt>Registro</dt><dd>{item.id.toUpperCase()}</dd></div>
+                        <div><dt>Autoria</dt><dd>{item.author || 'Não identificada'}</dd></div>
+                        <div><dt>Datação</dt><dd>{item.year}</dd></div>
+                        <div><dt>Fundo</dt><dd>{item.publisher || 'Arquivo Adversus Omnes'}</dd></div>
+                        <div><dt>Movimento</dt><dd>{item.politicalMovement}</dd></div>
+                        {item.event && <div><dt>Contexto</dt><dd>{item.event}</dd></div>}
+                        <div><dt>Extensão</dt><dd>{item.pages} páginas no registro original</dd></div>
+                      </dl>
+                    </section>
+
+                    {/* Aviso de Edição */}
+                    <div className="archive-reader__drawer-notice">
+                      <p>
+                        {documentEmbedUrl
+                          ? `Volume integral com ${item.pages} páginas preservadas. Use o modo "Folhas Restauradas" para altíssima resolução ou "Documento Integral" para navegar no volume completo.`
+                          : 'Documento histórico preservado no acervo digital de consulta restrita.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Ficha & Índice na barra lateral (Desktop) */}
+            <aside className="archive-reader__catalogue hidden lg:flex" aria-label="Ficha catalográfica e páginas">
               <details className="archive-reader__disclosure">
                 <summary>Ficha da obra</summary>
                 <dl className="archive-reader__metadata">
@@ -479,122 +615,140 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
             <div className="archive-reader__surface">
               <div className="archive-reader__toolbar" role="toolbar" aria-label="Ferramentas de leitura">
-                {/* View Mode Tabs */}
-                <div className="archive-reader__mode-tabs" role="tablist" aria-label="Modo de visualização">
-                  {documentEmbedUrl && (
+                {/* Grupo de modos de exibição + botão de índice */}
+                <div className="archive-reader__toolbar-group archive-reader__toolbar-group--modes">
+                  <div className="archive-reader__mode-tabs" role="tablist" aria-label="Modo de visualização">
                     <button
                       type="button"
                       role="tab"
-                      aria-selected={viewMode === 'document'}
-                      onClick={() => setViewMode('document')}
-                      className={`archive-reader__tab-btn ${viewMode === 'document' ? 'archive-reader__tab-btn--active' : ''}`}
-                      title="Ver o livro integral com todas as páginas escaneadas"
+                      aria-selected={viewMode === 'facsimile'}
+                      onClick={() => setViewMode('facsimile')}
+                      className={`archive-reader__tab-btn ${viewMode === 'facsimile' ? 'archive-reader__tab-btn--active' : ''}`}
+                      title="Ver folhas restauradas em alta resolução"
                     >
-                      <BookOpen size={14} aria-hidden="true" />
-                      <span className="hidden sm:inline">Documento Integral</span>
-                      <span className="sm:hidden">Integral</span>
+                      <ImageIcon size={14} aria-hidden="true" />
+                      <span className="hidden sm:inline">Folhas Restauradas</span>
+                      <span className="sm:hidden">Folhas</span>
                     </button>
-                  )}
+                    {documentEmbedUrl && (
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={viewMode === 'document'}
+                        onClick={() => setViewMode('document')}
+                        className={`archive-reader__tab-btn ${viewMode === 'document' ? 'archive-reader__tab-btn--active' : ''}`}
+                        title="Ver o livro integral com todas as páginas escaneadas"
+                      >
+                        <BookOpen size={14} aria-hidden="true" />
+                        <span className="hidden sm:inline">Documento Integral</span>
+                        <span className="sm:hidden">Integral</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={viewMode === 'text'}
+                      onClick={() => setViewMode('text')}
+                      className={`archive-reader__tab-btn ${viewMode === 'text' ? 'archive-reader__tab-btn--active' : ''}`}
+                      title="Ler transcrição em texto acessível"
+                    >
+                      <Type size={14} aria-hidden="true" />
+                      <span className="hidden sm:inline">Texto OCR</span>
+                      <span className="sm:hidden">Texto</span>
+                    </button>
+                  </div>
+
                   <button
                     type="button"
-                    role="tab"
-                    aria-selected={viewMode === 'facsimile'}
-                    onClick={() => setViewMode('facsimile')}
-                    className={`archive-reader__tab-btn ${viewMode === 'facsimile' ? 'archive-reader__tab-btn--active' : ''}`}
-                    title="Ver folhas restauradas em alta resolução"
+                    onClick={() => setIsIndexOpen(true)}
+                    className="archive-reader__index-btn"
+                    title="Abrir índice da obra e ficha"
+                    aria-label={`Abrir índice da obra com ${totalPages} folhas`}
                   >
-                    <ImageIcon size={14} aria-hidden="true" />
-                    <span className="hidden sm:inline">Folhas Restauradas</span>
-                    <span className="sm:hidden">Folhas</span>
-                  </button>
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={viewMode === 'text'}
-                    onClick={() => setViewMode('text')}
-                    className={`archive-reader__tab-btn ${viewMode === 'text' ? 'archive-reader__tab-btn--active' : ''}`}
-                    title="Ler transcrição em texto acessível"
-                  >
-                    <Type size={14} aria-hidden="true" />
-                    <span className="hidden sm:inline">Texto OCR</span>
-                    <span className="sm:hidden">Texto</span>
+                    <List size={14} aria-hidden="true" />
+                    <span>Índice</span>
+                    <span className="archive-reader__index-badge">{totalPages}</span>
                   </button>
                 </div>
 
-                {/* Page Navigation for Facsimile / Text */}
-                {viewMode !== 'document' ? (
-                  <div className="archive-reader__page-controls" role="group" aria-label="Navegação entre páginas">
-                    <button
-                      type="button"
-                      disabled={currentPage <= 1}
-                      onClick={() => setCurrentPage(previous => Math.max(1, previous - 1))}
-                      aria-label="Página anterior"
-                    >
-                      <ChevronLeft size={18} aria-hidden="true" />
-                    </button>
-                    <span className="archive-reader__page-count" aria-live="polite">
-                      <span>Folha</span>
-                      <strong>{String(currentPage).padStart(2, '0')}</strong>
-                      <span>de {String(totalPages).padStart(2, '0')}</span>
-                    </span>
-                    <button
-                      type="button"
-                      disabled={currentPage >= totalPages}
-                      onClick={() => setCurrentPage(previous => Math.min(totalPages, previous + 1))}
-                      aria-label="Próxima página"
-                    >
-                      <ChevronRight size={18} aria-hidden="true" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="archive-reader__document-meta-inline hidden md:flex items-center gap-2 text-xs text-[#a69882]">
-                    <BookOpen size={14} className="text-rubrica" />
-                    <span>{item.pages} páginas digitalizadas no volume original</span>
-                  </div>
-                )}
-
-                {/* Zoom & Fullscreen Tools */}
-                <div className="archive-reader__tools">
-                  {viewMode !== 'document' && (
-                    <div className="archive-reader__zoom" role="group" aria-label="Ampliação da página">
+                {/* Grupo 2: Navegação + Ferramentas (Zoom & Tela Cheia) */}
+                <div className="archive-reader__toolbar-group archive-reader__toolbar-group--actions">
+                  {viewMode !== 'document' ? (
+                    <div className="archive-reader__page-controls" role="group" aria-label="Navegação entre páginas">
                       <button
                         type="button"
-                        disabled={zoom <= 80}
-                        onClick={() => setZoom(previous => Math.max(80, previous - 20))}
-                        aria-label="Diminuir zoom da leitura"
+                        disabled={currentPage <= 1}
+                        onClick={() => setCurrentPage(previous => Math.max(1, previous - 1))}
+                        aria-label="Página anterior"
                       >
-                        <ZoomOut size={16} aria-hidden="true" />
+                        <ChevronLeft size={16} aria-hidden="true" />
                       </button>
-                      <output aria-live="polite">{zoom}%</output>
+                      <span className="archive-reader__page-count" aria-live="polite">
+                        <span>Folha</span>
+                        <strong>{String(currentPage).padStart(2, '0')}</strong>
+                        <span>de {String(totalPages).padStart(2, '0')}</span>
+                      </span>
                       <button
                         type="button"
-                        disabled={zoom >= 200}
-                        onClick={() => setZoom(previous => Math.min(200, previous + 20))}
-                        aria-label="Aumentar zoom da leitura"
+                        disabled={currentPage >= totalPages}
+                        onClick={() => setCurrentPage(previous => Math.min(totalPages, previous + 1))}
+                        aria-label="Próxima página"
                       >
-                        <ZoomIn size={16} aria-hidden="true" />
+                        <ChevronRight size={16} aria-hidden="true" />
                       </button>
+                    </div>
+                  ) : (
+                    <div className="archive-reader__document-meta-inline flex items-center gap-2 text-xs text-[#a69882]">
+                      <BookOpen size={14} className="text-rubrica shrink-0" />
+                      <span className="truncate">{item.pages} págs digitalizadas</span>
                     </div>
                   )}
 
-                  <button
-                    type="button"
-                    onClick={toggleFullscreen}
-                    aria-label={isFullscreen ? 'Sair da tela cheia' : 'Entrar em tela cheia'}
-                    className="archive-reader__fullscreen"
-                  >
-                    {isFullscreen ? <Minimize2 size={16} aria-hidden="true" /> : <Maximize2 size={16} aria-hidden="true" />}
-                    <span className="hidden sm:inline">{isFullscreen ? 'Sair' : 'Tela cheia'}</span>
-                  </button>
+                  {/* Controles de Zoom & Tela cheia */}
+                  <div className="archive-reader__tools">
+                    {viewMode !== 'document' && (
+                      <div className="archive-reader__zoom" role="group" aria-label="Ampliação da página">
+                        <button
+                          type="button"
+                          disabled={zoom <= 80}
+                          onClick={() => setZoom(previous => Math.max(80, previous - 20))}
+                          aria-label="Diminuir zoom da leitura"
+                        >
+                          <ZoomOut size={14} aria-hidden="true" />
+                        </button>
+                        <output aria-live="polite">{zoom}%</output>
+                        <button
+                          type="button"
+                          disabled={zoom >= 200}
+                          onClick={() => setZoom(previous => Math.min(200, previous + 20))}
+                          aria-label="Aumentar zoom da leitura"
+                        >
+                          <ZoomIn size={14} aria-hidden="true" />
+                        </button>
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={toggleFullscreen}
+                      aria-label={isFullscreen ? 'Sair da tela cheia' : 'Entrar em tela cheia'}
+                      className="archive-reader__fullscreen"
+                    >
+                      {isFullscreen ? <Minimize2 size={16} aria-hidden="true" /> : <Maximize2 size={16} aria-hidden="true" />}
+                      <span className="hidden sm:inline">{isFullscreen ? 'Sair' : 'Tela cheia'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
               <div
                 ref={pageFrameRef}
                 className={`archive-reader__stage ch-reader-stage ${isExclusive ? 'user-select-none' : ''}`}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
               >
                 {viewMode === 'document' && documentEmbedUrl ? (
-                  <div className="archive-reader__integral-view w-full h-[78vh] min-h-[500px] flex flex-col bg-[#14110e] rounded border border-[#3d342a] overflow-hidden shadow-2xl">
+                  <div className="archive-reader__integral-view w-full h-[78vh] min-h-[480px] flex flex-col bg-[#14110e] rounded border border-[#3d342a] overflow-hidden shadow-2xl">
                     <div className="archive-reader__integral-bar flex items-center justify-between px-3 py-2 bg-[#221c17] border-b border-[#3d342a] text-xs text-[#c9bca6]">
                       <div className="flex items-center gap-2 min-w-0">
                         <BookOpen size={14} className="text-rubrica shrink-0" />
@@ -626,6 +780,36 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                         </a>
                       </div>
                     </div>
+
+                    {/* Cartão de Ação Móvel para Google Drive */}
+                    <div className="archive-reader__mobile-drive-card sm:hidden p-3 bg-[#1d1712] border-b border-[#3d342a] text-xs">
+                      <p className="text-[#c9bca6] mb-2 leading-tight">
+                        Para folhear as {item.pages} páginas com fluidez e tela cheia no celular:
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={documentEmbedUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="archive-reader__drive-btn archive-reader__drive-btn--primary flex-1 text-center py-2 px-3 rounded bg-rubrica text-white font-medium flex items-center justify-center gap-1.5 min-h-[44px]"
+                        >
+                          <ExternalLink size={14} />
+                          <span>Abrir em Tela Cheia</span>
+                        </a>
+                        {item.downloadUrl && (
+                          <a
+                            href={item.downloadUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="archive-reader__drive-btn archive-reader__drive-btn--secondary py-2 px-3 rounded border border-[#5a4d3e] text-[#e8ded0] font-medium flex items-center justify-center gap-1 min-h-[44px]"
+                          >
+                            <Download size={14} />
+                            <span>Baixar</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
                     <iframe
                       src={documentEmbedUrl}
                       title={`Documento integral de ${item.title}`}
@@ -689,6 +873,45 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   </div>
                 )}
               </div>
+
+              {/* Barra inferior ergonômica para leitura em celulares */}
+              {viewMode !== 'document' && (
+                <div className="archive-reader__mobile-bottom-bar md:hidden" role="navigation" aria-label="Navegação rápida de folha">
+                  <button
+                    type="button"
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage(previous => Math.max(1, previous - 1))}
+                    className="archive-reader__mobile-nav-btn"
+                    aria-label="Folha anterior"
+                  >
+                    <ChevronLeft size={18} aria-hidden="true" />
+                    <span>Anterior</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsIndexOpen(true)}
+                    className="archive-reader__mobile-page-indicator"
+                    aria-label={`Folha ${currentPage} de ${totalPages}. Toque para abrir sumário.`}
+                  >
+                    <span className="archive-reader__mobile-indicator-label">Folha</span>
+                    <strong className="archive-reader__mobile-indicator-current">{String(currentPage).padStart(2, '0')}</strong>
+                    <span className="archive-reader__mobile-indicator-total">/ {String(totalPages).padStart(2, '0')}</span>
+                    <List size={13} className="text-rubrica ml-1" aria-hidden="true" />
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage(previous => Math.min(totalPages, previous + 1))}
+                    className="archive-reader__mobile-nav-btn"
+                    aria-label="Próxima folha"
+                  >
+                    <span>Próxima</span>
+                    <ChevronRight size={18} aria-hidden="true" />
+                  </button>
+                </div>
+              )}
             </div>
           </section>
         )}

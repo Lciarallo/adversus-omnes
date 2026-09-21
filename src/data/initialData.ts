@@ -78,6 +78,45 @@ export const INITIAL_AUTHORS: Author[] = [
     themes: ['Guerra de Canudos', 'Sertão Brasileiro', 'Mestiçagem', 'Geografia Social'],
     works: ['Os Sertões', 'Contrastes e Confrontos', 'À Margem da História'],
     featured: false
+  },
+  {
+    id: 'author-plinio-salgado',
+    name: 'Plínio Salgado',
+    avatar: '/covers/o_cavaleiro_de_itarare.webp',
+    bio: 'Escritor, romancista, ensaísta, líder do movimento Verde-Amarelo na Semana de Arte Moderna de 1922 e fundador da Ação Integralista Brasileira e do PRP. Autor prolífico de vasta obra literária, sociológica e parlamentar voltada à interiorização da cultura e à afirmação da identidade nacional.',
+    birthYear: 1895,
+    deathYear: 1975,
+    period: 'Século XX',
+    politicalMovement: 'Modernismo Verde-Amarelo / Integralismo',
+    themes: ['Espiritualismo', 'Nacionalismo Cívico', 'Romance Histórico', 'Marcha para o Oeste', 'Sociologia Política'],
+    works: ['O Estrangeiro', 'O Cavaleiro de Itararé', 'A Quarta Humanidade', 'Madrugada do Espírito', 'Nosso Brasil', 'Oriente', '13 Anos em Brasília'],
+    featured: true
+  },
+  {
+    id: 'author-gustavo-barroso',
+    name: 'Gustavo Barroso',
+    avatar: '/covers/a_ronda_dos_seculos.webp',
+    bio: 'Advogado, romancista, historiador militar, folclorista e presidente da Academia Brasileira de Letras em dois mandatos. Diretor histórico do Museu Histórico Nacional e uma das maiores referências intelectuais do tradicionalismo e da historiografia épica brasileira.',
+    birthYear: 1888,
+    deathYear: 1959,
+    period: 'Século XX',
+    politicalMovement: 'Integralismo / Tradicionalismo Histórico',
+    themes: ['História Militar', 'Folclore Sertanejo', 'Tradição Cívica', 'Crítica Civilizacional'],
+    works: ['Terra de Sol', 'A Ronda dos Séculos', 'História Secreta do Brasil', 'O Integralismo em Marcha'],
+    featured: true
+  },
+  {
+    id: 'author-abel-rafael-pinto',
+    name: 'Abel Rafael Pinto',
+    avatar: '/covers/as_vestais_paridas.webp',
+    bio: 'Deputado federal, memorialista e líder político mineiro. Secretário de Propaganda da Ação Integralista Brasileira em Juiz de Fora desde 1935, comandante de milícias cívicas, dirigente do PRP e Secretário de Agricultura de Minas Gerais.',
+    birthYear: 1914,
+    deathYear: 1995,
+    period: 'Século XX',
+    politicalMovement: 'Integralismo / Doutrina do Sigma (PRP)',
+    themes: ['Memória Política', 'Atuação Parlamentar', 'Balanço Institucional Republicano'],
+    works: ['As Vestais Paridas'],
+    featured: false
   }
 ];
 
@@ -419,6 +458,309 @@ export const INITIAL_CATALOG: CatalogItem[] = [
         pageNumber: 2,
         title: 'Reflexões sobre a Responsabilidade Coletiva',
         content: 'A política não é moral aplicada, mas o espaço onde homens livres agem em conjunto. Quando o Estado totalitário transforma a legalidade em mero instrumento de extermínio organizado, a desobediência civil torna-se a última obrigação do cidadão que se recusa a ser cúmplice.'
+      }
+    ],
+    isFeatured: true
+  },
+
+  // ------------------------------------------------------------------
+  // ACERVO HISTÓRICO INTEGRALISTA & NACIONALISTA — EXCLUSIVO PARA ASSINANTES
+  // ------------------------------------------------------------------
+  {
+    id: 'cat-11',
+    title: 'A Ronda dos Séculos (4ª Edição Histórica)',
+    author: 'Gustavo Barroso',
+    authorId: 'author-gustavo-barroso',
+    year: 1937,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/a_ronda_dos_seculos.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. 4ª edição comemorativa da Livraria José Olympio Editora. Grande panorama em prosa lírica e épica das eras históricas: Antiguidade, Idade Média, Renascimento, Grandes Navegações e a Primeira Guerra Mundial.',
+    pages: 288,
+    publisher: 'Livraria José Olympio Editora (Rio de Janeiro)',
+    politicalMovement: 'Integralismo / Tradicionalismo Histórico',
+    period: 'Século XX',
+    event: 'Panorama Civilizacional e Crítica Histórica',
+    downloadUrl: 'https://drive.google.com/uc?id=1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Frontispício da 4ª Edição (José Olympio)',
+        content: 'GUSTAVO BARROSO, da Academia Brasileira de Letras — A RONDA DOS SÉCULOS (4ª Edição).\n\nLivraria José Olympio Editora — Rua do Ouvidor, 110, Rio de Janeiro.\n\nEvocação panorâmica do destino trágico e heroico das civilizações humanas através das eras históricas.'
+      },
+      {
+        pageNumber: 2,
+        title: 'Idade Média: A Espada do Rei Dagoberto',
+        content: 'Na penumbra das velhas catedrais e sob o silêncio denso das florestas renanas, a cavalaria forjava a sua armadura espiritual. A espada do rei Dagoberto não era um mero instrumento de conquista territorial, mas o símbolo do dever supremo da autoridade: proteger os deserdados e submeter a força bruta à honra inabalável.'
+      },
+      {
+        pageNumber: 3,
+        title: 'Reforma e Renascimento: A Espiã',
+        content: 'Nas cortes de Florença e Ferrara, entre brocados e intrigas secretas, o Renascimento despontava sob a duplicidade do fausto e da traição palaciana. As palavras sussurradas em latim humanista valiam mais do que punhais de ferro, selando o destino de principados inteiros.'
+      },
+      {
+        pageNumber: 4,
+        title: 'Na Era dos Descobrimentos: Antropófagos',
+        content: 'As caravelas portuguesas romperam as brumas do mar ignoto para plantar o padrão das quinas na praia bravia da Terra de Santa Cruz. Diante da voragem dos canibais da floresta virgem, a cruz de madeira erguida pelos missionários inaugurou a epopeia heroica da catequese e da penetração sertaneja.'
+      },
+      {
+        pageNumber: 5,
+        title: 'A Grande Guerra: A Alma de Marko Kralievitch',
+        content: '1914. Nas trincheiras frias dos Balcãs, onde o ferro e a fumaça de artilharia dilaceravam as esperanças do século, a lenda guerreira de Marko Kralievitch ecoava no canto dos soldados. A técnica mecanizada podia aniquilar a carne, mas era impotente para dobrar o espírito eterno dos povos livres.'
+      }
+    ],
+    isFeatured: true
+  },
+  {
+    id: 'cat-12',
+    title: 'As "Vestais Paridas": Memórias e Discursos Parlamentares',
+    author: 'Abel Rafael Pinto',
+    authorId: 'author-abel-rafael-pinto',
+    year: 1984,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/as_vestais_paridas.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. Relato confessional e histórico de Abel Rafael Pinto sobre 50 anos de vida política: a adesão à AIB em 1935, a fundação do Partido de Representação Popular (PRP) em 1945 e os bastidores das tribunas parlamentares em Minas Gerais e Brasília.',
+    pages: 178,
+    publisher: 'Edição do Autor / Arquivo Histórico',
+    politicalMovement: 'Integralismo / Doutrina do Sigma (PRP)',
+    period: 'Século XX',
+    event: 'Atuação Parlamentar e Resistência Democrática Pós-1937',
+    downloadUrl: 'https://drive.google.com/uc?id=1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Introdução: Do Integralismo à Atuação Parlamentar',
+        content: 'Em 1935 entrei para a Ação Integralista Brasileira, em Juiz de Fora. E nunca mais parei em minhas atividades políticas. No Integralismo fui Secretário de Propaganda Municipal e Secretário de Educação Física. Comandei cerca de 700 milicianos na célebre parada de 1º de novembro de 1937, no Rio de Janeiro. Durante o período das "catacumbas", isto é, das perseguições do Estado Novo, fui Chefe Municipal em Juiz de Fora.'
+      },
+      {
+        pageNumber: 2,
+        title: 'A Fundação do PRP e a Trajetória Eleitoral',
+        content: 'Em 1945, quando fundamos o Partido de Representação Popular, fui Secretário do Diretório Municipal de Juiz de Fora; mais tarde membro do Diretório Estadual e seu Presidente e membro do Diretório Nacional. Fui vereador do PRP à Câmara Municipal de 1947 a 1950. Elegi-me deputado federal em 1958 e reeleito em 1962, ocupando também a Secretaria de Agricultura de Minas Gerais.'
+      },
+      {
+        pageNumber: 3,
+        title: 'O Enigma das "Vestais Paridas"',
+        content: 'Até mesmo as "vestais paridas" eram homens de grande valor pessoal, claudicando apenas nas questões partidárias, em que se incendiavam de paixão. Lutei muito na Câmara, mas não deixei inimigos. Sempre fiz questão de distinguir entre o homem e o político; o homem e suas ideias; a atuação pública e o respeito à dignidade individual.'
+      },
+      {
+        pageNumber: 4,
+        title: 'Epílogo de 1984: Balanço de Meio Século',
+        content: 'Estamos em 1984. Os fatos estão aí e respondem, por si mesmos, o que afirmei nos discursos parlamentares transcritos. Revolução, como ensinava Alberto Torres, é a mudança de atitudes em face dos fatos. Uma Nação sem Deus, com a moral corroída e a família fragilizada, perde a sua substância histórica. Por isso continuo lutando: Deus, Pátria e Família!'
+      }
+    ],
+    isFeatured: true
+  },
+  {
+    id: 'cat-13',
+    title: 'O Cavaleiro de Itararé (5ª Edição Histórica)',
+    author: 'Plínio Salgado',
+    authorId: 'author-plinio-salgado',
+    year: 1932,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/o_cavaleiro_de_itarare.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. 5ª edição com prefácio de Gumercindo Rocha Dórea (Editora Voz do Oeste / INL / MEC). O romance histórico que imortalizou a mocidade nos levantes dos anos 1920 e 1930: os 18 de Copacabana, a Coluna Prestes e a Revolução Constitucionalista.',
+    pages: 345,
+    publisher: 'Editora Voz do Oeste / Instituto Nacional do Livro (MEC)',
+    politicalMovement: 'Modernismo Verde-Amarelo / Integralismo',
+    period: 'Século XX',
+    event: 'Tenentismo, Revolução de 1930 e Revolução Constitucionalista de 1932',
+    downloadUrl: 'https://drive.google.com/uc?id=1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Prefácio Histórico por Gumercindo Rocha Dórea',
+        content: 'Esta nova edição de "O Cavaleiro de Itararé" vem a lume no ano que antecede o cinquentenário da Revolução de 1930, permitindo aos que hoje tomam assento nas assembleias representativas e a uma juventude ávida de verdade o conhecimento de uma época decisiva através de uma das penas mais vigorosas e líricas das letras brasileiras.'
+      },
+      {
+        pageNumber: 2,
+        title: 'Capítulo I: Os 18 de Copacabana e o Despertar da Mocidade',
+        content: 'Julho de 1922. A praia de Copacabana tremia sob as salvas do forte amotinado. Um punhado de tenentes marchava a peito aberto contra as forças legalistas da República Velha. Não era apenas um levante de quartel, mas o grito de revolta de uma geração inteira que não suportava mais ver o Brasil negociado no balcão das oligarquias cafeeiras.'
+      },
+      {
+        pageNumber: 3,
+        title: 'Capítulo II: A Marcha Épica da Coluna pelos Chapadões',
+        content: 'Pelos sertões sem fim do Centro-Oeste, cavaleiros empoeirados rasgavam as distâncias do abandono nacional. A Coluna marchava sem abastecimento regular, sustentada pelo entusiasmo e pela mística cívica de que a soberania do povo brasileiro precisava ser resgatada do esquecimento das capitanias eleitorais.'
+      },
+      {
+        pageNumber: 4,
+        title: 'Capítulo III: A Névoa de Itararé e o Destino da Pátria',
+        content: 'Outubro de 1930. Na estação ferroviária de Itararé, o frio paranaense envolvia os destacamentos armados sob um suspense que paralisava a República. O Cavaleiro de Itararé surge das sombras como a sentinela atenta de um país que teimava em renascer das cinzas do passado oligárquico.'
+      }
+    ],
+    isFeatured: true
+  },
+  {
+    id: 'cat-14',
+    title: '13 Anos em Brasília: Ação Parlamentar e o Sonho dos Bandeirantes',
+    author: 'Plínio Salgado',
+    authorId: 'author-plinio-salgado',
+    year: 1973,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/treze_anos_em_brasilia.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. Edição histórica Asteca registrando os discursos e conferências parlamentares de Plínio Salgado no Congresso Nacional (1959–1972). Exemplar com dedicatória original preservada, abordando a interiorização do país e o papel civilizatório de Brasília.',
+    pages: 191,
+    publisher: 'Edição Asteca / Coleção da Câmara dos Deputados',
+    politicalMovement: 'Pensamento Político Nacionalista / Representação Parlamentar',
+    period: 'Século XX',
+    event: 'Construção de Brasília e Interiorização da República',
+    downloadUrl: 'https://drive.google.com/uc?id=1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Frontispício e Dedicatória Manuscrita de 1920/2020',
+        content: 'Exemplar com dedicatória histórica manuscrita na guarda: "Dedico este singelo presente ao ilustre amigo Auriberto, que possa compreender através dessas páginas o resultado da epopeia dos bandeirantes."\n\n13 ANOS EM BRASÍLIA (1959–1972) — Intervenções parlamentares, debates orçamentários e projetos de lei apresentados pelo deputado Plínio Salgado.'
+      },
+      {
+        pageNumber: 2,
+        title: 'O Sonho dos Bandeirantes: A Convocação dos Pioneiros',
+        content: 'Vou fazer a chamada dos heróis para que venham ver Brasília. Para verem a consequência gloriosa do que fizeram conquistando o Oeste e a Amazônia e integrando o vastíssimo território na Pátria Brasileira.\n\nComeço a chamar pelos que desbravaram sertões no século XVI: Jorge Dias e Sebastião Tourinho, exploradores do rio São Francisco e do rio Doce; Paulo Afonso, Gabriel Soares, Antônio Dias Adorno...'
+      },
+      {
+        pageNumber: 3,
+        title: 'A Epopeia no Século XVII e XVIII',
+        content: 'Passo ao século XVII, com o gigante de botas de sete-léguas, Raposo Tavares, que andou do Sul ao Norte e do Leste ao Oeste, indo até a Bolívia e volvendo pelo rio Madeira ao curso do Amazonas. Chamo Fernão Dias, o caçador de esmeraldas; Borba Gato; Garcia Rodrigues; e Bartolomeu Bueno da Silva, o Anhanguera, que incendiou as águas e desvendou Goiás.'
+      },
+      {
+        pageNumber: 4,
+        title: 'Vêde Brasília: O Testamento Continental',
+        content: 'Vêde Brasília, erguendo-se imponente nos sertões que perlustrastes. Orgulhai-vos da nossa geração como nós nos orgulhamos de vós. Fostes capazes de idealizar, nós fomos capazes de continuar e, finalmente, de realizar. Como o amplíssimo território que nos legastes, no espaço continental, com unidade de idioma e de sentido político, nós nos integramos na certeza da permanência histórica da Grande Pátria!'
+      }
+    ],
+    isFeatured: true
+  },
+  {
+    id: 'cat-15',
+    title: 'Madrugada do Espírito: Súmula Filosófico-Política',
+    author: 'Plínio Salgado',
+    authorId: 'author-plinio-salgado',
+    year: 1946,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/madrugada_do_espirito.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. Publicada em Lisboa pela Editora Pro Domo (Coleção Cultura Política). Uma das mais densas exposições filosóficas de Plínio Salgado, refutando o materialismo de Marx e Hegel e afirmando a centralidade da pessoa humana, da família orgânica e da ética cristã.',
+    pages: 168,
+    publisher: 'Editora Pro Domo / Livraria Ática (Lisboa)',
+    politicalMovement: 'Espiritualismo / Filosofia Política Integralista',
+    period: 'Século XX',
+    event: 'Debates do Pós-Guerra e Doutrina Social do Homem Integral',
+    downloadUrl: 'https://drive.google.com/uc?id=1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Frontispício da Edição de Lisboa (1946)',
+        content: 'COLEÇÃO CULTURA POLÍTICA, Nº 11. Composto e impresso na Gráfica Santelmo, Rua de S. Bernardo, 84 — Lisboa.\n\n"Madrugada do Espírito" reúne os ensaios de reflexão filosófica redigidos entre 1931 e 1936 sobre o ocaso do racionalismo mecanicista e a aurora da dignidade espiritual do homem.'
+      },
+      {
+        pageNumber: 2,
+        title: 'Gigantes da Montanha e Anões de Nibelungos',
+        content: 'Depois de Hegel, o pensamento europeu desceu a ladeira do mecanicismo. Marx tentou inverter a dialética hegeliana colocando-a de cabeça para baixo, mas não fez mais do que reduzir todo o mistério da alma humana a uma equação de estômago e ferramentas de produção. O panorama burguês gerou um conformismo materialista tão estéril quanto a utopia burocrática.'
+      },
+      {
+        pageNumber: 3,
+        title: 'Capitalismo e Comunismo: Identidade de Origens',
+        content: 'Capitalismo financeiro e comunismo coletivista partilham a mesmíssima matriz ontológica: a submissão total da pessoa à matéria. Um atomiza o homem no isolamento egoísta do lucro; outro dissolve a individualidade na máquina estatal. Ambos ignoram que o homem é um ser com aspirações transcendentais que transcendem os limites econômicos.'
+      },
+      {
+        pageNumber: 4,
+        title: 'A Revolução da Família e a Concepção Integral do Trabalho',
+        content: 'A família é a primeira e mais sólida trincheira da liberdade contra o despotismo. O trabalho humano não é mera mercadoria a ser negociada, mas o ato sagrado de colaboração do homem na ordem divina da Criação. A alvorada do espírito principia no momento em que a sociedade reconhece o primado da alma sobre as engrenagens da técnica.'
+      }
+    ],
+    isFeatured: true
+  },
+  {
+    id: 'cat-16',
+    title: 'Nosso Brasil (4ª Edição Revista e Ilustrada)',
+    author: 'Plínio Salgado',
+    authorId: 'author-plinio-salgado',
+    year: 1936,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/nosso_brasil.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. 4ª edição com reprodução na capa do clássico quadro da Primeira Missa de Victor Meirelles (Editora Voz do Oeste / Secretaria de Cultura de SP). Obra de pedagogia cívica que narra a geografia lírica, a fé e a formação épica do povo brasileiro.',
+    pages: 130,
+    publisher: 'Editora Voz do Oeste (São Paulo)',
+    politicalMovement: 'Pedagogia Cívica / Nacionalismo Cultural',
+    period: 'Século XX',
+    event: 'Formação Cívica da Juventude e Literatura de Brasilidade',
+    downloadUrl: 'https://drive.google.com/uc?id=1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Palavras aos Pais e Educadores',
+        content: '«Toda a minha preocupação aqui é formar brasileiros pelo coração, pelo estímulo às virtudes, sem o que jamais teremos nem soldados, nem intelectuais e muito menos estadistas.»\n\nNosso Brasil revive aspectos e tradições de nossa Pátria em linguagem límpida e acessível, para incutir no espírito dos jovens o amor filial à terra onde nascemos.'
+      },
+      {
+        pageNumber: 2,
+        title: 'Capítulo I: A Terra Abençoada e a Cruz de Cabral',
+        content: 'No dia 26 de abril de 1500, Frei Henrique de Coimbra celebrou no ilhéu da Coroa Vermelha a primeira missa. O altar de madeira tosca, erguido sob o dossel das árvores nativas diante dos marinheiros de joelhos e dos índios perplexos, selou a aliança eterna entre a fé cristã e a terra americana. Nascia o Brasil sob o signo da fraternidade e da esperança.'
+      },
+      {
+        pageNumber: 3,
+        title: 'Capítulo II: A Marcha dos Rios e das Montanhas',
+        content: 'Nenhum outro país possui bacias hidrográficas que abracem o continente com tanta generosidade. O Amazonas, o São Francisco — o rio da unidade nacional —, o Paraná e o Paraguai não são barreiras que dividem, mas estradas líquidas que os pioneiros navegaram para costurar um país unido de norte a sul, falando uma só língua e venerando um só pavilhão.'
+      },
+      {
+        pageNumber: 4,
+        title: 'Capítulo III: O Culto aos Antepassados',
+        content: 'Não se ama aquilo que não se conhece. Conhecer a história do Brasil é reverenciar os sacrifícios dos jesuítas, o sangue derramado pelos bandeirantes, a tenacidade dos caboclos e a bravura dos soldados de Guararapes e do Riachuelo. Cada geração tem a sagrada missão de transmitir aos filhos a tocha acesa do patriotismo sem mancha.'
+      }
+    ],
+    isFeatured: true
+  },
+  {
+    id: 'cat-17',
+    title: 'Oriente: Impressões de Viagens pelo Mediterrâneo',
+    author: 'Plínio Salgado',
+    authorId: 'author-plinio-salgado',
+    year: 1931,
+    type: 'digital',
+    access: 'exclusive',
+    price: 0,
+    stock: 9999,
+    coverImage: '/covers/oriente.webp',
+    description: 'MATERIAL EXCLUSIVO PARA ASSINANTES. Diário de viagem lírico e filosófico pelo Mediterrâneo Oriental, Grécia, Egito e Palestina. A busca pelas fontes primordiais da cultura humana e o choque poético entre as ruínas clássicas e o deserto milenar.',
+    pages: 151,
+    publisher: 'Edição Histórica (Rio de Janeiro)',
+    politicalMovement: 'Modernismo / Literatura de Viagem',
+    period: 'Século XX',
+    event: 'Viagem ao Mediterrâneo e Meditações Históricas',
+    downloadUrl: 'https://drive.google.com/uc?id=1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy&export=download',
+    pdfPages: [
+      {
+        pageNumber: 1,
+        title: 'Partida: O Vapor «Brasile» no Azul do Mediterrâneo',
+        content: 'Nosso vapor (o "Brasile") levantou ferros numa tarde esplêndida, de lindo firmamento azul. Era bem o céu da Grécia. Da Grécia das nossas primeiras poesias, naturalmente parnasianas. Era bem o porto do Pireu, onde as nossas estrofes de outrora punham as trirremes decorativas.'
+      },
+      {
+        pageNumber: 2,
+        title: 'Capítulo II: A Acrópole de Atenas e o Papiro Seco',
+        content: 'Ao subir as pedras gastas do Partenon sob o sol brilhante da Ática, compreende-se por que a harmonia das formas gregas resistiu aos milênios. Não há ali nada de colossal ou opressor; tudo é medida, simetria e ritmo do espírito. No entanto, faltava àquela civilização sublime o calor da caridade que mais tarde desceria das colinas da Judeia para abraçar a humanidade.'
+      },
+      {
+        pageNumber: 3,
+        title: 'Capítulo III: As Areias do Egito e as Pirâmides',
+        content: 'O Nilo serpenteia pelo deserto como uma artéria de vida pulsando através do mar de areia. As pirâmides de Gizé erguem-se contra o crepúsculo como sentinelas do silêncio eterno. O cavaleiro no dorso do dromedário contempla o horizonte onde a história dos homens parece tão efêmera quanto a poeira que o vento do deserto dispersa ao entardecer.'
+      },
+      {
+        pageNumber: 4,
+        title: 'Capítulo IV: O Encontro com a Terra Santa',
+        content: 'Jerusalém é a cidade onde a terra toca o infinito. Pelas vielas de pedra calcária desgastadas por passos de peregrinos de todas as línguas e raças, o viajante sente a palpitação viva da promessa bíblica. O Oriente não é um museu do passado, mas a nascente viva da qual a alma ocidental bebeu a sua sede de eternidade.'
       }
     ],
     isFeatured: true

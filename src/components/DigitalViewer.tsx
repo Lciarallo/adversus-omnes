@@ -7,10 +7,9 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
+  Minimize2,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
-  BookOpen,
   ArrowLeft,
   Type,
   Image as ImageIcon,
@@ -79,10 +78,19 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
   const activePage = pages[currentPage - 1] || pages[0];
   const isExclusive = item.access === 'exclusive';
   const hasAccess = !isExclusive || currentUser.role === 'subscriber' || currentUser.role === 'admin';
+  const preferredPlan = plans[1] || plans[0];
+  const planPrice = preferredPlan
+    ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(preferredPlan.priceMonthly)
+    : null;
+
+  const handleBack = () => {
+    onBack();
+    setTimeout(() => setTransitioningCoverId(null), 480);
+  };
 
   // Security restrictions when exclusive
   useEffect(() => {
-    if (!isExclusive) return;
+    if (!isExclusive || !hasAccess) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Block Ctrl+S, Ctrl+P, Ctrl+C, Ctrl+U, Cmd+S, Cmd+P, Cmd+C
@@ -114,7 +122,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
         container.removeEventListener('contextmenu', handleContextMenu);
       }
     };
-  }, [isExclusive]);
+  }, [isExclusive, hasAccess]);
 
   // Render text to canvas to prevent DOM text extraction
   useEffect(() => {
@@ -139,25 +147,26 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     const scale = (width / 800) * dpr;
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
 
-    // Background: parchment paper texture feel
-    ctx.fillStyle = '#fdfbf6';
+    // A folha segue a materialidade clara do acervo, enquanto o entorno funciona
+    // como mesa de exame. O desenho permanece em coordenadas editoriais fixas.
+    ctx.fillStyle = '#fbf8f1';
     ctx.fillRect(0, 0, 800, 1100);
 
-    // Border line
+    // Moldura e cabeçalho de registro
     ctx.strokeStyle = '#d8ccb4';
     ctx.lineWidth = 1;
-    ctx.strokeRect(30, 30, 740, 1040);
-    ctx.strokeRect(34, 34, 732, 1032);
+    ctx.strokeRect(32, 32, 736, 1036);
 
-    // Page header
     ctx.fillStyle = '#68573d';
-    ctx.font = 'italic 12px "Cormorant Garamond", Georgia, serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(
-      `ADVERSUS OMNES — BIBLIOTHECA ET ARCHIVUM`,
-      400,
-      60
-    );
+    ctx.font = '600 10px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('ADVERSUS OMNES · BIBLIOTHECA ET ARCHIVUM', 58, 64);
+    ctx.textAlign = 'right';
+    ctx.fillText(`COTA ${item.id.toUpperCase()}`, 742, 64);
+    ctx.beginPath();
+    ctx.moveTo(58, 82);
+    ctx.lineTo(742, 82);
+    ctx.stroke();
 
     // Título do documento: quebra em linhas dentro da própria folha.
     const activePageData = activePage;
@@ -180,44 +189,51 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     };
 
     ctx.fillStyle = '#14110e';
-    ctx.font = 'bold 22px "Cormorant Garamond", Georgia, serif';
+    ctx.font = '700 21px "Cormorant Garamond", Georgia, serif';
     ctx.textAlign = 'center';
-    let titleY = 110;
+    let titleY = 124;
     for (const line of wrap(item.title.toUpperCase(), 620)) {
       ctx.fillText(line, 400, titleY);
-      titleY += 28;
+      titleY += 26;
     }
 
-    const afterTitle = titleY + 2;
+    const afterTitle = titleY + 4;
 
     ctx.fillStyle = '#b8311a';
-    ctx.font = '600 13px "Cinzel", serif';
+    ctx.font = '600 11px "Cinzel", Georgia, serif';
     ctx.fillText(item.author || 'Arquivo Histórico', 400, afterTitle);
 
-    // Filete de rubrica sob a assinatura
     ctx.strokeStyle = '#b8311a';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(320, afterTitle + 15);
-    ctx.lineTo(480, afterTitle + 15);
+    ctx.moveTo(340, afterTitle + 17);
+    ctx.lineTo(460, afterTitle + 17);
     ctx.stroke();
 
-    // Section title
-    ctx.fillStyle = '#4a4236';
-    ctx.font = 'italic bold 16px "Cormorant Garamond", Georgia, serif';
+    // Identificação da folha e título da seção
+    const sectionY = afterTitle + 72;
+    ctx.fillStyle = '#b8311a';
+    ctx.font = '600 10px "Cinzel", Georgia, serif';
     ctx.textAlign = 'left';
-    const sectionY = afterTitle + 65;
-    ctx.fillText(activePageData.title, 70, sectionY);
+    ctx.fillText(`FÓLIO ${String(activePageData.pageNumber).padStart(2, '0')}`, 70, sectionY);
+
+    ctx.fillStyle = '#28221c';
+    ctx.font = 'italic 700 22px "Cormorant Garamond", Georgia, serif';
+    let sectionTitleY = sectionY + 32;
+    for (const line of wrap(activePageData.title, 640)) {
+      ctx.fillText(line, 70, sectionTitleY);
+      sectionTitleY += 27;
+    }
 
     // Body content wrapped
     ctx.fillStyle = '#14110e';
-    ctx.font = '15px/1.8 "Cormorant Garamond", Georgia, serif';
+    ctx.font = '17px "Spectral", Georgia, serif';
     
     const words = activePageData.content.split(' ');
     let line = '';
-    let y = sectionY + 40;
-    const maxWidth = 660;
-    const lineHeight = 28;
+    let y = sectionTitleY + 22;
+    const maxWidth = 640;
+    const lineHeight = 31;
 
     for (let n = 0; n < words.length; n++) {
       const testLine = line + words[n] + ' ';
@@ -233,15 +249,22 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     }
     ctx.fillText(line, 70, y);
 
-    // Archival metadata footer in canvas
+    // Colofão catalográfico
+    ctx.strokeStyle = '#d8ccb4';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(58, 1015);
+    ctx.lineTo(742, 1015);
+    ctx.stroke();
+
     ctx.fillStyle = '#68573d';
-    ctx.font = '11px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(
-      `Página ${currentPage} de ${totalPages} • Ano: ${item.year} • Proveniência: ${item.publisher || 'Arquivo Adversus Omnes'}`,
-      400,
-      1030
-    );
+    ctx.font = '10px "Outfit", sans-serif';
+    ctx.textAlign = 'left';
+    const provenance = item.publisher || 'Arquivo Adversus Omnes';
+    const shortProvenance = provenance.length > 62 ? `${provenance.slice(0, 59)}…` : provenance;
+    ctx.fillText(`${item.year} · ${shortProvenance}`, 58, 1043);
+    ctx.textAlign = 'right';
+    ctx.fillText(`PÁGINA ${currentPage} / ${totalPages}`, 742, 1043);
 
     // Security Canvas Watermark for Exclusive Content
     if (isExclusive) {
@@ -249,6 +272,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
       ctx.rotate((-25 * Math.PI) / 180);
       ctx.fillStyle = 'rgba(184, 49, 26, 0.07)';
       ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'left';
       const watermarkText = `ADVERSUS OMNES • ${currentUser.name.toUpperCase()} (${currentUser.email}) • USO EXCLUSIVO • CÓPIA PROIBIDA`;
       for (let wx = -400; wx < 1200; wx += 450) {
         for (let wy = -200; wy < 1400; wy += 140) {
@@ -272,279 +296,345 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
         .requestFullscreen()
         .catch(() => notify('Este navegador não permitiu abrir o leitor em tela cheia.', 'error'));
     } else {
-      document.exitFullscreen();
+      document
+        .exitFullscreen()
+        .catch(() => notify('Não foi possível sair da tela cheia. Pressione Esc para tentar novamente.', 'error'));
     }
   };
 
+  useEffect(() => {
+    pageFrameRef.current?.scrollTo({ top: 0, left: 0 });
+  }, [currentPage, textMode]);
+
   return (
-    <div className="min-h-screen bg-paper-400 py-6 px-3 sm:px-6">
-      {/* Alert toast when copy is blocked */}
+    <div className="archive-reader">
       {copiedAlert && (
         <div
           role="alert"
-          className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-rubrica-tint/95 border border-rubrica text-rubrica-deep px-5 py-3 rounded-lg shadow-2xl flex items-center gap-3 text-xs font-semibold"
+          className="archive-reader__alert"
         >
-          <ShieldAlert className="text-rubrica w-5 h-5 shrink-0" aria-hidden="true" />
+          <ShieldAlert size={19} aria-hidden="true" />
           <span>
-            Aviso de Proteção: A extração de texto, atalhos de cópia e impressão estão bloqueados para este documento exclusivo de assinantes.
+            Esta cópia de consulta restringe atalhos de extração e impressão. Capturas de tela ainda são possíveis.
           </span>
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto space-y-4">
-        {/* Top bar with back button & item summary */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-paper-700 border border-rule-faint rounded-xl">
-          <div className="flex items-center gap-2.5 min-w-0 flex-1">
-            <button
-              type="button"
-              onClick={() => {
-                onBack();
-                setTimeout(() => setTransitioningCoverId(null), 480);
-              }}
-              aria-label="Voltar para a lista do acervo"
-              className="px-3 py-2 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink-soft hover:text-ink transition flex items-center gap-1.5 text-xs font-medium min-h-[44px] shrink-0 whitespace-nowrap"
-            >
-              <ArrowLeft size={16} aria-hidden="true" />
-              <span className="sm:hidden">Voltar</span>
-              <span className="hidden sm:inline">Voltar ao Acervo</span>
-            </button>
+      <div className="archive-reader__inner">
+        <header className="archive-reader__masthead">
+          <button type="button" onClick={handleBack} className="archive-reader__back">
+            <ArrowLeft size={17} aria-hidden="true" />
+            <span>Voltar ao acervo</span>
+          </button>
 
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-sm sm:text-base font-cinzel font-bold text-ink line-clamp-1">
-                  {item.title}
-                </h1>
-                {isExclusive ? (
-                  <span className="px-2 py-0.5 rounded text-xs font-semibold bg-ocre-tint text-rubrica border border-ocre/35 flex items-center gap-1 shrink-0">
-                    <Shield size={11} aria-hidden="true" /> Exclusivo
-                  </span>
-                ) : (
-                  <span className="px-2 py-0.5 rounded text-xs font-semibold bg-verdete-tint text-verdete border border-verdete/35 flex items-center gap-1 shrink-0">
-                    <FileText size={11} aria-hidden="true" /> Domínio Público
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-ink-soft font-serif italic truncate mt-0.5">
-                {item.author} ({item.year}) • {item.pages} páginas
-              </p>
-            </div>
+          <div className="archive-reader__titleblock">
+            <h1>{item.title}</h1>
+            <p>
+              <span>{item.author || 'Autoria não identificada'}</span>
+              <span aria-hidden="true">·</span>
+              <span>{item.year}</span>
+              <span aria-hidden="true">·</span>
+              <span>{item.pages} páginas no registro</span>
+            </p>
           </div>
 
-          {/* Download button for free documents */}
-          {!isExclusive && item.downloadUrl && (
-            <a
-              href={item.downloadUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Baixar PDF completo de ${item.title}`}
-              className="px-4 py-2.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-semibold text-xs transition flex items-center gap-2 self-start sm:self-auto shadow-md min-h-[44px]"
-            >
-              <Download size={15} aria-hidden="true" />
-              <span>Baixar PDF Completo</span>
-            </a>
-          )}
-        </div>
+          <div className="archive-reader__mast-actions">
+            <span className={`archive-reader__access archive-reader__access--${isExclusive ? 'restricted' : 'open'}`}>
+              {isExclusive ? <Shield size={14} aria-hidden="true" /> : <FileText size={14} aria-hidden="true" />}
+              {isExclusive ? 'Consulta reservada' : 'Consulta aberta'}
+            </span>
+            {item.downloadUrl && (!isExclusive || hasAccess) && (
+              <a
+                href={item.downloadUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Baixar fac-símile completo de ${item.title}`}
+                className="archive-reader__download"
+              >
+                <Download size={15} aria-hidden="true" />
+                <span>Baixar fac-símile</span>
+              </a>
+            )}
+          </div>
+        </header>
 
-        {/* Access check / Paywall */}
         {!hasAccess ? (
-          <div className="p-8 sm:p-12 rounded-2xl bg-gradient-to-b from-paper-700 to-paper-600 border border-rule text-center space-y-6 shadow-2xl">
-            <div className="w-16 h-16 rounded-full bg-ocre-tint/80 border border-rubrica/50 text-rubrica flex items-center justify-center mx-auto shadow-lg">
-              <Lock size={32} aria-hidden="true" />
-            </div>
-
-            <div className="max-w-xl mx-auto space-y-2">
-              <h2 className="text-2xl font-cinzel font-bold text-ink">
-                Material Restrito a Membros Assinantes
-              </h2>
-              <p className="text-sm leading-relaxed text-ink-soft">
-                Este documento faz parte da coleção reservada de <strong>Adversus Omnes</strong>. A
-                assinatura abre o acervo digital completo no leitor protegido, com a ficha de
-                proveniência de cada peça.
-              </p>
-            </div>
-
-            <div className="p-4 max-w-lg mx-auto bg-paper-600 border border-rule rounded-xl text-left text-xs space-y-2 text-ink-soft">
-              <div className="font-semibold text-ocre flex items-center gap-1.5">
-                <Sparkles size={14} aria-hidden="true" /> Vantagens da Assinatura:
-              </div>
-              <ul className="space-y-1 text-ink-soft">
-                <li>• Acervo digital completo, incluindo os documentos reservados a assinantes</li>
-                <li>• Leitor protegido com marca de proveniência e modo de texto acessível</li>
-                <li>• 15% a 20% de desconto em todo o acervo físico</li>
-                <li>• Ensaios e notas de pesquisa exclusivos do clube</li>
-              </ul>
-            </div>
-
-            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
-              <button
-                type="button"
-                onClick={() => startSubscriptionCheckout(plans[1] || plans[0])}
-                className="px-6 py-3.5 rounded-lg bg-rubrica hover:bg-rubrica-deep text-paper-800 font-bold text-sm transition shadow-xl flex items-center justify-center gap-2 min-h-[44px]"
-              >
-                <span>Assinar Plano Pesquisador (R$ 59,90/mês)</span>
-              </button>
-              <button
-                type="button"
-                onClick={onBack}
-                className="px-5 py-3.5 rounded-lg bg-paper-400 text-ink-soft text-sm hover:bg-paper-300 transition min-h-[44px]"
-              >
-                Explorar Acervo Aberto
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* Authorized Reader Canvas with Security Controls */
-          <div
-            ref={viewerContainerRef}
-            className={`bg-paper-600 border border-rule rounded-xl overflow-hidden shadow-2xl flex flex-col ${
-              isFullscreen ? 'fixed inset-0 z-50 rounded-none' : ''
-            }`}
-          >
-            {/* Reader Toolbar */}
-            <div className="bg-paper-700 px-4 py-2.5 border-b border-rule-faint flex flex-wrap items-center justify-between gap-3 text-xs">
-              {/* Pagination controls with 44px min-touch */}
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={currentPage <= 1}
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  aria-label="Página anterior"
-                  className="p-2.5 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink-soft disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
-                >
-                  <ChevronLeft size={18} aria-hidden="true" />
-                </button>
-                <span className="text-ink-soft font-medium">
-                  Pág. <strong className="text-ink">{currentPage}</strong> de {totalPages}
-                </span>
-                <button
-                  type="button"
-                  disabled={currentPage >= totalPages}
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  aria-label="Próxima página"
-                  className="p-2.5 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink-soft disabled:opacity-40 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
-                >
-                  <ChevronRight size={18} aria-hidden="true" />
-                </button>
-              </div>
-
-              {/* Security indicator for exclusive */}
-              {isExclusive && (
-                <div
-                  className="flex items-center gap-2 rounded-full border border-ocre/35 bg-ocre-tint/40 px-3 py-1.5 text-[11px] text-ocre"
-                  title="A página é desenhada em tela e marcada com sua identidade. Isso dificulta a extração casual, mas não impede captura de tela."
-                >
-                  <Shield size={13} className="text-rubrica" aria-hidden="true" />
-                  <span>Leitor protegido • página marcada com sua identidade</span>
+          <section className="archive-reader__gate" aria-labelledby="reader-gate-title">
+            <div className="archive-reader__gate-preview" aria-hidden="true">
+              <div className="archive-reader__gate-folio">
+                <p>Adversus Omnes · Cota {item.id.toUpperCase()}</p>
+                <h3>{item.title}</h3>
+                <span>{item.author}</span>
+                <div className="archive-reader__redactions">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
                 </div>
-              )}
-
-              {/* Zoom & Screen Controls */}
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setZoom(prev => Math.max(70, prev - 15))}
-                  aria-label="Diminuir zoom da leitura"
-                  className="p-2.5 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink-soft min-h-[44px] min-w-[44px] flex items-center justify-center"
-                >
-                  <ZoomOut size={16} aria-hidden="true" />
-                </button>
-                <span className="text-ink-soft w-12 text-center">{zoom}%</span>
-                <button
-                  type="button"
-                  onClick={() => setZoom(prev => Math.min(150, prev + 15))}
-                  aria-label="Aumentar zoom da leitura"
-                  className="p-2.5 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink-soft min-h-[44px] min-w-[44px] flex items-center justify-center"
-                >
-                  <ZoomIn size={16} aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTextMode(v => !v)}
-                  aria-pressed={textMode}
-                  aria-label={textMode ? 'Ver a página desenhada' : 'Ler em texto acessível'}
-                  title={textMode ? 'Ver a página desenhada' : 'Ler em texto acessível'}
-                  className={`flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2.5 transition ${
-                    textMode
-                      ? 'bg-rubrica text-paper-800'
-                      : 'bg-paper-600 text-ink-soft hover:bg-paper-300'
-                  }`}
-                >
-                  {textMode ? <ImageIcon size={16} aria-hidden="true" /> : <Type size={16} aria-hidden="true" />}
-                </button>
-                <button
-                  type="button"
-                  onClick={toggleFullscreen}
-                  aria-label={isFullscreen ? 'Sair da tela cheia' : 'Entrar em tela cheia'}
-                  className="p-2.5 rounded-lg bg-paper-600 hover:bg-paper-300 text-ink-soft ml-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                >
-                  <Maximize2 size={16} aria-hidden="true" />
-                </button>
+                <div className="archive-reader__gate-stamp">
+                  <Lock size={20} />
+                  Acesso reservado
+                </div>
               </div>
             </div>
 
-            {/* Página: desenhada em tela, ou em texto corrido quando pedido */}
-            <div
-              ref={pageFrameRef}
-              className={`ch-reader-stage flex-1 overflow-auto p-2 sm:p-8 flex justify-center items-start sm:items-center user-select-none max-w-full ${
-                isExclusive ? 'select-none pointer-events-auto' : ''
-              }`}
-            >
-              <div
-                style={transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : undefined}
-                className={`ch-reader-sheet relative max-w-full overflow-hidden ${
-                  textMode ? 'w-full' : ''
-                }`}
-              >
-                {textMode ? (
-                  <article className="ch-reader-page">
-                    <p className="ch-reader-kicker">
-                      Adversus Omnes — Bibliotheca et Archivum
-                    </p>
-                    <h2 className="ch-reader-title">{item.title}</h2>
-                    <p className="ch-reader-byline">{item.author || 'Arquivo Histórico'}</p>
-                    <h3 className="ch-reader-section">{activePage.title}</h3>
-                    <div className="ch-reader-body">
-                      {activePage.content
-                        .split(/\n+/)
-                        .map(part => part.trim())
-                        .filter(Boolean)
-                        .map((part, index) => (
-                          <p key={index}>{part}</p>
-                        ))}
-                    </div>
-                    <p className="ch-reader-colophon">
-                      Página {currentPage} de {totalPages} · Ano {item.year} · Proveniência:{' '}
-                      {item.publisher || 'Arquivo Adversus Omnes'}
-                      {isExclusive && ` · Licenciado para ${currentUser.name} (${currentUser.email})`}
-                    </p>
-                  </article>
-                ) : (
-                  <>
-                    <canvas
-                      ref={canvasRef}
-                      role="img"
-                      aria-label={`Página ${currentPage} de ${totalPages} de ${item.title}, desenhada em tela. Use "Ler em texto acessível" na barra do leitor para o conteúdo em texto.`}
-                      className="mx-auto block h-auto max-w-full rounded transition-transform"
-                    />
+            <div className="archive-reader__gate-copy">
+              <span className="archive-reader__gate-lock" aria-hidden="true">
+                <Lock size={22} />
+              </span>
+              <h2 id="reader-gate-title">Esta peça exige credencial de consulta.</h2>
+              <p>
+                O documento pertence à coleção reservada do Adversus Omnes. A assinatura libera a
+                leitura integral disponível no protótipo, com marca nominal e alternativa em texto
+                acessível.
+              </p>
 
-                    {/* O conteúdo da página também chega a quem lê por leitor de
-                        tela, sem alterar a composição visual. */}
-                    <div className="sr-only">
-                      <h2>{item.title}</h2>
-                      <h3>{activePage.title}</h3>
-                      <p>{activePage.content}</p>
-                    </div>
+              <dl className="archive-reader__gate-register">
+                <div>
+                  <dt>Fundo</dt>
+                  <dd>{item.publisher || 'Arquivo Adversus Omnes'}</dd>
+                </div>
+                <div>
+                  <dt>Período</dt>
+                  <dd>{item.period}</dd>
+                </div>
+                <div>
+                  <dt>Movimento</dt>
+                  <dd>{item.politicalMovement}</dd>
+                </div>
+              </dl>
 
-                    {isExclusive && (
-                      <div className="pointer-events-none absolute bottom-1.5 left-0 right-0 truncate px-2 text-center font-mono text-xs text-ink-faint">
-                        Licenciado para: {currentUser.name} ({currentUser.email})
-                      </div>
-                    )}
-                  </>
+              <div className="archive-reader__gate-benefits">
+                <h3>A credencial inclui</h3>
+                <ul>
+                  <li>acervo digital reservado e ensaios de pesquisa;</li>
+                  <li>modo de leitura em tela e versão textual acessível;</li>
+                  <li>marca de proveniência vinculada à conta;</li>
+                  <li>benefícios previstos no plano para o acervo físico.</li>
+                </ul>
+              </div>
+
+              <div className="archive-reader__gate-actions">
+                <button
+                  type="button"
+                  onClick={() => preferredPlan && startSubscriptionCheckout(preferredPlan)}
+                  disabled={!preferredPlan}
+                >
+                  <span>Solicitar credencial</span>
+                  {preferredPlan && <small>{preferredPlan.name}{planPrice ? ` · ${planPrice}/mês` : ''}</small>}
+                </button>
+                <button type="button" onClick={handleBack}>
+                  Consultar o acervo aberto
+                </button>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section
+            ref={viewerContainerRef}
+            className={`archive-reader__workspace ${isFullscreen ? 'archive-reader__workspace--fullscreen' : ''}`}
+            aria-label={`Leitor de ${item.title}`}
+          >
+            <aside className="archive-reader__catalogue" aria-label="Ficha catalográfica e páginas">
+              <div className="archive-reader__catalogue-head">
+                <h2>Ficha da peça</h2>
+                <span>Cota {item.id.toUpperCase()}</span>
+              </div>
+
+              <dl className="archive-reader__metadata">
+                <div>
+                  <dt>Autoria</dt>
+                  <dd>{item.author || 'Não identificada'}</dd>
+                </div>
+                <div>
+                  <dt>Datação</dt>
+                  <dd>{item.year}</dd>
+                </div>
+                <div>
+                  <dt>Fundo / edição</dt>
+                  <dd>{item.publisher || 'Arquivo Adversus Omnes'}</dd>
+                </div>
+                <div>
+                  <dt>Classificação</dt>
+                  <dd>{item.politicalMovement}</dd>
+                </div>
+                {item.event && (
+                  <div>
+                    <dt>Contexto</dt>
+                    <dd>{item.event}</dd>
+                  </div>
                 )}
+                <div>
+                  <dt>Extensão</dt>
+                  <dd>{item.pages} páginas no registro</dd>
+                </div>
+              </dl>
+
+              <nav className="archive-reader__leaves" aria-label="Páginas disponíveis nesta leitura">
+                <h3>Páginas nesta leitura</h3>
+                <ol>
+                  {pages.map((page, index) => (
+                    <li key={`${page.pageNumber}-${page.title}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentPage(index + 1)}
+                        aria-current={currentPage === index + 1 ? 'page' : undefined}
+                      >
+                        <span>{String(page.pageNumber).padStart(2, '0')}</span>
+                        <strong>{page.title}</strong>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+
+              <div className={`archive-reader__notice archive-reader__notice--${isExclusive ? 'restricted' : 'open'}`}>
+                {isExclusive ? <Shield size={16} aria-hidden="true" /> : <FileText size={16} aria-hidden="true" />}
+                <p>
+                  {isExclusive
+                    ? 'Camada dissuasória: a folha recebe marca nominal, mas capturas de tela continuam possíveis.'
+                    : 'Documento aberto. A transcrição pode ser selecionada no modo de texto.'}
+                </p>
+              </div>
+            </aside>
+
+            <div className="archive-reader__surface">
+              <div className="archive-reader__toolbar" role="toolbar" aria-label="Ferramentas de leitura">
+                <div className="archive-reader__page-controls" role="group" aria-label="Navegação entre páginas">
+                  <button
+                    type="button"
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage(previous => Math.max(1, previous - 1))}
+                    aria-label="Página anterior"
+                  >
+                    <ChevronLeft size={18} aria-hidden="true" />
+                  </button>
+                  <span className="archive-reader__page-count" aria-live="polite">
+                    <span>Página</span>
+                    <strong>{String(currentPage).padStart(2, '0')}</strong>
+                    <span>de {String(totalPages).padStart(2, '0')}</span>
+                  </span>
+                  <button
+                    type="button"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage(previous => Math.min(totalPages, previous + 1))}
+                    aria-label="Próxima página"
+                  >
+                    <ChevronRight size={18} aria-hidden="true" />
+                  </button>
+                </div>
+
+                <p className="archive-reader__active-leaf" title={activePage.title}>
+                  {activePage.title}
+                </p>
+
+                <div className="archive-reader__tools">
+                  <div className="archive-reader__zoom" role="group" aria-label="Ampliação da página">
+                    <button
+                      type="button"
+                      disabled={zoom <= 70}
+                      onClick={() => setZoom(previous => Math.max(70, previous - 15))}
+                      aria-label="Diminuir zoom da leitura"
+                    >
+                      <ZoomOut size={16} aria-hidden="true" />
+                    </button>
+                    <output aria-live="polite">{zoom}%</output>
+                    <button
+                      type="button"
+                      disabled={zoom >= 150}
+                      onClick={() => setZoom(previous => Math.min(150, previous + 15))}
+                      aria-label="Aumentar zoom da leitura"
+                    >
+                      <ZoomIn size={16} aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setTextMode(value => !value)}
+                    aria-pressed={textMode}
+                    className={`archive-reader__mode ${textMode ? 'archive-reader__mode--active' : ''}`}
+                  >
+                    {textMode ? <ImageIcon size={16} aria-hidden="true" /> : <Type size={16} aria-hidden="true" />}
+                    <span>{textMode ? 'Ver folha' : 'Texto acessível'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={toggleFullscreen}
+                    aria-label={isFullscreen ? 'Sair da tela cheia' : 'Entrar em tela cheia'}
+                    className="archive-reader__fullscreen"
+                  >
+                    {isFullscreen ? <Minimize2 size={16} aria-hidden="true" /> : <Maximize2 size={16} aria-hidden="true" />}
+                    <span>{isFullscreen ? 'Sair' : 'Tela cheia'}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div
+                ref={pageFrameRef}
+                className={`archive-reader__stage ch-reader-stage ${isExclusive ? 'user-select-none' : ''}`}
+              >
+                <div
+                  key={`${item.id}-${currentPage}-${textMode ? 'texto' : 'folha'}`}
+                  style={{
+                    ...(transitioningCoverId === item.id ? { viewTransitionName: 'codex-cover' } : {}),
+                    ...(textMode
+                      ? {
+                          width: `${frameWidth * (zoom / 100)}px`,
+                          fontSize: `${zoom / 100}rem`
+                        }
+                      : {})
+                  }}
+                  className="ch-reader-sheet"
+                >
+                  {textMode ? (
+                    <article className="ch-reader-page">
+                      <h2 className="ch-reader-title">{item.title}</h2>
+                      <p className="ch-reader-byline">{item.author || 'Arquivo Histórico'}</p>
+                      <h3 className="ch-reader-section">{activePage.title}</h3>
+                      <div className="ch-reader-body">
+                        {activePage.content
+                          .split(/\n+/)
+                          .map(part => part.trim())
+                          .filter(Boolean)
+                          .map((part, index) => (
+                            <p key={index}>{part}</p>
+                          ))}
+                      </div>
+                      <p className="ch-reader-colophon">
+                        Página {currentPage} de {totalPages} · Ano {item.year} · Proveniência:{' '}
+                        {item.publisher || 'Arquivo Adversus Omnes'}
+                        {isExclusive && ` · Licenciado para ${currentUser.name} (${currentUser.email})`}
+                      </p>
+                    </article>
+                  ) : (
+                    <>
+                      <canvas
+                        ref={canvasRef}
+                        role="img"
+                        aria-label={`Página ${currentPage} de ${totalPages} de ${item.title}, desenhada em tela. Use o controle Texto acessível para ler a transcrição.`}
+                        className="archive-reader__canvas"
+                      />
+
+                      <div className="sr-only">
+                        <h2>{item.title}</h2>
+                        <h3>{activePage.title}</h3>
+                        <p>{activePage.content}</p>
+                      </div>
+
+                      {isExclusive && (
+                        <div className="archive-reader__license">
+                          Licenciado para {currentUser.name} · {currentUser.email}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         )}
       </div>
     </div>

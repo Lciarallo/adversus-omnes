@@ -230,7 +230,7 @@ export const DigitalCatalog: React.FC = () => {
                   <span>{isExclusive && !isUnlocked ? 'Ver Prévia Protegida' : 'Abrir no Leitor'}</span>
                 </button>
 
-                {!isExclusive && item.downloadUrl && (
+                {item.downloadUrl && (!isExclusive || isUnlocked) && (
                   <a
                     href={item.downloadUrl}
                     target="_blank"

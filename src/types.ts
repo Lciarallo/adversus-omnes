@@ -37,6 +37,7 @@ export type CatalogType = 'physical' | 'digital' | 'historical_doc';
 export type AccessType = 'free' | 'exclusive' | 'sale';
 
 export interface PdfPage {
+  /** Página do volume digitalizado quando a obra tem `scan`; senão, a ordem da folha. */
   pageNumber: number;
   title: string;
   content: string;
@@ -66,6 +67,8 @@ export interface CatalogItem {
   downloadUrl?: string;
   googleDriveId?: string;
   embedUrl?: string;
+  /** Volume digitalizado página a página: `${path}/p001.webp` … */
+  scan?: { pageCount: number; path: string };
   isFeatured?: boolean;
 }
 

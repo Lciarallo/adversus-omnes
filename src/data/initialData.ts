@@ -485,6 +485,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Panorama Civilizacional e Crítica Histórica',
     googleDriveId: '1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j',
     embedUrl: 'https://drive.google.com/file/d/1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j/preview',
+    scan: { pageCount: 288, path: '/documents/cat-11/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1BMINLmZbwpxZiddU1r3ks-FmCZnCXx6j&export=download',
     pdfPages: [
       {
@@ -500,19 +501,19 @@ export const INITIAL_CATALOG: CatalogItem[] = [
         content: 'Na penumbra das velhas catedrais e sob o silêncio denso das florestas renanas, a cavalaria forjava a sua armadura espiritual. A espada do rei Dagoberto não era um mero instrumento de conquista territorial, mas o símbolo do dever supremo da autoridade: proteger os deserdados e submeter a força bruta à honra inabalável.'
       },
       {
-        pageNumber: 3,
+        pageNumber: 4,
         title: 'Frontispício Oficial (Livraria José Olympio)',
         imageUrl: '/documents/cat-11/page_3.webp',
         content: 'Nas cortes de Florença e Ferrara, entre brocados e intrigas secretas, o Renascimento despontava sob a duplicidade do fausto e da traição palaciana. As palavras sussurradas em latim humanista valiam mais do que punhais de ferro, selando o destino de principados inteiros.'
       },
       {
-        pageNumber: 4,
+        pageNumber: 5,
         title: 'Dedicatória a Domício da Gama',
         imageUrl: '/documents/cat-11/page_4.webp',
         content: 'À memória do meu querido amigo DOMÍCIO DA GAMA, que tanto amou o Brasil e as suas tradições. As caravelas portuguesas romperam as brumas do mar ignoto para plantar o padrão das quinas na praia bravia da Terra de Santa Cruz.'
       },
       {
-        pageNumber: 5,
+        pageNumber: 6,
         title: 'Epígrafe Histórica e Abertura',
         imageUrl: '/documents/cat-11/page_5.webp',
         content: '«Pour l\'imagination guidée par l\'étude, il n\'y a point de passé mort.» 1914. Nas trincheiras frias dos Balcãs, onde o ferro e a fumaça de artilharia dilaceravam as esperanças do século, a lenda guerreira de Marko Kralievitch ecoava no canto dos soldados.'
@@ -539,6 +540,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Atuação Parlamentar e Resistência Democrática Pós-1937',
     googleDriveId: '1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8',
     embedUrl: 'https://drive.google.com/file/d/1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8/preview',
+    scan: { pageCount: 178, path: '/documents/cat-12/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1ycOOdufF47_0QWYFvAjo9L5FJJSk2QP8&export=download',
     pdfPages: [
       {
@@ -593,6 +595,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Tenentismo, Revolução de 1930 e Revolução Constitucionalista de 1932',
     googleDriveId: '1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS',
     embedUrl: 'https://drive.google.com/file/d/1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS/preview',
+    scan: { pageCount: 345, path: '/documents/cat-13/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1fs_2Bj5CtoN8WLbCKiocBcUTLPiBLXRS&export=download',
     pdfPages: [
       {
@@ -614,13 +617,13 @@ export const INITIAL_CATALOG: CatalogItem[] = [
         content: 'Voz do Oeste — Coleção de Obras Clássicas do Pensamento Brasileiro, editada em convênio com o Instituto Nacional do Livro (MEC).'
       },
       {
-        pageNumber: 4,
+        pageNumber: 5,
         title: 'Frontispício Oficial',
         imageUrl: '/documents/cat-13/page_4.webp',
         content: 'Plínio Salgado — O CAVALEIRO DE ITARARÉ, 5ª edição. Com notas explicativas e contextualização histórica dos combates de Itararé, da marcha da Coluna e da epopeia de 1932.'
       },
       {
-        pageNumber: 5,
+        pageNumber: 7,
         title: 'Sumário Biobibliográfico',
         imageUrl: '/documents/cat-13/page_5.webp',
         content: 'SUMÁRIO: Biobibliografia de Plínio Salgado (organizada por G. Rocha Dórea); Prefácio; Capítulo I — Os 18 do Forte; Capítulo II — Pelo sertão em marcha; Capítulo III — A névoa de Itararé.'
@@ -647,6 +650,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Construção de Brasília e Interiorização da República',
     googleDriveId: '1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P',
     embedUrl: 'https://drive.google.com/file/d/1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P/preview',
+    scan: { pageCount: 191, path: '/documents/cat-14/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1uNvQr8EWlIrlgPU1wrK3eW_X9MhSWY6P&export=download',
     pdfPages: [
       {
@@ -701,6 +705,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Debates do Pós-Guerra e Doutrina Social do Homem Integral',
     googleDriveId: '1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09',
     embedUrl: 'https://drive.google.com/file/d/1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09/preview',
+    scan: { pageCount: 168, path: '/documents/cat-15/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1a6e7gaa6aa3-cO6iGJjv-ri3Lk64wI09&export=download',
     pdfPages: [
       {
@@ -755,6 +760,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Formação Cívica da Juventude e Literatura de Brasilidade',
     googleDriveId: '1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3',
     embedUrl: 'https://drive.google.com/file/d/1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3/preview',
+    scan: { pageCount: 130, path: '/documents/cat-16/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1yfmq2xHM-gdalZbH2-S5P6exskuaO8Q3&export=download',
     pdfPages: [
       {
@@ -770,19 +776,19 @@ export const INITIAL_CATALOG: CatalogItem[] = [
         content: 'NOSSO BRASIL: «São às centenas os livros voltados para a formação da nossa juventude... Toda a minha preocupação aqui é formar brasileiros pelo coração, pelo estímulo às virtudes.»'
       },
       {
-        pageNumber: 3,
+        pageNumber: 4,
         title: 'Frontispício da 4ª Edição',
         imageUrl: '/documents/cat-16/page_3.webp',
         content: 'PLÍNIO SALGADO — NOSSO BRASIL, 1.ª série: HISTÓRIA. Prefácio do Deputado Arruda Camargo. Editora Voz do Oeste, São Paulo, 1981.'
       },
       {
-        pageNumber: 4,
+        pageNumber: 5,
         title: 'Ficha Técnica e Créditos da Obra de Arte',
         imageUrl: '/documents/cat-16/page_4.webp',
         content: 'CAPA: Regina Helena Garcia Dórea utilizando reprodução da "Primeira Missa no Brasil" de Victor Meirelles. Edição subsidiada pela Secretaria de Cultura de São Paulo.'
       },
       {
-        pageNumber: 5,
+        pageNumber: 6,
         title: 'Sumário da 1ª Série: História',
         imageUrl: '/documents/cat-16/page_5.webp',
         content: 'SUMÁRIO: Apresentação; Prefácio de Arruda Camargo; Aos pais e educadores; Capítulo I — A Terra Abençoada; Capítulo II — A marcha dos rios; Capítulo III — O culto aos antepassados.'
@@ -809,6 +815,7 @@ export const INITIAL_CATALOG: CatalogItem[] = [
     event: 'Viagem ao Mediterrâneo e Meditações Históricas',
     googleDriveId: '1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy',
     embedUrl: 'https://drive.google.com/file/d/1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy/preview',
+    scan: { pageCount: 151, path: '/documents/cat-17/scan' },
     downloadUrl: 'https://drive.google.com/uc?id=1OWHIZLhOUCgwSqYxFUAPzCedTziw60Xy&export=download',
     pdfPages: [
       {

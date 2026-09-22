@@ -166,7 +166,7 @@ export const transitionState = (fn: () => void) => {
  * semente nova alcance quem já visitou o site antes.                  *
  * ------------------------------------------------------------------ */
 
-const STORAGE_VERSION = '5';
+const STORAGE_VERSION = '6';
 const storageKey = (name: string) => `contraste_${name}`;
 
 const resetStaleStorage = () => {

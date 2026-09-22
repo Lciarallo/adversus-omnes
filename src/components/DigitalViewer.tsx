@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Download,
   Shield,
@@ -19,7 +19,7 @@ import {
   X
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
-import { CatalogItem } from '../types';
+import { CatalogItem, PdfPage } from '../types';
 import { useToast } from './ui/Toast';
 
 export type ReaderViewMode = 'document' | 'facsimile' | 'text';
@@ -32,6 +32,10 @@ interface DigitalViewerProps {
 const MIN_ZOOM = 80;
 const MAX_ZOOM = 200;
 const ZOOM_STEP = 20;
+
+const pad3 = (n: number) => String(n).padStart(3, '0');
+
+type ReaderPage = PdfPage & { transcribed: boolean };
 
 const isNarrowViewport = () => typeof window !== 'undefined' && window.innerWidth < 900;
 
@@ -47,7 +51,7 @@ const readSavedPage = (id: string, total: number) => {
 };
 
 const MODE_LABEL: Record<ReaderViewMode, { full: string; short: string; hint: string }> = {
-  facsimile: { full: 'Folhas', short: 'Folhas', hint: 'Folhas restauradas em alta resolução' },
+  facsimile: { full: 'Folhas', short: 'Folhas', hint: 'Páginas digitalizadas da obra' },
   document: { full: 'Volume integral', short: 'Integral', hint: 'Todas as páginas digitalizadas da obra' },
   text: { full: 'Transcrição', short: 'Texto', hint: 'Transcrição em texto, ajustável e legível por leitores de tela' }
 };
@@ -62,10 +66,27 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
   const pages = item.pdfPages?.length
     ? item.pdfPages
     : [{ pageNumber: 1, title: item.title, content: item.description }];
-  const totalPages = pages.length;
+
+  // Obra com volume digitalizado: navega por todas as páginas do volume e
+  // usa as folhas restauradas (com transcrição) onde houver destaque.
+  const scan = item.scan;
+  const totalPages = scan ? scan.pageCount : pages.length;
+  const highlights = scan ? item.pdfPages ?? [] : pages;
+  const highlightTarget = (page: PdfPage, index: number) => (scan ? page.pageNumber : index + 1);
+  const pageAt = (n: number): ReaderPage => {
+    if (!scan) return { ...(pages[n - 1] || pages[0]), transcribed: true };
+    const highlight = item.pdfPages?.find(p => p.pageNumber === n);
+    return {
+      pageNumber: n,
+      title: highlight?.title ?? `Página ${n}`,
+      content: highlight?.content ?? '',
+      imageUrl: highlight?.imageUrl ?? `${scan.path}/p${pad3(n)}.webp`,
+      transcribed: !!highlight
+    };
+  };
 
   const initialMode = (): ReaderViewMode =>
-    isNarrowViewport() || !documentEmbedUrl ? 'facsimile' : 'document';
+    scan || isNarrowViewport() || !documentEmbedUrl ? 'facsimile' : 'document';
 
   const [viewMode, setViewMode] = useState<ReaderViewMode>(initialMode);
   const [currentPage, setCurrentPage] = useState(() => readSavedPage(item.id, totalPages));
@@ -87,7 +108,8 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
   const isExclusive = item.access === 'exclusive';
   const hasAccess = !isExclusive || currentUser.role === 'subscriber' || currentUser.role === 'admin';
-  const activePage = pages[currentPage - 1] || pages[0];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const activePage = useMemo(() => pageAt(currentPage), [item, currentPage]);
   const isExampleDownload = /(?:^|\/)dummy\.pdf(?:[?#]|$)/i.test(item.downloadUrl || '');
   const preferredPlan = plans[1] || plans[0];
   const planPrice = preferredPlan
@@ -170,6 +192,17 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     setTimeout(() => setTransitioningCoverId(null), 480);
   };
 
+  // Folhas vizinhas pré-carregadas: virar a página não espera a rede.
+  useEffect(() => {
+    if (!scan || !hasAccess || viewMode !== 'facsimile') return;
+    [currentPage + 1, currentPage - 1].forEach(n => {
+      if (n < 1 || n > totalPages) return;
+      const url = pageAt(n).imageUrl;
+      if (url) new Image().src = url;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scan, hasAccess, viewMode, currentPage, totalPages]);
+
   // Restrições de extração no material exclusivo
   useEffect(() => {
     if (!isExclusive || !hasAccess) return;
@@ -243,8 +276,30 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
           renderWatermark(pageWidth * imgAspect);
         };
 
+        const onImageError = () => {
+          if (cancelled) return;
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const w = frameWidth;
+          const h = Math.round(w * 1.4);
+          canvas.width = Math.ceil(w * dpr);
+          canvas.height = Math.ceil(h * dpr);
+          canvas.style.width = `${w}px`;
+          canvas.style.height = `${h}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.fillStyle = '#fbf8f1';
+          ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = '#4a4236';
+          ctx.font = '16px "Spectral", Georgia, serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`Não foi possível carregar a página ${currentPage}.`, w / 2, h / 2 - 10);
+          ctx.fillText('Verifique a conexão e vire a folha para tentar de novo.', w / 2, h / 2 + 16);
+        };
+
         if (img.complete && img.naturalWidth > 0) onImageReady();
-        else img.onload = onImageReady;
+        else {
+          img.onload = onImageReady;
+          img.onerror = onImageError;
+        }
         return;
       }
 
@@ -404,14 +459,15 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
 
   const leafList = (onPick?: () => void) => (
     <ol className="reader-leaves">
-      {pages.map((page, index) => {
-        const isActive = currentPage === index + 1 && paged;
+      {highlights.map((page, index) => {
+        const target = highlightTarget(page, index);
+        const isActive = currentPage === target && paged;
         return (
           <li key={`${page.pageNumber}-${page.title}`}>
             <button
               type="button"
               onClick={() => {
-                goToPage(index + 1);
+                goToPage(target);
                 if (viewMode === 'document') setViewMode('facsimile');
                 onPick?.();
               }}
@@ -426,6 +482,30 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
     </ol>
   );
 
+  const jumpForm = (id: string, onDone?: () => void) =>
+    scan ? (
+      <form
+        className="reader-jump"
+        onSubmit={e => {
+          e.preventDefault();
+          const value = Number(new FormData(e.currentTarget).get('page'));
+          if (!Number.isFinite(value) || value < 1) return;
+          goToPage(Math.round(value));
+          if (viewMode === 'document') setViewMode('facsimile');
+          e.currentTarget.reset();
+          // Solta o campo: as setas do teclado voltam a virar a folha.
+          (document.activeElement as HTMLElement | null)?.blur();
+          onDone?.();
+        }}
+      >
+        <label htmlFor={id}>Ir para a página</label>
+        <div>
+          <input id={id} name="page" type="number" inputMode="numeric" min={1} max={totalPages} placeholder={`1 a ${totalPages}`} />
+          <button type="submit">Ir</button>
+        </div>
+      </form>
+    ) : null;
+
   const register = (
     <dl className="reader-register">
       <div><dt>Registro</dt><dd>{item.id.toUpperCase()}</dd></div>
@@ -434,7 +514,14 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
       <div><dt>Fundo</dt><dd>{item.publisher || 'Arquivo Adversus Omnes'}</dd></div>
       <div><dt>Movimento</dt><dd>{item.politicalMovement}</dd></div>
       {item.event && <div><dt>Contexto</dt><dd>{item.event}</dd></div>}
-      <div><dt>Extensão</dt><dd>{item.pages} páginas no original · {totalPages} em destaque</dd></div>
+      <div>
+        <dt>Extensão</dt>
+        <dd>
+          {scan
+            ? `${scan.pageCount} páginas digitalizadas · ${highlights.length} transcritas`
+            : `${item.pages} páginas no original · ${totalPages} em destaque`}
+        </dd>
+      </div>
     </dl>
   );
 
@@ -530,9 +617,11 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
         >
           {/* Lateral de consulta: índice sempre à mão, ficha sob demanda */}
           <aside className="reader-side" aria-label="Índice e ficha da obra">
+            {jumpForm('reader-jump-side')}
             <nav aria-label="Folhas em destaque">
               <h2 className="reader-side__title">
-                Índice <span>{totalPages} folhas</span>
+                {scan ? 'Destaques' : 'Índice'}
+                <span>{scan ? `${highlights.length} de ${totalPages} págs.` : `${totalPages} folhas`}</span>
               </h2>
               {leafList()}
             </nav>
@@ -577,7 +666,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   <span className="reader-pager__count" aria-live="polite">
                     <strong>{pad(currentPage)}</strong>
                     <span>/ {pad(totalPages)}</span>
-                    <em>{activePage.title}</em>
+                    {(!scan || activePage.transcribed) && <em>{activePage.title}</em>}
                   </span>
                   <button type="button" disabled={currentPage >= totalPages} onClick={() => goToPage(currentPage + 1)} aria-label="Próxima folha">
                     <ChevronRight size={17} aria-hidden="true" />
@@ -625,6 +714,31 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                     loading="lazy"
                   />
                 </div>
+              ) : viewMode === 'text' && !activePage.transcribed ? (
+                <div key={`${item.id}-${currentPage}-sem-texto`} className="ch-reader-sheet ch-reader-sheet--text">
+                  <article className="ch-reader-page reader-untranscribed">
+                    <h2 className="ch-reader-section">Página {currentPage}</h2>
+                    <p>
+                      Esta página ainda não tem transcrição. A imagem digitalizada está completa no modo
+                      Folhas; por enquanto, só as folhas em destaque foram transcritas.
+                    </p>
+                    <button type="button" className="reader-untranscribed__primary" onClick={() => setViewMode('facsimile')}>
+                      <ImageIcon size={15} aria-hidden="true" />
+                      <span>Ver a página {currentPage} digitalizada</span>
+                    </button>
+                    <h3>Páginas transcritas</h3>
+                    <ul>
+                      {highlights.map(h => (
+                        <li key={h.pageNumber}>
+                          <button type="button" onClick={() => goToPage(h.pageNumber)}>
+                            <span>p. {h.pageNumber}</span>
+                            <strong>{h.title}</strong>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </div>
               ) : viewMode === 'text' ? (
                 <div
                   key={`${item.id}-${currentPage}-texto`}
@@ -662,7 +776,7 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                   />
                   <div className="sr-only">
                     <h2>{activePage.title}</h2>
-                    <p>{activePage.content}</p>
+                    <p>{activePage.content || 'Página digitalizada, ainda sem transcrição.'}</p>
                   </div>
                   {isExclusive && (
                     <div className="reader-license">Licenciado para {currentUser.name} · {currentUser.email}</div>
@@ -708,6 +822,8 @@ export const DigitalViewer: React.FC<DigitalViewerProps> = ({ item, onBack }) =>
                 </div>
 
                 <div className="reader-drawer__body">
+                  {jumpForm('reader-jump-drawer', () => setIsIndexOpen(false))}
+                  {scan && <h3 className="reader-drawer__label">Folhas em destaque</h3>}
                   {leafList(() => setIsIndexOpen(false))}
 
                   {paged && (

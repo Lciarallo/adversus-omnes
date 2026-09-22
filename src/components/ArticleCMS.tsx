@@ -19,6 +19,7 @@ import { Dialog } from './ui/Dialog';
 import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
 import { EmptyState } from './ui/EmptyState';
 import { useToast } from './ui/Toast';
+import { formatDate, slugify, todayDateOnly } from '../utils/format';
 
 export const ArticleCMS: React.FC = () => {
   const {
@@ -57,7 +58,6 @@ export const ArticleCMS: React.FC = () => {
     historicalPeriod: 'Século XIX'
   });
 
-  const categories = Array.from(new Set(articles.map(a => a.category)));
 
   const handleOpenNew = () => {
     setEditingArticle(null);
@@ -116,10 +116,14 @@ export const ArticleCMS: React.FC = () => {
 
     const payload = {
       title: formData.title.trim(),
-      slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      slug: slugify(formData.title),
       subtitle: formData.subtitle.trim(),
       authorName: formData.authorName.trim(),
-      publishedAt: new Date().toISOString().split('T')[0],
+      // Editar não republica: a data só muda quando um rascunho vai ao ar.
+      publishedAt:
+        editingArticle && !(editingArticle.status === 'draft' && formData.status === 'published')
+          ? editingArticle.publishedAt
+          : todayDateOnly(),
       readTime: formData.readTime.trim() || '5 min',
       category: formData.category,
       tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
@@ -138,11 +142,11 @@ export const ArticleCMS: React.FC = () => {
     setIsEditorOpen(false);
   };
 
-  const filteredArticles = articles.filter(a => {
-    if (selectedCategory !== 'all' && a.category !== selectedCategory) return false;
-    if (currentUser.role !== 'admin' && a.status === 'draft') return false;
-    return true;
-  });
+  const visibleArticles = articles.filter(a => isAdmin || a.status !== 'draft');
+  const categories = Array.from(new Set(visibleArticles.map(a => a.category)));
+  const filteredArticles = visibleArticles.filter(
+    a => selectedCategory === 'all' || a.category === selectedCategory
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
@@ -180,7 +184,7 @@ export const ArticleCMS: React.FC = () => {
             <div className="flex items-center justify-between text-xs text-ink-soft pt-2">
               <div>
                 Por <strong className="text-ink">{selectedArticle.authorName}</strong> em{' '}
-                {new Date(selectedArticle.publishedAt).toLocaleDateString('pt-BR')}
+                {formatDate(selectedArticle.publishedAt)}
               </div>
 
               <div className="flex items-center gap-2">
@@ -340,7 +344,7 @@ export const ArticleCMS: React.FC = () => {
 
                   <div className="p-5 space-y-2.5">
                     <div className="flex items-center gap-2 text-[11px] text-ink-soft font-mono">
-                      <span>{new Date(art.publishedAt).toLocaleDateString('pt-BR')}</span>
+                      <span>{formatDate(art.publishedAt)}</span>
                       <span>•</span>
                       <span>{art.readTime}</span>
                     </div>

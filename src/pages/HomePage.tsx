@@ -78,9 +78,15 @@ export const HomePage: React.FC = () => {
                   <p>{leadPhysical.description}</p>
                   <div>
                     <strong>R$ {leadPhysical.price.toFixed(2)}</strong>
-                    <button type="button" onClick={() => addToCart(leadPhysical)}>
-                      Adicionar à sacola <ArrowRight size={14} aria-hidden="true" />
-                    </button>
+                    {leadPhysical.stock > 0 ? (
+                      <button type="button" onClick={() => addToCart(leadPhysical)}>
+                        Adicionar à sacola <ArrowRight size={14} aria-hidden="true" />
+                      </button>
+                    ) : (
+                      <button type="button" disabled>
+                        Esgotado
+                      </button>
+                    )}
                   </div>
                 </div>
               </article>
@@ -97,7 +103,12 @@ export const HomePage: React.FC = () => {
                     </div>
                     <div className="physical-register__action">
                       <strong>R$ {item.price.toFixed(2)}</strong>
-                      <button type="button" onClick={() => addToCart(item)} aria-label={`Adicionar ${item.title} à sacola`}>
+                      <button
+                        type="button"
+                        onClick={() => addToCart(item)}
+                        disabled={item.stock <= 0}
+                        aria-label={item.stock > 0 ? `Adicionar ${item.title} à sacola` : `${item.title} está esgotado`}
+                      >
                         <BookMarked size={17} aria-hidden="true" />
                       </button>
                     </div>
@@ -156,10 +167,9 @@ export const HomePage: React.FC = () => {
 
           <div className="author-index" role="list">
             {featuredAuthors.map((author, index) => (
+              <div key={author.id} role="listitem">
               <button
-                key={author.id}
                 type="button"
-                role="listitem"
                 onClick={() => {
                   setSelectedAuthor(author);
                   goTo('autores');
@@ -172,6 +182,7 @@ export const HomePage: React.FC = () => {
                 <span>{author.period}</span>
                 <ArrowRight size={17} aria-hidden="true" />
               </button>
+              </div>
             ))}
           </div>
         </section>

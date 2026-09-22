@@ -20,8 +20,10 @@ export const InfinitePayModal: React.FC = () => {
     setIsInfinitePayModalOpen,
     checkoutType,
     checkoutPlan,
+    checkoutCycle,
     cartTotal,
     selectedShipping,
+    hasFreeShipping,
     createOrder,
     subscribeUser,
     infinitePayConfig,
@@ -55,7 +57,16 @@ export const InfinitePayModal: React.FC = () => {
     installments: '1'
   });
 
-  const totalToPay = checkoutType === 'subscription' && checkoutPlan ? checkoutPlan.priceMonthly : cartTotal;
+  const [addressError, setAddressError] = useState<string | null>(null);
+
+  const isYearly = checkoutCycle === 'yearly';
+  const totalToPay =
+    checkoutType === 'subscription' && checkoutPlan
+      ? isYearly
+        ? checkoutPlan.priceYearly
+        : checkoutPlan.priceMonthly
+      : cartTotal;
+  const needsShipping = checkoutType === 'cart' && !hasFreeShipping && !selectedShipping;
 
   const demoPixPayload = `00020126580014br.gov.bcb.pix0136${infinitePayConfig.walletId}520400005303986540${totalToPay.toFixed(
     2
@@ -71,39 +82,62 @@ export const InfinitePayModal: React.FC = () => {
     }
   };
 
+  const validateAddress = (): string | null => {
+    if (address.cep.replace(/\D/g, '').length !== 8) return 'Informe um CEP com 8 dígitos.';
+    const missing = [
+      [address.street, 'rua'],
+      [address.number, 'número'],
+      [address.neighborhood, 'bairro'],
+      [address.city, 'cidade']
+    ].find(([value]) => !value.trim());
+    if (missing) return `Preencha o campo ${missing[1]} do endereço de entrega.`;
+    if (!/^[A-Za-z]{2}$/.test(address.state.trim())) return 'Informe a UF com duas letras, como SP.';
+    return null;
+  };
+
   const handleConfirmPayment = () => {
+    if (isProcessing) return;
+    if (checkoutType === 'cart') {
+      if (needsShipping) return;
+      const problem = validateAddress();
+      setAddressError(problem);
+      if (problem) return;
+    }
     setIsProcessing(true);
 
-    setTimeout(async () => {
+    setTimeout(() => {
+      // O registro vem antes de qualquer efeito visual: a comemoração é
+      // opcional, o pedido não.
+      if (checkoutType === 'subscription' && checkoutPlan) {
+        subscribeUser(checkoutPlan.name, checkoutCycle);
+      } else {
+        const order = createOrder({
+          address: { ...address, state: address.state.trim().toUpperCase() },
+          paymentMethod
+        });
+        setConfirmedOrderId(order.id);
+      }
       setIsProcessing(false);
       setIsSuccess(true);
 
-      // Confete só é baixado quando há o que comemorar.
-      try {
-        const { default: confetti } = await import('canvas-confetti');
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-        }
-      } catch {
-        // A comemoração é opcional; o pedido não depende dela.
-      }
-
-      if (checkoutType === 'subscription' && checkoutPlan) {
-        subscribeUser(checkoutPlan.name);
-      } else {
-        const order = createOrder({
-          address,
-          paymentMethod,
-          shippingMethod: selectedShipping?.service || 'SEDEX',
-          shippingPrice: selectedShipping?.price || 0
-        });
-        setConfirmedOrderId(order.id);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        import('canvas-confetti')
+          .then(({ default: confetti }) =>
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
+          )
+          .catch(() => {
+            // Sem confete, sem problema.
+          });
       }
     }, 1500);
   };
 
   const handleClose = () => {
+    // Fechar no meio da simulação deixaria o pedido nascer com a janela
+    // fechada e o recibo reaparecer na próxima abertura.
+    if (isProcessing) return;
     setIsInfinitePayModalOpen(false);
+    setAddressError(null);
     setIsSuccess(false);
     setConfirmedOrderId(null);
   };
@@ -209,7 +243,9 @@ export const InfinitePayModal: React.FC = () => {
                   {checkoutType === 'subscription' ? 'Plano selecionado' : 'Itens do acervo'}
                 </span>
                 <span className="block truncate text-sm font-semibold text-ink">
-                  {checkoutType === 'subscription' ? checkoutPlan?.name : 'Livros e documentos físicos'}
+                  {checkoutType === 'subscription'
+                    ? `${checkoutPlan?.name ?? ''} · ${isYearly ? 'anual' : 'mensal'}`
+                    : 'Livros e documentos físicos'}
                 </span>
               </div>
               <div className="shrink-0 text-right">
@@ -217,6 +253,9 @@ export const InfinitePayModal: React.FC = () => {
                 <span className="font-cinzel text-lg font-bold tabular-nums text-rubrica">
                   R$ {totalToPay.toFixed(2)}
                 </span>
+                {checkoutType === 'subscription' && (
+                  <span className="block text-[10px] text-ink-soft">{isYearly ? 'por ano' : 'por mês'}</span>
+                )}
               </div>
             </div>
 
@@ -276,26 +315,39 @@ export const InfinitePayModal: React.FC = () => {
                       className={fieldClass}
                     />
                   </div>
-                  <div>
-                    <label htmlFor="ship-city" className="sr-only">Cidade e UF</label>
-                    <input
-                      id="ship-city"
-                      type="text"
-                      autoComplete="address-level2"
-                      placeholder="Cidade - UF"
-                      value={`${address.city} - ${address.state}`}
-                      onChange={e => {
-                        const parts = e.target.value.split('-');
-                        setAddress({
-                          ...address,
-                          city: parts[0]?.trim() || address.city,
-                          state: parts[1]?.trim() || address.state
-                        });
-                      }}
-                      className={fieldClass}
-                    />
+                  <div className="grid grid-cols-[1fr_4.5rem] gap-2">
+                    <div>
+                      <label htmlFor="ship-city" className="sr-only">Cidade</label>
+                      <input
+                        id="ship-city"
+                        type="text"
+                        autoComplete="address-level2"
+                        placeholder="Cidade"
+                        value={address.city}
+                        onChange={e => setAddress({ ...address, city: e.target.value })}
+                        className={fieldClass}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="ship-state" className="sr-only">UF</label>
+                      <input
+                        id="ship-state"
+                        type="text"
+                        autoComplete="address-level1"
+                        placeholder="UF"
+                        maxLength={2}
+                        value={address.state}
+                        onChange={e => setAddress({ ...address, state: e.target.value.toUpperCase() })}
+                        className={`${fieldClass} text-center uppercase`}
+                      />
+                    </div>
                   </div>
                 </div>
+                {addressError && (
+                  <p role="alert" className="text-[11px] text-rubrica-deep">
+                    {addressError}
+                  </p>
+                )}
               </fieldset>
             )}
 
@@ -473,9 +525,14 @@ export const InfinitePayModal: React.FC = () => {
             )}
 
             {/* Confirmação */}
+            {needsShipping && (
+              <p role="alert" className="text-center text-[11px] text-rubrica-deep">
+                Calcule o frete na sacola e escolha uma modalidade dos Correios antes de pagar.
+              </p>
+            )}
             <button
               type="button"
-              disabled={isProcessing}
+              disabled={isProcessing || needsShipping}
               onClick={handleConfirmPayment}
               className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-rubrica px-4 py-3.5 text-sm font-semibold text-paper-800 shadow-lg shadow-rubrica/20 transition hover:bg-rubrica-deep disabled:opacity-50"
             >

@@ -972,7 +972,7 @@ export const INITIAL_ORDERS: Order[] = [
   },
   {
     id: 'ORD-9843',
-    userId: 'user-subscriber',
+    userId: 'user-rodrigo',
     customerName: 'Rodrigo Fonseca Silveira',
     customerEmail: 'rodrigo.fonseca@cultura.org.br',
     items: [

@@ -7,6 +7,8 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { InfinitePayModal } from './components/InfinitePayModal';
 import { HomePage } from './pages/HomePage';
+import { EmptyState } from './components/ui/EmptyState';
+import { BookOpen, Lock } from 'lucide-react';
 
 // Code-splitting with React.lazy for optimized bundle and performance
 const PhysicalCatalog = lazy(() =>
@@ -42,7 +44,14 @@ const ViewLoadingFallback: React.FC = () => (
 );
 
 const AppContent: React.FC = () => {
-  const { activeTab, setActiveTab, selectedReaderItem, catalog } = useStore();
+  const { activeTab, setActiveTab, selectedReaderItem, catalog, currentUser, setRole } = useStore();
+
+  // O leitor abre a versão atual da obra: a cópia guardada ao clicar pode
+  // ter sido editada ou removida pelo administrador desde então.
+  const readerItem =
+    (selectedReaderItem && catalog.find(c => c.id === selectedReaderItem.id)) ||
+    catalog.find(c => c.type === 'digital') ||
+    catalog[0];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -79,15 +88,36 @@ const AppContent: React.FC = () => {
           </Suspense>
         );
       case 'leitor':
+        if (!readerItem) {
+          return (
+            <div className="mx-auto max-w-2xl px-4 py-16">
+              <EmptyState
+                icon={<BookOpen size={22} aria-hidden="true" />}
+                title="Esta obra não está mais no acervo"
+                body="O documento pode ter sido removido do catálogo. O acervo online reúne tudo o que segue disponível para leitura."
+                action={{ label: 'Abrir o acervo online', onClick: () => setActiveTab('digital') }}
+              />
+            </div>
+          );
+        }
         return (
           <Suspense fallback={<ViewLoadingFallback />}>
-            <DigitalViewer
-              item={selectedReaderItem || catalog.find(c => c.type === 'digital') || catalog[0]}
-              onBack={() => setActiveTab('digital')}
-            />
+            <DigitalViewer item={readerItem} onBack={() => setActiveTab('digital')} />
           </Suspense>
         );
       case 'admin':
+        if (currentUser.role !== 'admin') {
+          return (
+            <div className="mx-auto max-w-2xl px-4 py-16">
+              <EmptyState
+                icon={<Lock size={22} aria-hidden="true" />}
+                title="Painel restrito à administração"
+                body="O painel administrativo só abre no perfil de administrador. Nesta demonstração, o perfil pode ser trocado a qualquer momento."
+                action={{ label: 'Entrar como administrador', onClick: () => setRole('admin') }}
+              />
+            </div>
+          );
+        }
         return (
           <Suspense fallback={<ViewLoadingFallback />}>
             <AdminDashboard />

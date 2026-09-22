@@ -15,7 +15,7 @@ import { useStore } from '../context/StoreContext';
 import { EmptyState } from './ui/EmptyState';
 
 export const PhysicalCatalog: React.FC = () => {
-  const { catalog, addToCart, cart, currentUser } = useStore();
+  const { catalog, addToCart, cart, currentUser, subscriberRate } = useStore();
 
   const [search, setSearch] = useState('');
   const [selectedMovement, setSelectedMovement] = useState('all');
@@ -61,12 +61,12 @@ export const PhysicalCatalog: React.FC = () => {
           Exemplares históricos, primeiras tiragens, volumes encadernados em couro com marcas do tempo e edições esgotadas de profunda relevância política e intelectual.
         </p>
 
-        {currentUser.activePlan && (
+        {currentUser.activePlan && subscriberRate > 0 && (
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-verdete-tint/70 border border-verdete/35 text-xs text-verdete">
             <CheckCircle2 size={14} aria-hidden="true" />
             <span>
               Você possui <strong>{currentUser.activePlan}</strong> ativo: desconto automático de{' '}
-              {currentUser.activePlan === 'Membro do Círculo' ? '20%' : '15%'} aplicado na sua sacola!
+              {Math.round(subscriberRate * 100)}% aplicado na sua sacola!
             </span>
           </div>
         )}

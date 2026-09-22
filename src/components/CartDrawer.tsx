@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   X,
   Trash2,
@@ -35,6 +35,7 @@ export const CartDrawer: React.FC = () => {
     setSelectedShipping,
     calculateShipping,
     currentUser,
+    hasFreeShipping,
     startCartCheckout,
     setActiveTab
   } = useStore();
@@ -47,6 +48,17 @@ export const CartDrawer: React.FC = () => {
   const [couponFeedback, setCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
   const close = () => setIsCartOpen(false);
+  const unitCount = cart.reduce((total, entry) => total + entry.quantity, 0);
+  const canCheckout = hasFreeShipping || !!selectedShipping;
+
+  // Sacola esvaziada (inclusive por um pedido concluído): as cotações e o
+  // retorno do cupom da compra anterior não valem mais.
+  useEffect(() => {
+    if (cart.length > 0) return;
+    setShippingQuotes([]);
+    setCouponFeedback(null);
+    setCouponInput('');
+  }, [cart.length]);
 
   const handleCalculateCep = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +83,7 @@ export const CartDrawer: React.FC = () => {
     setCouponFeedback(applyCoupon(couponInput));
   };
 
-  const isFreeShipping = currentUser.activePlan === 'Membro do Círculo';
+  const isFreeShipping = hasFreeShipping;
 
   return (
     <Dialog
@@ -89,11 +101,11 @@ export const CartDrawer: React.FC = () => {
             Sua Sacola de Obras
           </h2>
           <p className="font-serif text-xs italic text-ink-soft">
-            {cart.length === 0
+            {unitCount === 0
               ? 'Nenhum exemplar selecionado'
-              : cart.length === 1
+              : unitCount === 1
               ? '1 exemplar selecionado do acervo'
-              : `${cart.length} exemplares selecionados do acervo`}
+              : `${unitCount} exemplares selecionados do acervo`}
           </p>
         </div>
         <button
@@ -405,13 +417,20 @@ export const CartDrawer: React.FC = () => {
             </div>
           </div>
 
+          {!canCheckout && (
+            <p id="cart-checkout-hint" className="text-center text-[11px] text-ink-soft">
+              Calcule o frete pelo CEP para seguir ao pagamento.
+            </p>
+          )}
           <button
             type="button"
+            disabled={!canCheckout}
+            aria-describedby={canCheckout ? undefined : 'cart-checkout-hint'}
             onClick={() => {
               close();
               startCartCheckout();
             }}
-            className="group flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-rubrica px-4 py-3 text-sm font-semibold text-paper-800 shadow-lg shadow-rubrica/20 transition hover:bg-rubrica-deep"
+            className="group flex min-h-[48px] w-full disabled:cursor-not-allowed disabled:opacity-50 items-center justify-center gap-2 rounded-lg bg-rubrica px-4 py-3 text-sm font-semibold text-paper-800 shadow-lg shadow-rubrica/20 transition hover:bg-rubrica-deep"
           >
             <span>Ir para o checkout</span>
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />

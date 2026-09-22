@@ -15,6 +15,7 @@ import {
 import { useStore } from '../context/StoreContext';
 import { Tabs, TabPanel } from './ui/Tabs';
 import { EmptyState } from './ui/EmptyState';
+import { formatDate } from '../utils/format';
 
 export const CustomerPortal: React.FC = () => {
   const {
@@ -34,8 +35,10 @@ export const CustomerPortal: React.FC = () => {
     o => o.userId === currentUser.id || o.customerEmail === currentUser.email
   );
 
-  // User accessible materials
+  // Materiais de leitura liberados. Livros físicos comprados ficam em
+  // "Pedidos": não têm o que abrir no leitor.
   const accessibleItems = catalog.filter(item => {
+    if (item.type === 'physical') return false;
     if (item.access === 'free') return true;
     if (currentUser.purchasedItems.includes(item.id)) return true;
     if (currentUser.role === 'subscriber' && item.access === 'exclusive') return true;
@@ -140,7 +143,9 @@ export const CustomerPortal: React.FC = () => {
                 <div>
                   <span className="text-ink-soft block">Data de Expiração / Próxima Renovação</span>
                   <span className="font-mono text-ink text-sm">
-                    {currentUser.subscriptionExpiresAt || 'Renovação Automática em 2027'}
+                    {currentUser.subscriptionExpiresAt
+                      ? formatDate(currentUser.subscriptionExpiresAt)
+                      : 'Renovação automática'}
                   </span>
                 </div>
                 <div>
@@ -217,7 +222,7 @@ export const CustomerPortal: React.FC = () => {
                     <span className="text-ink-soft">Pedido</span>{' '}
                     <strong className="text-rubrica font-mono text-sm">{order.id}</strong>
                     <span className="text-ink-soft ml-2 font-mono">
-                      ({new Date(order.createdAt).toLocaleDateString('pt-BR')})
+                      ({formatDate(order.createdAt)})
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -317,7 +322,7 @@ export const CustomerPortal: React.FC = () => {
                   />
                   <div className="min-w-0">
                     <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-paper-300 text-ink-soft">
-                      {item.type === 'physical' ? 'Obra Adquirida' : item.access === 'exclusive' ? 'Acervo Assinante' : 'PDF Aberto'}
+                      {item.access === 'exclusive' ? 'Acervo Assinante' : 'PDF Aberto'}
                     </span>
                     <h2 className="text-xs font-semibold text-ink truncate mt-1">{item.title}</h2>
                     <p className="text-[11px] text-ink-soft truncate">{item.author}</p>

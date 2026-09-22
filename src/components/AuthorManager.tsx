@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Plus,
   Edit2,
@@ -19,6 +19,16 @@ import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
 import { EmptyState } from './ui/EmptyState';
 import { useToast } from './ui/Toast';
 
+const lifespan = (author: Author) =>
+  author.birthYear && author.deathYear
+    ? `${author.birthYear} — ${author.deathYear}`
+    : author.birthYear
+    ? `Nasc. ${author.birthYear}`
+    : '';
+
+const normalize = (text: string) =>
+  text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
 export const AuthorManager: React.FC = () => {
   const {
     authors,
@@ -29,7 +39,9 @@ export const AuthorManager: React.FC = () => {
     catalog,
     openReader,
     setActiveTab,
-    setRole
+    setRole,
+    selectedAuthor,
+    setSelectedAuthor
   } = useStore();
   const { notify } = useToast();
 
@@ -62,6 +74,20 @@ export const AuthorManager: React.FC = () => {
   const [viewAuthor, setViewAuthor] = useState<Author | null>(null);
   const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // Autor escolhido em outra seção (índice da página inicial): abre a ficha
+  // aqui e devolve a seleção ao store, para não reabrir a cada visita.
+  useEffect(() => {
+    if (!selectedAuthor) return;
+    setViewAuthor(authors.find(a => a.id === selectedAuthor.id) ?? null);
+    setSelectedAuthor(null);
+  }, [selectedAuthor, authors, setSelectedAuthor]);
+
+  // Obras do acervo ligadas a este autor, pelo id ou pelo nome.
+  const catalogOf = (author: Author) =>
+    catalog.filter(
+      c => c.authorId === author.id || normalize(c.author).includes(normalize(author.name))
+    );
 
   const movements = Array.from(new Set(authors.map(a => a.politicalMovement)));
   const periods = Array.from(new Set(authors.map(a => a.period)));
@@ -277,13 +303,7 @@ export const AuthorManager: React.FC = () => {
                   <h2 className="text-base font-cinzel font-bold text-ink mt-1.5 truncate group-hover:text-rubrica transition">
                     {author.name}
                   </h2>
-                  <p className="text-[11px] text-ink-soft font-mono">
-                    {author.birthYear && author.deathYear
-                      ? `${author.birthYear} — ${author.deathYear}`
-                      : author.birthYear
-                      ? `Nasc. ${author.birthYear}`
-                      : ''}
-                  </p>
+                  <p className="text-[11px] text-ink-soft font-mono">{lifespan(author)}</p>
                 </div>
               </div>
 
@@ -394,9 +414,9 @@ export const AuthorManager: React.FC = () => {
                   <div className="text-xs text-rubrica font-mono mt-0.5">
                     {viewAuthor.politicalMovement} • {viewAuthor.period}
                   </div>
-                  <div className="text-xs text-ink-soft font-mono">
-                    {viewAuthor.birthYear} — {viewAuthor.deathYear}
-                  </div>
+                  {lifespan(viewAuthor) && (
+                    <div className="text-xs text-ink-soft font-mono">{lifespan(viewAuthor)}</div>
+                  )}
                 </div>
               </div>
               <button
@@ -424,9 +444,13 @@ export const AuthorManager: React.FC = () => {
               </h3>
               <div className="space-y-2">
                 {viewAuthor.works.map((w, idx) => {
-                  const catalogMatch = catalog.find(
-                    c => c.title.toLowerCase().includes(w.toLowerCase()) || w.toLowerCase().includes(c.title.toLowerCase())
-                  );
+                  // Só compara com as obras do próprio autor: títulos curtos
+                  // casavam por substring com livros de outras pessoas.
+                  const work = normalize(w);
+                  const catalogMatch = catalogOf(viewAuthor).find(c => {
+                    const title = normalize(c.title);
+                    return title.includes(work) || work.includes(title);
+                  });
 
                   return (
                     <div

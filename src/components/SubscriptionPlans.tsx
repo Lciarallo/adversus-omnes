@@ -132,7 +132,7 @@ export const SubscriptionPlans: React.FC = () => {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => startSubscriptionCheckout(plan)}
+                    onClick={() => startSubscriptionCheckout(plan, billingCycle)}
                     className={`w-full py-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg min-h-[48px] ${
                       plan.isPopular
                         ? 'bg-rubrica hover:bg-rubrica-deep text-paper-800 shadow-rubrica/20'

@@ -31,6 +31,28 @@ import {
   INITIAL_ORDERS
 } from '../data/initialData';
 import { useToast } from '../components/ui/Toast';
+import { addMonths, toDateOnly, todayDateOnly } from '../utils/format';
+
+export type BillingCycle = 'monthly' | 'yearly';
+
+const FREE_SHIPPING_PLAN = 'Membro do Círculo';
+
+const SUBSCRIBER_RATES: Record<string, number> = {
+  'Membro do Círculo': 0.2,
+  Pesquisador: 0.15
+};
+
+/** Motivo pelo qual um cupom não vale para este subtotal, ou null se vale. */
+export const couponProblem = (coupon: Coupon, subtotal: number): string | null => {
+  if (!coupon.active) return `O cupom ${coupon.code} está pausado.`;
+  if (coupon.validUntil && coupon.validUntil < todayDateOnly()) {
+    return `O cupom ${coupon.code} expirou.`;
+  }
+  if (coupon.minAmount && subtotal < coupon.minAmount) {
+    return `O cupom ${coupon.code} vale para compras a partir de R$ ${coupon.minAmount.toFixed(2)}.`;
+  }
+  return null;
+};
 
 interface StoreContextType {
   // Navigation & View
@@ -48,7 +70,7 @@ interface StoreContextType {
   // User & Auth
   currentUser: User;
   setRole: (role: UserRole) => void;
-  subscribeUser: (planName: string) => void;
+  subscribeUser: (planName: string, cycle: BillingCycle) => void;
   cancelSubscription: () => void;
 
   // Authors CRUD
@@ -82,6 +104,9 @@ interface StoreContextType {
   cartTotal: number;
   discountAmount: number;
   subscriberDiscount: number;
+  subscriberRate: number;
+  hasFreeShipping: boolean;
+  shippingCost: number;
   couponDiscount: number;
   appliedCoupon: Coupon | null;
   applyCoupon: (code: string) => { success: boolean; message: string };
@@ -102,12 +127,7 @@ interface StoreContextType {
 
   // Orders
   orders: Order[];
-  createOrder: (data: {
-    address: ShippingAddress;
-    paymentMethod: 'pix' | 'credit_card';
-    shippingMethod: string;
-    shippingPrice: number;
-  }) => Order;
+  createOrder: (data: { address: ShippingAddress; paymentMethod: 'pix' | 'credit_card' }) => Order;
 
   // InfinitePay
   infinitePayConfig: InfinitePayConfig;
@@ -116,8 +136,9 @@ interface StoreContextType {
   setIsInfinitePayModalOpen: (open: boolean) => void;
   checkoutType: 'cart' | 'subscription';
   checkoutPlan: SubscriptionPlan | null;
+  checkoutCycle: BillingCycle;
   startCartCheckout: () => void;
-  startSubscriptionCheckout: (plan: SubscriptionPlan) => void;
+  startSubscriptionCheckout: (plan: SubscriptionPlan, cycle?: BillingCycle) => void;
 }
 
 export const transitionState = (fn: () => void) => {
@@ -126,7 +147,13 @@ export const transitionState = (fn: () => void) => {
     'startViewTransition' in document &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ) {
-    (document as any).startViewTransition(fn);
+    // Duas transições seguidas (ex.: escolher autor e trocar de seção)
+    // pulam a primeira; o estado é aplicado mesmo assim, então a rejeição
+    // "Transition was skipped" é esperada e não deve vazar como erro.
+    const transition = (document as any).startViewTransition(fn);
+    transition.ready?.catch(() => {});
+    transition.finished?.catch(() => {});
+    transition.updateCallbackDone?.catch(() => {});
   } else {
     fn();
   }
@@ -139,7 +166,7 @@ export const transitionState = (fn: () => void) => {
  * semente nova alcance quem já visitou o site antes.                  *
  * ------------------------------------------------------------------ */
 
-const STORAGE_VERSION = '4';
+const STORAGE_VERSION = '5';
 const storageKey = (name: string) => `contraste_${name}`;
 
 const resetStaleStorage = () => {
@@ -258,6 +285,21 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isInfinitePayModalOpen, setIsInfinitePayModalOpen] = useState(false);
   const [checkoutType, setCheckoutType] = useState<'cart' | 'subscription'>('cart');
   const [checkoutPlan, setCheckoutPlan] = useState<SubscriptionPlan | null>(null);
+  const [checkoutCycle, setCheckoutCycle] = useState<BillingCycle>('monthly');
+
+  // Link compartilhado de ensaio (?ensaio=slug): abre o texto direto.
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get('ensaio');
+    if (!slug) return;
+    const shared = articles.find(a => a.slug === slug && a.status === 'published');
+    if (shared) {
+      setSelectedArticleState(shared);
+      setActiveTabState('artigos');
+    }
+    window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+    // Só na abertura: o parâmetro é consumido uma vez.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Auth / Role switcher
   const setRole = useCallback(
@@ -288,15 +330,15 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [setCurrentUser]
   );
 
+  // Assinar ou cancelar mexe no plano, nunca rebaixa um administrador.
   const subscribeUser = useCallback(
-    (planName: string) => {
-      const nextYear = new Date();
-      nextYear.setFullYear(nextYear.getFullYear() + 1);
+    (planName: string, cycle: BillingCycle) => {
+      const expiresAt = addMonths(new Date(), cycle === 'yearly' ? 12 : 1);
       setCurrentUser(prev => ({
         ...prev,
-        role: 'subscriber',
+        role: prev.role === 'admin' ? 'admin' : 'subscriber',
         activePlan: planName,
-        subscriptionExpiresAt: nextYear.toISOString().split('T')[0]
+        subscriptionExpiresAt: toDateOnly(expiresAt)
       }));
     },
     [setCurrentUser]
@@ -305,7 +347,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const cancelSubscription = useCallback(() => {
     setCurrentUser(prev => ({
       ...prev,
-      role: 'visitor',
+      role: prev.role === 'admin' ? 'admin' : 'visitor',
       activePlan: undefined,
       subscriptionExpiresAt: undefined
     }));
@@ -400,31 +442,39 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 
   // Cart operations
+  // O limite vem do estoque atual do catálogo, não da cópia guardada na
+  // sacola. A decisão é tomada fora do updater do setState: o React pode
+  // adiar (ou repetir) o updater, e o aviso sairia errado.
+  const stockOf = useCallback(
+    (item: CatalogItem) => catalog.find(c => c.id === item.id)?.stock ?? item.stock,
+    [catalog]
+  );
+
   const addToCart = useCallback(
     (item: CatalogItem) => {
-      let blocked = false;
-      setCart(prev => {
-        const existing = prev.find(i => i.item.id === item.id);
-        if (!existing) return [...prev, { item, quantity: 1 }];
-        if (existing.quantity >= item.stock) {
-          blocked = true;
-          return prev;
-        }
-        return prev.map(i => (i.item.id === item.id ? { ...i, quantity: i.quantity + 1 } : i));
-      });
+      const stock = stockOf(item);
+      const inCart = cart.find(i => i.item.id === item.id)?.quantity ?? 0;
 
-      if (blocked) {
+      if (inCart >= stock) {
         notify(
-          item.stock === 1
+          stock <= 0
+            ? `"${item.title}" está esgotado no acervo.`
+            : stock === 1
             ? `"${item.title}" é peça única: há apenas um exemplar no acervo.`
-            : `Restam ${item.stock} exemplares de "${item.title}" no acervo.`,
+            : `Restam ${stock} exemplares de "${item.title}" no acervo.`,
           'error'
         );
         return;
       }
+
+      setCart(prev =>
+        prev.some(i => i.item.id === item.id)
+          ? prev.map(i => (i.item.id === item.id ? { item, quantity: i.quantity + 1 } : i))
+          : [...prev, { item, quantity: 1 }]
+      );
       setIsCartOpen(true);
     },
-    [notify, setCart]
+    [cart, notify, setCart, stockOf]
   );
 
   const removeFromCart = useCallback(
@@ -441,29 +491,30 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return;
       }
 
-      let cappedAt: { title: string; stock: number } | null = null;
-      setCart(prev =>
-        prev.map(i => {
-          if (i.item.id !== itemId) return i;
-          if (quantity > i.item.stock) {
-            cappedAt = { title: i.item.title, stock: i.item.stock };
-            return { ...i, quantity: i.item.stock };
-          }
-          return { ...i, quantity };
-        })
-      );
+      const entry = cart.find(i => i.item.id === itemId);
+      if (!entry) return;
+      const stock = stockOf(entry.item);
+      const capped = Math.min(quantity, stock);
 
-      if (cappedAt) {
-        const { title, stock } = cappedAt as { title: string; stock: number };
+      if (capped <= 0) {
+        setCart(prev => prev.filter(i => i.item.id !== itemId));
+      } else {
+        setCart(prev => prev.map(i => (i.item.id === itemId ? { ...i, quantity: capped } : i)));
+      }
+
+      if (quantity > stock) {
+        const { title } = entry.item;
         notify(
-          stock === 1
+          stock <= 0
+            ? `"${title}" esgotou e saiu da sacola.`
+            : stock === 1
             ? `"${title}" é peça única: mantivemos um exemplar na sacola.`
             : `Só há ${stock} exemplares de "${title}"; ajustamos a quantidade.`,
           'error'
         );
       }
     },
-    [notify, setCart]
+    [cart, notify, setCart, stockOf]
   );
 
   const clearCart = useCallback(() => {
@@ -474,49 +525,58 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Cart calculations
   const totals = useMemo(() => {
-    const subscriberRate =
-      currentUser.activePlan === 'Membro do Círculo'
-        ? 0.2
-        : currentUser.activePlan === 'Pesquisador'
-        ? 0.15
-        : 0;
+    const subscriberRate = SUBSCRIBER_RATES[currentUser.activePlan ?? ''] ?? 0;
+    const hasFreeShipping = currentUser.activePlan === FREE_SHIPPING_PLAN;
 
     const rawSubtotal = cart.reduce((acc, curr) => acc + curr.item.price * curr.quantity, 0);
     const subscriberDiscount = rawSubtotal * subscriberRate;
     const afterSubscriber = Math.max(0, rawSubtotal - subscriberDiscount);
-    const couponDiscount = appliedCoupon
-      ? (afterSubscriber * appliedCoupon.discountPercentage) / 100
+
+    // O cupom é relido da lista atual: se o administrador o pausou, apagou
+    // ou ele venceu depois de aplicado, deixa de descontar.
+    const liveCoupon = appliedCoupon
+      ? coupons.find(c => c.code === appliedCoupon.code) ?? null
+      : null;
+    const effectiveCoupon =
+      liveCoupon && !couponProblem(liveCoupon, rawSubtotal) ? liveCoupon : null;
+    const couponDiscount = effectiveCoupon
+      ? (afterSubscriber * Math.min(100, effectiveCoupon.discountPercentage)) / 100
       : 0;
     const discountAmount = subscriberDiscount + couponDiscount;
-    const shipping =
-      currentUser.activePlan === 'Membro do Círculo' ? 0 : selectedShipping?.price ?? 0;
+    const shippingCost = hasFreeShipping ? 0 : selectedShipping?.price ?? 0;
 
     return {
       cartSubtotal: rawSubtotal,
+      subscriberRate,
       subscriberDiscount,
+      hasFreeShipping,
+      shippingCost,
+      effectiveCoupon,
       couponDiscount,
       discountAmount,
-      cartTotal: Math.max(0, rawSubtotal - discountAmount + shipping)
+      cartTotal: Math.max(0, rawSubtotal - discountAmount) + shippingCost
     };
-  }, [cart, currentUser.activePlan, appliedCoupon, selectedShipping]);
+  }, [cart, currentUser.activePlan, appliedCoupon, coupons, selectedShipping]);
 
   const applyCoupon = useCallback(
     (code: string) => {
       const cleanCode = code.trim().toUpperCase();
-      const found = coupons.find(c => c.code.toUpperCase() === cleanCode && c.active);
+      const found = coupons.find(c => c.code.toUpperCase() === cleanCode);
       if (!found) {
         return {
           success: false,
-          message: `Não encontramos o cupom "${cleanCode}" entre os ativos. Confira o código e tente de novo.`
+          message: `Não encontramos o cupom "${cleanCode}". Confira o código e tente de novo.`
         };
       }
+      const problem = couponProblem(found, totals.cartSubtotal);
+      if (problem) return { success: false, message: problem };
       setAppliedCoupon(found);
       return {
         success: true,
         message: `Cupom ${found.code} aplicado: ${found.discountPercentage}% de desconto nas obras.`
       };
     },
-    [coupons]
+    [coupons, totals.cartSubtotal]
   );
 
   const removeCoupon = useCallback(() => setAppliedCoupon(null), []);
@@ -582,12 +642,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Orders
   const createOrder = useCallback(
-    (data: {
-      address: ShippingAddress;
-      paymentMethod: 'pix' | 'credit_card';
-      shippingMethod: string;
-      shippingPrice: number;
-    }): Order => {
+    (data: { address: ShippingAddress; paymentMethod: 'pix' | 'credit_card' }): Order => {
       const orderItems = cart.map(c => ({
         id: c.item.id,
         title: c.item.title,
@@ -600,16 +655,17 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const randDigits = Math.floor(100000000 + Math.random() * 900000000);
 
       const newOrder: Order = {
-        id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+        id: `ORD-${Date.now().toString(36).toUpperCase()}`,
         userId: currentUser.id,
         customerName: currentUser.name,
         customerEmail: currentUser.email,
         items: orderItems,
         subtotal: totals.cartSubtotal,
         discount: totals.discountAmount,
-        couponCode: appliedCoupon?.code,
-        shippingMethod: data.shippingMethod,
-        shippingPrice: data.shippingPrice,
+        couponCode: totals.effectiveCoupon?.code,
+        // O frete gravado é o mesmo que entrou no total cobrado.
+        shippingMethod: totals.hasFreeShipping ? 'SEDEX' : selectedShipping?.service ?? 'SEDEX',
+        shippingPrice: totals.shippingCost,
         total: totals.cartTotal,
         shippingAddress: data.address,
         paymentGateway: 'infinitepay',
@@ -630,7 +686,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       clearCart();
       return newOrder;
     },
-    [cart, currentUser, totals, appliedCoupon, updateStock, setCurrentUser, setOrders, clearCart]
+    [cart, currentUser, totals, selectedShipping, updateStock, setCurrentUser, setOrders, clearCart]
   );
 
   const updateInfinitePayConfig = useCallback(
@@ -646,9 +702,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setIsInfinitePayModalOpen(true);
   }, []);
 
-  const startSubscriptionCheckout = useCallback((plan: SubscriptionPlan) => {
+  const startSubscriptionCheckout = useCallback((plan: SubscriptionPlan, cycle: BillingCycle = 'monthly') => {
     setCheckoutType('subscription');
     setCheckoutPlan(plan);
+    setCheckoutCycle(cycle);
     setIsInfinitePayModalOpen(true);
   }, []);
 
@@ -688,8 +745,15 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       removeFromCart,
       updateCartQuantity,
       clearCart,
-      ...totals,
-      appliedCoupon,
+      cartSubtotal: totals.cartSubtotal,
+      cartTotal: totals.cartTotal,
+      discountAmount: totals.discountAmount,
+      subscriberDiscount: totals.subscriberDiscount,
+      subscriberRate: totals.subscriberRate,
+      hasFreeShipping: totals.hasFreeShipping,
+      shippingCost: totals.shippingCost,
+      couponDiscount: totals.couponDiscount,
+      appliedCoupon: totals.effectiveCoupon,
       applyCoupon,
       removeCoupon,
       selectedShipping,
@@ -709,6 +773,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setIsInfinitePayModalOpen,
       checkoutType,
       checkoutPlan,
+      checkoutCycle,
       startCartCheckout,
       startSubscriptionCheckout
     }),
@@ -764,6 +829,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       isInfinitePayModalOpen,
       checkoutType,
       checkoutPlan,
+      checkoutCycle,
       startCartCheckout,
       startSubscriptionCheckout
     ]

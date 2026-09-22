@@ -1292,7 +1292,7 @@ h1, h2, h3, .font-serif-title {
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms ease;
 }
 
-.author-index__row:last-child {
+.author-index > :last-child .author-index__row {
   border-bottom: 0;
 }
 

@@ -27,6 +27,7 @@ import { Tabs, TabPanel } from './ui/Tabs';
 import { Dialog } from './ui/Dialog';
 import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
 import { useToast } from './ui/Toast';
+import { formatDate, todayDateOnly } from '../utils/format';
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -150,9 +151,17 @@ export const AdminDashboard: React.FC = () => {
     }
     setCatalogFormError(null);
 
+    // Condição de conservação só descreve exemplar físico; em obra digital
+    // o valor padrão do formulário virava um selo falso de "Peça Única".
+    const condition =
+      catalogFormData.type === 'physical' && catalogFormData.condition.trim()
+        ? (catalogFormData.condition.trim() as CatalogItem['condition'])
+        : undefined;
     const payload = {
       ...catalogFormData,
-      condition: catalogFormData.condition as any
+      price: Math.max(0, catalogFormData.price || 0),
+      stock: Math.max(0, Math.floor(catalogFormData.stock || 0)),
+      condition
     };
 
     if (editingItem) {
@@ -167,6 +176,15 @@ export const AdminDashboard: React.FC = () => {
   const handleCreateCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCouponCode.trim()) return;
+    const discount = Number(newCouponDiscount);
+    if (!Number.isFinite(discount) || discount < 1 || discount > 100) {
+      notify('O desconto do cupom precisa ficar entre 1% e 100%.', 'error');
+      return;
+    }
+    if (newCouponDate && newCouponDate < todayDateOnly()) {
+      notify('A validade do cupom já passou. Escolha uma data a partir de hoje.', 'error');
+      return;
+    }
     addCoupon({
       code: newCouponCode.trim().toUpperCase(),
       discountPercentage: Number(newCouponDiscount),
@@ -331,7 +349,7 @@ export const AdminDashboard: React.FC = () => {
                         {order.trackingCode} ({order.shippingMethod})
                       </td>
                       <td className="p-3 text-ink-soft">
-                        {new Date(order.createdAt).toLocaleDateString('pt-BR')}
+                        {formatDate(order.createdAt)}
                       </td>
                     </tr>
                   ))}
@@ -590,6 +608,8 @@ export const AdminDashboard: React.FC = () => {
                 type="number"
                 placeholder="% de Desconto"
                 aria-label="Porcentagem de desconto"
+                min={1}
+                max={100}
                 value={newCouponDiscount}
                 onChange={e => setNewCouponDiscount(Number(e.target.value))}
                 className="bg-paper-600 border border-rule rounded p-2 text-ink font-mono min-h-[44px]"
@@ -626,17 +646,23 @@ export const AdminDashboard: React.FC = () => {
                   <tr key={c.code} className="hover:bg-paper-600">
                     <td className="p-3 font-mono font-bold text-rubrica">{c.code}</td>
                     <td className="p-3 font-bold text-ink">{c.discountPercentage}% OFF</td>
-                    <td className="p-3 text-ink-soft">{c.validUntil}</td>
+                    <td className="p-3 text-ink-soft">{formatDate(c.validUntil)}</td>
                     <td className="p-3">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono ${
-                          c.active
-                            ? 'bg-verdete-tint text-verdete border border-verdete/35'
-                            : 'bg-paper-300 text-ink-soft'
-                        }`}
-                      >
-                        {c.active ? 'Ativo' : 'Pausado'}
-                      </span>
+                      {c.validUntil < todayDateOnly() ? (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-rubrica-tint/60 text-rubrica-deep border border-rubrica/35">
+                          Expirado
+                        </span>
+                      ) : (
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                            c.active
+                              ? 'bg-verdete-tint text-verdete border border-verdete/35'
+                              : 'bg-paper-300 text-ink-soft'
+                          }`}
+                        >
+                          {c.active ? 'Ativo' : 'Pausado'}
+                        </span>
+                      )}
                     </td>
                     <td className="p-3 text-right space-x-2">
                       <button
@@ -890,6 +916,7 @@ export const AdminDashboard: React.FC = () => {
                   <input
                     id="cat-price"
                     type="number"
+                    min={0}
                     step="0.01"
                     value={catalogFormData.price}
                     onChange={e => setCatalogFormData({ ...catalogFormData, price: Number(e.target.value) })}
@@ -906,6 +933,7 @@ export const AdminDashboard: React.FC = () => {
                   <input
                     id="cat-stock"
                     type="number"
+                    min={0}
                     value={catalogFormData.stock}
                     onChange={e => setCatalogFormData({ ...catalogFormData, stock: Number(e.target.value) })}
                     className="w-full bg-paper-600 border border-rule rounded p-2 text-ink font-mono min-h-[44px]"

@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, BookMarked, FileText, Lock, Scroll } from 'lucide-react';
 import { HeroOpening } from '../components/HeroOpening';
 import { useStore } from '../context/StoreContext';
+import { formatBRL } from '../utils/format';
 
 interface SectionHeadingProps {
   title: string;
@@ -77,7 +78,7 @@ export const HomePage: React.FC = () => {
                   <cite>{leadPhysical.author}</cite>
                   <p>{leadPhysical.description}</p>
                   <div>
-                    <strong>R$ {leadPhysical.price.toFixed(2)}</strong>
+                    <strong>{formatBRL(leadPhysical.price)}</strong>
                     {leadPhysical.stock > 0 ? (
                       <button type="button" onClick={() => addToCart(leadPhysical)}>
                         Adicionar à sacola <ArrowRight size={14} aria-hidden="true" />
@@ -102,7 +103,7 @@ export const HomePage: React.FC = () => {
                       <cite>{item.author}</cite>
                     </div>
                     <div className="physical-register__action">
-                      <strong>R$ {item.price.toFixed(2)}</strong>
+                      <strong>{formatBRL(item.price)}</strong>
                       <button
                         type="button"
                         onClick={() => addToCart(item)}

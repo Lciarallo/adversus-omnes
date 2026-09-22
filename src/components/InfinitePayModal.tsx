@@ -13,6 +13,7 @@ import { useStore } from '../context/StoreContext';
 import { ShippingAddress } from '../types';
 import { Dialog } from './ui/Dialog';
 import { useToast } from './ui/Toast';
+import { formatBRL } from '../utils/format';
 
 export const InfinitePayModal: React.FC = () => {
   const {
@@ -251,7 +252,7 @@ export const InfinitePayModal: React.FC = () => {
               <div className="shrink-0 text-right">
                 <span className="block text-xs text-ink-soft">Total</span>
                 <span className="font-cinzel text-lg font-bold tabular-nums text-rubrica">
-                  R$ {totalToPay.toFixed(2)}
+                  {formatBRL(totalToPay)}
                 </span>
                 {checkoutType === 'subscription' && (
                   <span className="block text-[10px] text-ink-soft">{isYearly ? 'por ano' : 'por mês'}</span>
@@ -516,9 +517,9 @@ export const InfinitePayModal: React.FC = () => {
                     onChange={e => setCardData({ ...cardData, installments: e.target.value })}
                     className={fieldClass}
                   >
-                    <option value="1">1x de R$ {totalToPay.toFixed(2)} (sem juros)</option>
-                    <option value="2">2x de R$ {(totalToPay / 2).toFixed(2)} (sem juros)</option>
-                    <option value="3">3x de R$ {(totalToPay / 3).toFixed(2)} (sem juros)</option>
+                    <option value="1">1x de {formatBRL(totalToPay)} (sem juros)</option>
+                    <option value="2">2x de {formatBRL((totalToPay / 2))} (sem juros)</option>
+                    <option value="3">3x de {formatBRL((totalToPay / 3))} (sem juros)</option>
                   </select>
                 </div>
               </div>
@@ -546,8 +547,7 @@ export const InfinitePayModal: React.FC = () => {
                 </>
               ) : (
                 <span>
-                  {checkoutType === 'subscription' ? 'Simular assinatura' : 'Simular pagamento'} de R${' '}
-                  {totalToPay.toFixed(2)}
+                  {checkoutType === 'subscription' ? 'Simular assinatura' : 'Simular pagamento'} de {formatBRL(totalToPay)}
                 </span>
               )}
             </button>

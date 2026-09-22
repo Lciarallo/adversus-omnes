@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check, Sparkles, Shield, Gift, Truck, HelpCircle } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { SubscriptionPlan } from '../types';
+import { formatBRL } from '../utils/format';
 
 export const SubscriptionPlans: React.FC = () => {
   const { plans, currentUser, startSubscriptionCheckout } = useStore();
@@ -99,7 +100,7 @@ export const SubscriptionPlans: React.FC = () => {
                   </div>
                   {billingCycle === 'yearly' && (
                     <div className="text-xs text-ink-soft font-mono mt-1">
-                      Faturado anualmente (R$ {plan.priceYearly.toFixed(2)})
+                      Faturado anualmente ({formatBRL(plan.priceYearly)})
                     </div>
                   )}
                 </div>

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { EmptyState } from './ui/EmptyState';
+import { formatBRL } from '../utils/format';
 
 export const PhysicalCatalog: React.FC = () => {
   const { catalog, addToCart, cart, currentUser, subscriberRate } = useStore();
@@ -73,10 +74,10 @@ export const PhysicalCatalog: React.FC = () => {
       </div>
 
       {/* Multi-faceted Filter Bar */}
-      <div className="bg-paper-700 p-4 sm:p-5 rounded-xl border border-rule space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="bg-paper-700 p-3 sm:p-4 rounded-xl border border-rule space-y-3">
+        <div className="grid grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))] gap-2 sm:gap-3">
           {/* Search */}
-          <div className="relative">
+          <div className="relative col-span-2 lg:col-span-1">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none" aria-hidden="true" />
             <input
               type="text"
@@ -96,7 +97,7 @@ export const PhysicalCatalog: React.FC = () => {
               onChange={e => setSelectedMovement(e.target.value)}
               className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
             >
-              <option value="all">Todos os Movimentos Políticos</option>
+              <option value="all">Movimento: todos</option>
               {movements.map(m => (
                 <option key={m} value={m}>
                   {m}
@@ -113,7 +114,7 @@ export const PhysicalCatalog: React.FC = () => {
               onChange={e => setSelectedPeriod(e.target.value)}
               className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
             >
-              <option value="all">Todos os Períodos Históricos</option>
+              <option value="all">Período: todos</option>
               {periods.map(p => (
                 <option key={p} value={p}>
                   {p}
@@ -123,14 +124,14 @@ export const PhysicalCatalog: React.FC = () => {
           </div>
 
           {/* Condition */}
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <select
               aria-label="Filtrar por condição de conservação da obra"
               value={selectedCondition}
               onChange={e => setSelectedCondition(e.target.value)}
               className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
             >
-              <option value="all">Todas as Condições</option>
+              <option value="all">Condição: todas</option>
               {conditions.map(c => (
                 <option key={c} value={c}>
                   {c}
@@ -142,7 +143,11 @@ export const PhysicalCatalog: React.FC = () => {
 
         {/* Sorting options */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-rule-faint text-xs text-ink-soft">
-          <span>{filteredItems.length} exemplar(es) encontrado(s)</span>
+          <span>
+            {filteredItems.length === 1
+              ? '1 exemplar encontrado'
+              : `${filteredItems.length} exemplares encontrados`}
+          </span>
           <div className="flex items-center gap-2">
             <label htmlFor="sort-physical" className="text-ink-soft">
               Ordenar por:
@@ -193,7 +198,7 @@ export const PhysicalCatalog: React.FC = () => {
             >
               <div>
                 {/* Book Cover Image */}
-                <div className="relative h-72 bg-paper-400 p-4 flex items-center justify-center overflow-hidden border-b border-rule-faint">
+                <div className="relative h-56 sm:h-72 bg-paper-400 p-4 flex items-center justify-center overflow-hidden border-b border-rule-faint">
                   <img
                     src={item.coverImage}
                     alt={`Capa original da obra ${item.title}`}
@@ -202,16 +207,21 @@ export const PhysicalCatalog: React.FC = () => {
                     className="max-h-full max-w-[85%] object-cover rounded shadow-2xl border border-rule-strong"
                   />
 
-                  {/* Condition badge */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-1">
+                  {/* Selos: estado de conservação e, quando o estado não diz, exemplar único */}
+                  <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-1.5">
                     {item.condition && (
-                      <span className="px-2.5 py-1 rounded bg-paper-800/92 backdrop-blur text-rubrica border border-ocre/35 text-[10px] font-mono font-medium shadow">
+                      <span className="px-2 py-1 rounded-sm bg-paper-800 text-rubrica-deep border border-ocre/40 text-[10px] font-semibold tracking-wide shadow-sm">
                         {item.condition}
                       </span>
                     )}
-                    {item.stock === 1 && !isSoldOut && (
-                      <span className="px-2 py-0.5 rounded bg-rubrica-tint/90 text-rubrica-deep border border-rubrica/50 text-[10px] font-mono">
-                        Único em Estoque
+                    {item.stock === 1 && !isSoldOut && !/única|único/i.test(item.condition ?? '') && (
+                      <span className="px-2 py-1 rounded-sm bg-rubrica-tint text-rubrica-deep border border-rubrica/40 text-[10px] font-semibold tracking-wide shadow-sm">
+                        Exemplar único
+                      </span>
+                    )}
+                    {isSoldOut && (
+                      <span className="px-2 py-1 rounded-sm bg-ink text-paper-600 text-[10px] font-semibold tracking-wide">
+                        Esgotado
                       </span>
                     )}
                   </div>
@@ -219,23 +229,23 @@ export const PhysicalCatalog: React.FC = () => {
 
                 {/* Metadata */}
                 <div className="p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-[11px] text-ink-soft font-mono">
+                  <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-medium tabular-nums text-ink-faint">
+                    <span>{item.year}</span>
+                    <span aria-hidden="true">·</span>
                     <span>{item.period}</span>
-                    <span>•</span>
-                    <span>Ano: {item.year}</span>
-                    <span>•</span>
-                    <span>{item.pages} págs</span>
-                  </div>
+                    <span aria-hidden="true">·</span>
+                    <span>{item.pages} págs.</span>
+                  </p>
 
-                  <h2 className="text-base font-cinzel font-bold text-ink group-hover:text-rubrica transition line-clamp-2">
+                  <h2 className="font-serif text-xl font-bold leading-tight text-ink group-hover:text-rubrica transition line-clamp-2 text-balance">
                     {item.title}
                   </h2>
 
-                  <p className="text-xs text-rubrica font-medium font-serif italic">
+                  <p className="text-sm text-rubrica-deep font-serif italic">
                     {item.author}
                   </p>
 
-                  <p className="text-xs text-ink-soft line-clamp-3 leading-relaxed font-serif">
+                  <p className="text-xs text-ink-soft line-clamp-2 sm:line-clamp-3 leading-relaxed font-serif">
                     {item.description}
                   </p>
 
@@ -261,7 +271,7 @@ export const PhysicalCatalog: React.FC = () => {
                     Valor do Exemplar
                   </span>
                   <div className="text-lg font-cinzel font-bold text-ink">
-                    R$ {item.price.toFixed(2)}
+                    {formatBRL(item.price)}
                   </div>
                 </div>
 

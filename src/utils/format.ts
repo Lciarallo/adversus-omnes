@@ -39,3 +39,8 @@ export const slugify = (text: string): string =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+
+const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+/** Valor em reais no padrão brasileiro: R$ 1.250,00. */
+export const formatBRL = (value: number): string => BRL.format(value);

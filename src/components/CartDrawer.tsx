@@ -16,6 +16,7 @@ import {
 import { useStore } from '../context/StoreContext';
 import { CorreiosQuote } from '../types';
 import { Dialog } from './ui/Dialog';
+import { formatBRL } from '../utils/format';
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -190,7 +191,7 @@ export const CartDrawer: React.FC = () => {
 
                   <div className="text-right">
                     <div className="text-xs font-bold tabular-nums text-rubrica">
-                      R$ {(item.price * quantity).toFixed(2)}
+                      {formatBRL((item.price * quantity))}
                     </div>
                     {item.stock === 1 && (
                       <div className="text-[9px] font-medium text-rubrica">Peça única</div>
@@ -296,7 +297,7 @@ export const CartDrawer: React.FC = () => {
                       </div>
                     </div>
                     <span className="font-semibold tabular-nums text-rubrica">
-                      R$ {quote.price.toFixed(2)}
+                      {formatBRL(quote.price)}
                     </span>
                   </label>
                 ))}
@@ -383,20 +384,20 @@ export const CartDrawer: React.FC = () => {
           <div className="space-y-1.5 text-xs tabular-nums">
             <div className="flex justify-between text-ink-soft">
               <span>Subtotal das obras</span>
-              <span>R$ {cartSubtotal.toFixed(2)}</span>
+              <span>{formatBRL(cartSubtotal)}</span>
             </div>
 
             {subscriberDiscount > 0 && (
               <div className="flex justify-between text-verdete">
                 <span>Desconto do plano ({currentUser.activePlan})</span>
-                <span>−R$ {subscriberDiscount.toFixed(2)}</span>
+                <span>−{formatBRL(subscriberDiscount)}</span>
               </div>
             )}
 
             {appliedCoupon && (
               <div className="flex justify-between text-verdete">
                 <span>Cupom {appliedCoupon.code}</span>
-                <span>−R$ {couponDiscount.toFixed(2)}</span>
+                <span>−{formatBRL(couponDiscount)}</span>
               </div>
             )}
 
@@ -406,14 +407,14 @@ export const CartDrawer: React.FC = () => {
                 {isFreeShipping
                   ? 'Incluso'
                   : selectedShipping
-                  ? `R$ ${selectedShipping.price.toFixed(2)}`
+                  ? `${formatBRL(selectedShipping.price)}`
                   : 'A calcular'}
               </span>
             </div>
 
             <div className="flex justify-between border-t border-rule-faint pt-2 text-sm font-bold text-ink">
               <span>Total do pedido</span>
-              <span className="font-cinzel text-base text-rubrica">R$ {cartTotal.toFixed(2)}</span>
+              <span className="font-cinzel text-base text-rubrica">{formatBRL(cartTotal)}</span>
             </div>
           </div>
 

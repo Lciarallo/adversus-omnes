@@ -31,7 +31,7 @@ import {
   INITIAL_ORDERS
 } from '../data/initialData';
 import { useToast } from '../components/ui/Toast';
-import { addMonths, toDateOnly, todayDateOnly } from '../utils/format';
+import { addMonths, toDateOnly, todayDateOnly, formatBRL } from '../utils/format';
 
 export type BillingCycle = 'monthly' | 'yearly';
 
@@ -49,7 +49,7 @@ export const couponProblem = (coupon: Coupon, subtotal: number): string | null =
     return `O cupom ${coupon.code} expirou.`;
   }
   if (coupon.minAmount && subtotal < coupon.minAmount) {
-    return `O cupom ${coupon.code} vale para compras a partir de R$ ${coupon.minAmount.toFixed(2)}.`;
+    return `O cupom ${coupon.code} vale para compras a partir de ${formatBRL(coupon.minAmount)}.`;
   }
   return null;
 };

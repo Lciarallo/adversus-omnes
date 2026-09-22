@@ -15,7 +15,7 @@ import {
 import { useStore } from '../context/StoreContext';
 import { Tabs, TabPanel } from './ui/Tabs';
 import { EmptyState } from './ui/EmptyState';
-import { formatDate } from '../utils/format';
+import { formatDate, formatBRL } from '../utils/format';
 
 export const CustomerPortal: React.FC = () => {
   const {
@@ -252,11 +252,11 @@ export const CustomerPortal: React.FC = () => {
                           <div className="text-[10px] text-ocre font-mono">{i.condition}</div>
                         )}
                         <div className="text-[11px] text-ink-soft">
-                          {i.quantity}x R$ {i.price.toFixed(2)}
+                          {i.quantity}x {formatBRL(i.price)}
                         </div>
                       </div>
                       <div className="text-xs font-bold text-ink font-cinzel">
-                        R$ {(i.price * i.quantity).toFixed(2)}
+                        {formatBRL((i.price * i.quantity))}
                       </div>
                     </div>
                   ))}

@@ -79,9 +79,9 @@ export const DigitalCatalog: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-paper-700 p-4 rounded-xl border border-rule grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="bg-paper-700 p-3 sm:p-4 rounded-xl border border-rule grid grid-cols-2 sm:grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,1fr))] gap-2 sm:gap-3">
         {/* Search */}
-        <div className="relative">
+        <div className="relative col-span-2 sm:col-span-1">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none" aria-hidden="true" />
           <input
             type="text"
@@ -96,14 +96,14 @@ export const DigitalCatalog: React.FC = () => {
         {/* Access type */}
         <div>
           <select
-            aria-label="Filtrar por tipo de acesso (Livre ou Exclusivo)"
+            aria-label="Filtrar por tipo de acesso (livre ou para assinantes)"
             value={accessFilter}
             onChange={e => setAccessFilter(e.target.value as any)}
             className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
           >
-            <option value="all">Todos os Tipos de Acesso</option>
-            <option value="free">Livre para Download (PDF Aberto)</option>
-            <option value="exclusive">Exclusivo para Assinantes (Protegido)</option>
+            <option value="all">Acesso: todos</option>
+            <option value="free">Acesso livre (PDF aberto)</option>
+            <option value="exclusive">Para assinantes (leitor protegido)</option>
           </select>
         </div>
 
@@ -115,7 +115,7 @@ export const DigitalCatalog: React.FC = () => {
             onChange={e => setMovementFilter(e.target.value)}
             className="w-full bg-paper-600 border border-rule rounded-lg px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-rubrica min-h-[44px]"
           >
-            <option value="all">Todos os Movimentos Políticos</option>
+            <option value="all">Movimento: todos</option>
             {movements.map(m => (
               <option key={m} value={m}>
                 {m}
@@ -159,7 +159,7 @@ export const DigitalCatalog: React.FC = () => {
               className="bg-paper-700 rounded-xl border border-rule hover:border-rubrica/60 transition-all flex flex-col justify-between overflow-hidden group shadow-lg codex-card"
             >
               <div>
-                <div className="relative h-60 bg-paper-300 p-3 flex items-center justify-center overflow-hidden border-b border-rule-faint">
+                <div className="relative h-44 sm:h-60 bg-paper-300 p-3 flex items-center justify-center overflow-hidden border-b border-rule-faint">
                   <img
                     src={item.coverImage}
                     alt={`Capa do documento ${item.title}`}
@@ -172,27 +172,27 @@ export const DigitalCatalog: React.FC = () => {
                   {/* Badge */}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {isExclusive ? (
-                      <span className="px-2.5 py-1 rounded bg-ocre-tint/90 text-rubrica border border-ocre/35 text-[10px] font-mono font-medium flex items-center gap-1 shadow">
-                        <Shield size={11} aria-hidden="true" /> Exclusivo Assinantes
+                      <span className="px-2 py-1 rounded-sm bg-paper-800 text-rubrica-deep border border-ocre/40 text-[10px] font-semibold tracking-wide flex items-center gap-1 shadow-sm">
+                        <Shield size={11} aria-hidden="true" /> Para assinantes
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded bg-verdete-tint/90 text-verdete border border-verdete/35 text-[10px] font-mono font-medium flex items-center gap-1 shadow">
-                        <Download size={11} aria-hidden="true" /> PDF Livre / Baixar
+                      <span className="px-2 py-1 rounded-sm bg-paper-800 text-verdete border border-verdete/35 text-[10px] font-semibold tracking-wide flex items-center gap-1 shadow-sm">
+                        <Download size={11} aria-hidden="true" /> Acesso livre
                       </span>
                     )}
                   </div>
                 </div>
 
                 <div className="p-5 space-y-2.5">
-                  <div className="flex items-center gap-2 text-[11px] text-ink-soft font-mono">
+                  <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-medium tabular-nums text-ink-faint">
+                    <span>{item.year}</span>
+                    <span aria-hidden="true">·</span>
                     <span>{item.period}</span>
-                    <span>•</span>
-                    <span>Ano: {item.year}</span>
-                    <span>•</span>
-                    <span>{item.pages} págs</span>
-                  </div>
+                    <span aria-hidden="true">·</span>
+                    <span>{item.pages} págs.</span>
+                  </p>
 
-                  <h3 className="font-cinzel text-base font-bold leading-snug">
+                  <h3 className="font-serif text-xl font-bold leading-tight text-balance">
                     <button
                       type="button"
                       onClick={() => openReader(item)}
@@ -202,11 +202,11 @@ export const DigitalCatalog: React.FC = () => {
                     </button>
                   </h3>
 
-                  <p className="text-xs text-rubrica font-medium font-serif italic">
+                  <p className="text-sm text-rubrica-deep font-serif italic">
                     {item.author}
                   </p>
 
-                  <p className="text-xs text-ink-soft line-clamp-3 leading-relaxed font-serif">
+                  <p className="text-xs text-ink-soft line-clamp-2 sm:line-clamp-3 leading-relaxed font-serif">
                     {item.description}
                   </p>
 

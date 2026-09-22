@@ -27,7 +27,7 @@ import { Tabs, TabPanel } from './ui/Tabs';
 import { Dialog } from './ui/Dialog';
 import { ConfirmDialog, ConfirmRequest } from './ui/ConfirmDialog';
 import { useToast } from './ui/Toast';
-import { formatDate, todayDateOnly } from '../utils/format';
+import { formatDate, todayDateOnly, formatBRL } from '../utils/format';
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -223,7 +223,7 @@ export const AdminDashboard: React.FC = () => {
             <DollarSign size={16} className="text-rubrica" aria-hidden="true" />
           </div>
           <div className="font-cinzel text-2xl font-bold tabular-nums text-ink">
-            R$ {totalRevenue.toFixed(2)}
+            {formatBRL(totalRevenue)}
           </div>
           <div className="pt-1 font-mono text-[11px] text-ink-soft">
             Soma dos pedidos registrados
@@ -335,7 +335,7 @@ export const AdminDashboard: React.FC = () => {
                         ))}
                       </td>
                       <td className="p-3 font-cinzel font-bold text-ink">
-                        R$ {order.total.toFixed(2)}
+                        {formatBRL(order.total)}
                       </td>
                       <td className="p-3 font-mono text-[11px] uppercase">
                         InfinitePay ({order.paymentMethod})
@@ -419,7 +419,7 @@ export const AdminDashboard: React.FC = () => {
                       {item.politicalMovement} • {item.period}
                     </td>
                     <td className="p-3 font-cinzel font-bold text-ink">
-                      {item.price > 0 ? `R$ ${item.price.toFixed(2)}` : 'Incluso'}
+                      {item.price > 0 ? `${formatBRL(item.price)}` : 'Incluso'}
                     </td>
                     <td className="p-3 font-mono">
                       {item.type === 'physical' ? (
@@ -495,7 +495,7 @@ export const AdminDashboard: React.FC = () => {
                     <div className="min-w-0">
                       <h4 className="text-xs font-semibold text-ink truncate">{item.title}</h4>
                       <p className="text-[11px] text-ink-soft">{item.condition}</p>
-                      <p className="text-xs text-rubrica font-bold">R$ {item.price.toFixed(2)}</p>
+                      <p className="text-xs text-rubrica font-bold">{formatBRL(item.price)}</p>
                     </div>
                   </div>
 
